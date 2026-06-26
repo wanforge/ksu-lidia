@@ -7,7 +7,7 @@ set -euo pipefail
 APP_DIR="${1:-/var/www/ksu-lidia}"
 APP_NAME="ksuldia"
 SERVICE_NAME="ksu-lidia"
-NODE_PORT=3002
+NODE_PORT=3005
 
 echo "=== [1/7] Periksa dependensi sistem ==="
 command -v node  >/dev/null 2>&1 || { echo "❌  Node.js tidak ditemukan. Install Node 20+."; exit 1; }

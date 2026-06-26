@@ -98,7 +98,7 @@ Modul Toko Lidia dioptimalkan untuk pencatatan inventaris dan rekapan transaksi 
    pnpm run dev
    ```
 
-   Aplikasi dapat diakses di [http://localhost:3002](http://localhost:3002).
+   Aplikasi dapat diakses di [http://localhost:3005](http://localhost:3005).
 
 5. **Akun Pengguna Demo:**
    - **Administrator:** `sugeng.admin@instansi.go.id`

@@ -7,7 +7,7 @@
   "license": "Proprietary",
   "homepage": "https://wanforge.asia",
   "scripts": {
-    "dev": "next dev --turbopack --port 3002",
+    "dev": "next dev --turbopack --port 3005",
     "lint": "next lint",
     "build": "next build",
     "type:check": "tsc --noEmit",
@@ -15,7 +15,7 @@
     "format:check": "prettier --check \"src/**/*.{ts,tsx,json,css}\" \"prisma/**/*.ts\"",
     "test": "node --import tsx --test tests/*.test.ts",
     "audit:prune": "tsx scripts/prune-audit-logs.ts",
-    "start": "next start -p 3002",
+    "start": "next start -p 3005",
     "clean": "rm -rf node_modules .next .cache .turbo",
     "cache:clean": "rm -rf .next .cache .turbo",
     "db:generate": "prisma generate",
