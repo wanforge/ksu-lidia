@@ -1,8 +1,17 @@
 "use client";
 
 import { useActionState } from "react";
-import { updateMasterConfigAction, MasterConfig, MasterActionState } from "./actions";
-import { PiVaultDuotone, PiCoinsDuotone, PiInfoDuotone, PiHouseDuotone } from "react-icons/pi";
+import {
+  updateMasterConfigAction,
+  MasterConfig,
+  MasterActionState,
+} from "./actions";
+import {
+  PiVaultDuotone,
+  PiCoinsDuotone,
+  PiInfoDuotone,
+  PiHouseDuotone,
+} from "react-icons/pi";
 import { Button } from "@/components/ui/button";
 import { useActionFeedback } from "@/app/shared/use-action-feedback";
 
@@ -19,16 +28,18 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
   useActionFeedback(state);
 
   return (
-    <form action={dispatchAction} className="space-y-6 max-w-4xl">
+    <form action={dispatchAction} className="max-w-4xl space-y-6">
       {/* 1. General Info Card */}
       <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="text-base font-bold text-gray-900 flex items-center gap-2 mb-4">
+        <h2 className="mb-4 flex items-center gap-2 text-base font-bold text-gray-900">
           <PiHouseDuotone className="h-5 w-5 text-red-800" />
           Informasi & Identitas Koperasi
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Nama Koperasi</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Nama Koperasi
+            </label>
             <input
               type="text"
               name="cooperativeName"
@@ -38,7 +49,9 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Alamat Kantor Koperasi</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Alamat Kantor Koperasi
+            </label>
             <input
               type="text"
               name="cooperativeAddress"
@@ -52,13 +65,15 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
 
       {/* 2. Simpanan Settings Card */}
       <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="text-base font-bold text-gray-900 flex items-center gap-2 mb-4">
+        <h2 className="mb-4 flex items-center gap-2 text-base font-bold text-gray-900">
           <PiVaultDuotone className="h-5 w-5 text-amber-500" />
           Konfigurasi Simpanan Anggota
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Minimal Simpanan Pokok (Rp)</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Minimal Simpanan Pokok (Rp)
+            </label>
             <input
               type="number"
               name="minPokok"
@@ -66,10 +81,14 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
               required
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700 focus:ring-1 focus:ring-red-700"
             />
-            <p className="text-xs text-gray-500 mt-1">Setoran wajib pertama saat mendaftar menjadi anggota.</p>
+            <p className="mt-1 text-xs text-gray-500">
+              Setoran wajib pertama saat mendaftar menjadi anggota.
+            </p>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Iuran Simpanan Wajib Bulanan (Rp)</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Iuran Simpanan Wajib Bulanan (Rp)
+            </label>
             <input
               type="number"
               name="wajibMonthly"
@@ -77,20 +96,24 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
               required
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700 focus:ring-1 focus:ring-red-700"
             />
-            <p className="text-xs text-gray-500 mt-1">Setoran bulanan rutin anggota.</p>
+            <p className="mt-1 text-xs text-gray-500">
+              Setoran bulanan rutin anggota.
+            </p>
           </div>
         </div>
       </div>
 
       {/* 3. Pinjaman Settings Card */}
       <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="text-base font-bold text-gray-900 flex items-center gap-2 mb-4">
+        <h2 className="mb-4 flex items-center gap-2 text-base font-bold text-gray-900">
           <PiCoinsDuotone className="h-5 w-5 text-red-800" />
           Konfigurasi Pinjaman & Perkreditan
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Bunga Pinjaman (%)</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Bunga Pinjaman (%)
+            </label>
             <input
               type="number"
               step="0.01"
@@ -99,11 +122,15 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
               required
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700 focus:ring-1 focus:ring-red-700"
             />
-            <p className="text-xs text-gray-500 mt-1">Bunga per bulan berjalan.</p>
+            <p className="mt-1 text-xs text-gray-500">
+              Bunga per bulan berjalan.
+            </p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Biaya Provisi (%)</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Biaya Provisi (%)
+            </label>
             <input
               type="number"
               step="0.01"
@@ -112,11 +139,15 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
               required
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700 focus:ring-1 focus:ring-red-700"
             />
-            <p className="text-xs text-gray-500 mt-1">Dipotong saat pencairan.</p>
+            <p className="mt-1 text-xs text-gray-500">
+              Dipotong saat pencairan.
+            </p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Cad. Resiko Kredit (%)</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Cad. Resiko Kredit (%)
+            </label>
             <input
               type="number"
               step="0.01"
@@ -125,11 +156,15 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
               required
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700 focus:ring-1 focus:ring-red-700"
             />
-            <p className="text-xs text-gray-500 mt-1">Cadangan resiko kredit (CRK).</p>
+            <p className="mt-1 text-xs text-gray-500">
+              Cadangan resiko kredit (CRK).
+            </p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Denda Terlambat (%)</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Denda Terlambat (%)
+            </label>
             <input
               type="number"
               step="0.01"
@@ -138,16 +173,21 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
               required
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700 focus:ring-1 focus:ring-red-700"
             />
-            <p className="text-xs text-gray-500 mt-1">Denda keterlambatan angsuran.</p>
+            <p className="mt-1 text-xs text-gray-500">
+              Denda keterlambatan angsuran.
+            </p>
           </div>
         </div>
       </div>
 
       {/* Info Warning */}
-      <div className="rounded-xl border border-amber-100 bg-amber-50/50 p-4 flex gap-3 text-sm text-amber-850">
-        <PiInfoDuotone className="h-5 w-5 shrink-0 text-amber-600 mt-0.5" />
+      <div className="text-amber-850 flex gap-3 rounded-xl border border-amber-100 bg-amber-50/50 p-4 text-sm">
+        <PiInfoDuotone className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
         <div>
-          <span className="font-bold">Pemberitahuan Sistem:</span> Perubahan parameter di atas akan diterapkan pada perhitungan transaksi pinjaman baru dan pelaporan keuangan koperasi KSU Lidia GKJ Manahan di masa mendatang.
+          <span className="font-bold">Pemberitahuan Sistem:</span> Perubahan
+          parameter di atas akan diterapkan pada perhitungan transaksi pinjaman
+          baru dan pelaporan keuangan koperasi KSU Lidia GKJ Manahan di masa
+          mendatang.
         </div>
       </div>
 
@@ -155,7 +195,7 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
       <div className="flex justify-end gap-3">
         <Button
           type="submit"
-          className="bg-red-800 text-white hover:bg-red-900 shadow-md font-semibold px-6 py-2.5"
+          className="bg-red-800 px-6 py-2.5 font-semibold text-white shadow-md hover:bg-red-900"
         >
           Simpan Konfigurasi Master
         </Button>

@@ -152,8 +152,8 @@ export default function AuthWrapper({
             </Title>
 
             <Text className="mb-8 text-sm leading-relaxed text-amber-100/85">
-              {appConfig.tagline} — kelola simpan pinjam, anggota, dan retail toko
-              dalam satu platform terintegrasi.
+              {appConfig.tagline} — kelola simpan pinjam, anggota, dan retail
+              toko dalam satu platform terintegrasi.
             </Text>
 
             {/* Feature grid */}

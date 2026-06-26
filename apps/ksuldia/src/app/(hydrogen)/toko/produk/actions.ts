@@ -5,7 +5,11 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { ensureAuditContext } from "@/lib/audit-context";
 import { routes } from "@/config/routes";
-import { createProductSchema, updateProductSchema, stockAdjustmentSchema } from "@/validators/ksulidia.schema";
+import {
+  createProductSchema,
+  updateProductSchema,
+  stockAdjustmentSchema,
+} from "@/validators/ksulidia.schema";
 import { ProductTxType } from "@prisma/client";
 
 export type ProductActionState = {
@@ -20,11 +24,16 @@ export async function createProductAction(
 ): Promise<ProductActionState> {
   const session = await getSession();
   ensureAuditContext(
-    session?.user ? { actorId: session.user.id, actorRole: session.user.role } : undefined
+    session?.user
+      ? { actorId: session.user.id, actorRole: session.user.role }
+      : undefined
   );
 
   if (!session?.user) {
-    return { success: false, message: "Sesi Anda telah kedaluwarsa. Silakan sign in kembali." };
+    return {
+      success: false,
+      message: "Sesi Anda telah kedaluwarsa. Silakan sign in kembali.",
+    };
   }
 
   const code = formData.get("code");
@@ -34,7 +43,14 @@ export async function createProductAction(
   const purchasePrice = formData.get("purchasePrice") ?? 0;
   const sellingPrice = formData.get("sellingPrice") ?? 0;
 
-  const parsed = createProductSchema.safeParse({ code, name, category, stock, purchasePrice, sellingPrice });
+  const parsed = createProductSchema.safeParse({
+    code,
+    name,
+    category,
+    stock,
+    purchasePrice,
+    sellingPrice,
+  });
   if (!parsed.success) {
     return {
       success: false,
@@ -91,7 +107,10 @@ export async function createProductAction(
     });
 
     revalidatePath(routes.toko.produk);
-    return { success: true, message: "Produk berhasil ditambahkan ke katalog." };
+    return {
+      success: true,
+      message: "Produk berhasil ditambahkan ke katalog.",
+    };
   } catch (error: any) {
     return {
       success: false,
@@ -106,7 +125,9 @@ export async function updateProductAction(
 ): Promise<ProductActionState> {
   const session = await getSession();
   ensureAuditContext(
-    session?.user ? { actorId: session.user.id, actorRole: session.user.role } : undefined
+    session?.user
+      ? { actorId: session.user.id, actorRole: session.user.role }
+      : undefined
   );
 
   if (!session?.user) {
@@ -120,7 +141,14 @@ export async function updateProductAction(
   const purchasePrice = formData.get("purchasePrice") ?? 0;
   const sellingPrice = formData.get("sellingPrice") ?? 0;
 
-  const parsed = updateProductSchema.safeParse({ productId, code, name, category, purchasePrice, sellingPrice });
+  const parsed = updateProductSchema.safeParse({
+    productId,
+    code,
+    name,
+    category,
+    purchasePrice,
+    sellingPrice,
+  });
   if (!parsed.success) {
     return {
       success: false,
@@ -171,7 +199,9 @@ export async function adjustProductStockAction(
 ): Promise<ProductActionState> {
   const session = await getSession();
   ensureAuditContext(
-    session?.user ? { actorId: session.user.id, actorRole: session.user.role } : undefined
+    session?.user
+      ? { actorId: session.user.id, actorRole: session.user.role }
+      : undefined
   );
 
   if (!session?.user) {
@@ -182,7 +212,11 @@ export async function adjustProductStockAction(
   const quantity = formData.get("quantity");
   const reason = formData.get("reason");
 
-  const parsed = stockAdjustmentSchema.safeParse({ productId, quantity, reason });
+  const parsed = stockAdjustmentSchema.safeParse({
+    productId,
+    quantity,
+    reason,
+  });
   if (!parsed.success) {
     return {
       success: false,
@@ -205,7 +239,9 @@ export async function adjustProductStockAction(
       const newStock = currentStock + parsed.data.quantity;
 
       if (newStock < 0) {
-        throw new Error(`Stok akhir tidak boleh negatif. Stok saat ini: ${currentStock}`);
+        throw new Error(
+          `Stok akhir tidak boleh negatif. Stok saat ini: ${currentStock}`
+        );
       }
 
       // Update product stock
@@ -229,7 +265,10 @@ export async function adjustProductStockAction(
           transactionId: trans.id,
           productId: product.id,
           quantity: parsed.data.quantity,
-          unitPrice: parsed.data.quantity >= 0 ? product.purchasePrice : product.sellingPrice,
+          unitPrice:
+            parsed.data.quantity >= 0
+              ? product.purchasePrice
+              : product.sellingPrice,
           totalPrice: 0,
         },
       });

@@ -59,9 +59,7 @@ function createBaseClient() {
   return new PrismaClient({
     adapter,
     log:
-      env.NODE_ENV === "development"
-        ? ["query", "error", "warn"]
-        : ["error"],
+      env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
   });
 }
 
@@ -71,8 +69,7 @@ const globalForBase = globalThis as unknown as {
   basePrisma?: PrismaClient;
 };
 const basePrisma = globalForBase.basePrisma ?? createBaseClient();
-if (env.NODE_ENV !== "production")
-  globalForBase.basePrisma = basePrisma;
+if (env.NODE_ENV !== "production") globalForBase.basePrisma = basePrisma;
 
 function modelDelegateName(model: string): string {
   return model.charAt(0).toLowerCase() + model.slice(1);

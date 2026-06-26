@@ -8,7 +8,10 @@ export const dynamic = "force-dynamic";
 export default async function LaporanPage() {
   const session = await getSession();
 
-  if (!session?.user || !hasPermission(session.user.role, PERMISSIONS.SIMPAN_PINJAM_VIEW)) {
+  if (
+    !session?.user ||
+    !hasPermission(session.user.role, PERMISSIONS.SIMPAN_PINJAM_VIEW)
+  ) {
     return (
       <div className="mx-auto w-full max-w-[900px] rounded-md border border-rose-200 bg-rose-50 px-5 py-4 text-sm font-medium text-rose-800">
         Hanya pengguna berwenang yang dapat melihat laporan keuangan KSU Lidia.

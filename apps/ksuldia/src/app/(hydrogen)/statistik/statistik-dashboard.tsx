@@ -64,7 +64,11 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
   const savingsPieData = [
     { name: "Simpanan Pokok", value: metrics.totalPokok, color: "#d4af37" },
     { name: "Simpanan Wajib", value: metrics.totalWajib, color: "#991b1b" },
-    { name: "Simpanan Sukarela", value: metrics.totalSukarela, color: "#ea580c" },
+    {
+      name: "Simpanan Sukarela",
+      value: metrics.totalSukarela,
+      color: "#ea580c",
+    },
   ];
 
   const compareBarData = [
@@ -87,7 +91,8 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
             Statistik & Dashboard Analisis
           </h1>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-gray-600">
-            Monitor perkembangan total tabungan anggota, outstanding pinjaman perkreditan, penjualan toko kelontong, dan laba berjalan koperasi.
+            Monitor perkembangan total tabungan anggota, outstanding pinjaman
+            perkreditan, penjualan toko kelontong, dan laba berjalan koperasi.
           </p>
         </div>
         <button
@@ -112,8 +117,12 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
             </div>
           </div>
           <div className="mt-4">
-            <h3 className="text-2xl font-bold text-gray-900">{formatNumber(metrics.totalMembers)}</h3>
-            <p className="text-xs text-gray-500 mt-1">Anggota aktif terdaftar</p>
+            <h3 className="text-2xl font-bold text-gray-900">
+              {formatNumber(metrics.totalMembers)}
+            </h3>
+            <p className="mt-1 text-xs text-gray-500">
+              Anggota aktif terdaftar
+            </p>
           </div>
         </div>
 
@@ -128,8 +137,12 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
             </div>
           </div>
           <div className="mt-4">
-            <h3 className="text-2xl font-bold text-gray-900">{formatIDR(metrics.totalSavings)}</h3>
-            <p className="text-xs text-gray-500 mt-1">Pokok, wajib & sukarela</p>
+            <h3 className="text-2xl font-bold text-gray-900">
+              {formatIDR(metrics.totalSavings)}
+            </h3>
+            <p className="mt-1 text-xs text-gray-500">
+              Pokok, wajib & sukarela
+            </p>
           </div>
         </div>
 
@@ -144,8 +157,12 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
             </div>
           </div>
           <div className="mt-4">
-            <h3 className="text-2xl font-bold text-gray-900">{formatIDR(metrics.totalLoanRemaining)}</h3>
-            <p className="text-xs text-gray-500 mt-1">Dari {metrics.loanCount} pinjaman aktif</p>
+            <h3 className="text-2xl font-bold text-gray-900">
+              {formatIDR(metrics.totalLoanRemaining)}
+            </h3>
+            <p className="mt-1 text-xs text-gray-500">
+              Dari {metrics.loanCount} pinjaman aktif
+            </p>
           </div>
         </div>
 
@@ -160,26 +177,39 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
             </div>
           </div>
           <div className="mt-4">
-            <h3 className="text-2xl font-bold text-gray-900">{formatIDR(metrics.totalStoreSales)}</h3>
-            <p className="text-xs text-gray-500 mt-1">Periode Triwulan I 2026</p>
+            <h3 className="text-2xl font-bold text-gray-900">
+              {formatIDR(metrics.totalStoreSales)}
+            </h3>
+            <p className="mt-1 text-xs text-gray-500">
+              Periode Triwulan I 2026
+            </p>
           </div>
         </div>
       </div>
 
       {/* Auxiliary profit card */}
-      <div className="rounded-xl border border-red-100 bg-gradient-to-br from-red-50/40 to-white p-5 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col justify-between gap-4 rounded-xl border border-red-100 bg-gradient-to-br from-red-50/40 to-white p-5 shadow-sm md:flex-row md:items-center">
         <div className="flex items-center gap-4">
           <div className="rounded-full bg-red-800 p-3 text-white">
             <PiTrendUpDuotone className="h-7 w-7" />
           </div>
           <div>
-            <h4 className="text-lg font-bold text-gray-900">Total Laba Simpan Pinjam</h4>
-            <p className="text-sm text-gray-600 mt-0.5">Akumulasi laba bruto simpan pinjam yang berasal dari pendapatan Bunga, Provisi, dan Denda Anggota.</p>
+            <h4 className="text-lg font-bold text-gray-900">
+              Total Laba Simpan Pinjam
+            </h4>
+            <p className="mt-0.5 text-sm text-gray-600">
+              Akumulasi laba bruto simpan pinjam yang berasal dari pendapatan
+              Bunga, Provisi, dan Denda Anggota.
+            </p>
           </div>
         </div>
         <div className="text-right">
-          <span className="text-3xl font-extrabold text-red-850">{formatIDR(metrics.totalSpProfit)}</span>
-          <p className="text-xs text-gray-500 mt-1">Real-time dari transaksi berjalan</p>
+          <span className="text-red-850 text-3xl font-extrabold">
+            {formatIDR(metrics.totalSpProfit)}
+          </span>
+          <p className="mt-1 text-xs text-gray-500">
+            Real-time dari transaksi berjalan
+          </p>
         </div>
       </div>
 
@@ -187,10 +217,15 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Toko Sales / Purchases Trend */}
         <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm lg:col-span-2">
-          <h3 className="text-base font-bold text-gray-950 mb-6">Tren Penjualan & Pembelian Toko Lidia</h3>
+          <h3 className="mb-6 text-base font-bold text-gray-950">
+            Tren Penjualan & Pembelian Toko Lidia
+          </h3>
           <div className="h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
+              <AreaChart
+                data={chartData}
+                margin={{ top: 10, right: 10, left: 10, bottom: 0 }}
+              >
                 <defs>
                   <linearGradient id="salesGrad" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#991b1b" stopOpacity={0.2} />
@@ -201,8 +236,17 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
                     <stop offset="95%" stopColor="#ea580c" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
-                <XAxis dataKey="monthName" stroke="#9ca3af" fontSize={12} tickLine={false} />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  vertical={false}
+                  stroke="#f3f4f6"
+                />
+                <XAxis
+                  dataKey="monthName"
+                  stroke="#9ca3af"
+                  fontSize={12}
+                  tickLine={false}
+                />
                 <YAxis
                   stroke="#9ca3af"
                   fontSize={12}
@@ -212,9 +256,15 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
                 />
                 <Tooltip
                   formatter={(value: any) => [formatIDR(Number(value)), ""]}
-                  contentStyle={{ borderRadius: "8px", border: "1px solid #e5e7eb" }}
+                  contentStyle={{
+                    borderRadius: "8px",
+                    border: "1px solid #e5e7eb",
+                  }}
                 />
-                <Legend iconType="circle" wrapperStyle={{ fontSize: 12, paddingTop: 10 }} />
+                <Legend
+                  iconType="circle"
+                  wrapperStyle={{ fontSize: 12, paddingTop: 10 }}
+                />
                 <Area
                   type="monotone"
                   dataKey="sales"
@@ -239,12 +289,16 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
         </div>
 
         {/* Savings Composition */}
-        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm flex flex-col justify-between">
+        <div className="flex flex-col justify-between rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
           <div>
-            <h3 className="text-base font-bold text-gray-950 mb-2">Komposisi Dana Simpanan</h3>
-            <p className="text-xs text-gray-500 mb-4">Rasio alokasi dana pokok, wajib, dan sukarela anggota.</p>
+            <h3 className="mb-2 text-base font-bold text-gray-950">
+              Komposisi Dana Simpanan
+            </h3>
+            <p className="mb-4 text-xs text-gray-500">
+              Rasio alokasi dana pokok, wajib, dan sukarela anggota.
+            </p>
           </div>
-          <div className="h-60 w-full flex items-center justify-center">
+          <div className="flex h-60 w-full items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -260,18 +314,28 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value: any) => [formatIDR(Number(value)), ""]} />
+                <Tooltip
+                  formatter={(value: any) => [formatIDR(Number(value)), ""]}
+                />
               </PieChart>
             </ResponsiveContainer>
           </div>
-          <div className="space-y-2 mt-4">
+          <div className="mt-4 space-y-2">
             {savingsPieData.map((d) => (
-              <div key={d.name} className="flex items-center justify-between text-xs">
+              <div
+                key={d.name}
+                className="flex items-center justify-between text-xs"
+              >
                 <div className="flex items-center gap-2">
-                  <span className="h-3 w-3 rounded-full" style={{ backgroundColor: d.color }}></span>
+                  <span
+                    className="h-3 w-3 rounded-full"
+                    style={{ backgroundColor: d.color }}
+                  ></span>
                   <span className="text-gray-600">{d.name}</span>
                 </div>
-                <span className="font-semibold text-gray-900">{formatIDR(d.value)}</span>
+                <span className="font-semibold text-gray-900">
+                  {formatIDR(d.value)}
+                </span>
               </div>
             ))}
           </div>
@@ -282,13 +346,29 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Simpanan vs Pinjaman */}
         <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-          <h3 className="text-base font-bold text-gray-950 mb-2">Simpanan vs Outstanding Pinjaman</h3>
-          <p className="text-xs text-gray-500 mb-6">Likuiditas simpan pinjam anggota berjalan.</p>
+          <h3 className="mb-2 text-base font-bold text-gray-950">
+            Simpanan vs Outstanding Pinjaman
+          </h3>
+          <p className="mb-6 text-xs text-gray-500">
+            Likuiditas simpan pinjam anggota berjalan.
+          </p>
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={compareBarData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
-                <XAxis dataKey="name" stroke="#9ca3af" fontSize={12} tickLine={false} />
+              <BarChart
+                data={compareBarData}
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  vertical={false}
+                  stroke="#f3f4f6"
+                />
+                <XAxis
+                  dataKey="name"
+                  stroke="#9ca3af"
+                  fontSize={12}
+                  tickLine={false}
+                />
                 <YAxis
                   stroke="#9ca3af"
                   fontSize={12}
@@ -296,7 +376,9 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
                   axisLine={false}
                   tickFormatter={(v) => `${(v / 1000000).toFixed(0)}M`}
                 />
-                <Tooltip formatter={(value: any) => [formatIDR(Number(value)), ""]} />
+                <Tooltip
+                  formatter={(value: any) => [formatIDR(Number(value)), ""]}
+                />
                 <Legend iconType="square" />
                 <Bar dataKey="Simpanan" fill="#d4af37" radius={[4, 4, 0, 0]} />
                 <Bar dataKey="Pinjaman" fill="#991b1b" radius={[4, 4, 0, 0]} />
@@ -307,53 +389,95 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
 
         {/* Top Products stock list */}
         <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm lg:col-span-2">
-          <h3 className="text-base font-bold text-gray-950 mb-4">Daftar Produk Terlaris & Stok Terkini</h3>
+          <h3 className="mb-4 text-base font-bold text-gray-950">
+            Daftar Produk Terlaris & Stok Terkini
+          </h3>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm text-gray-500">
               <thead className="bg-gray-50 text-xs uppercase text-gray-700">
                 <tr>
-                  <th scope="col" className="px-4 py-3">Kode</th>
-                  <th scope="col" className="px-4 py-3">Nama Produk</th>
-                  <th scope="col" className="px-4 py-3">Kategori</th>
-                  <th scope="col" className="px-4 py-3 text-right">Stok</th>
-                  <th scope="col" className="px-4 py-3 text-right">Harga Jual</th>
+                  <th scope="col" className="px-4 py-3">
+                    Kode
+                  </th>
+                  <th scope="col" className="px-4 py-3">
+                    Nama Produk
+                  </th>
+                  <th scope="col" className="px-4 py-3">
+                    Kategori
+                  </th>
+                  <th scope="col" className="px-4 py-3 text-right">
+                    Stok
+                  </th>
+                  <th scope="col" className="px-4 py-3 text-right">
+                    Harga Jual
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 <tr className="border-b bg-white hover:bg-gray-50">
-                  <td className="px-4 py-3 font-semibold text-gray-950">IND-01</td>
+                  <td className="px-4 py-3 font-semibold text-gray-950">
+                    IND-01
+                  </td>
                   <td className="px-4 py-3">Indomie Goreng (Dus)</td>
                   <td className="px-4 py-3">Sembako</td>
-                  <td className="px-4 py-3 text-right font-medium text-gray-900">45</td>
-                  <td className="px-4 py-3 text-right text-gray-900">{formatIDR(115000)}</td>
+                  <td className="px-4 py-3 text-right font-medium text-gray-900">
+                    45
+                  </td>
+                  <td className="px-4 py-3 text-right text-gray-900">
+                    {formatIDR(115000)}
+                  </td>
                 </tr>
                 <tr className="border-b bg-white hover:bg-gray-50">
-                  <td className="px-4 py-3 font-semibold text-gray-950">BRS-01</td>
+                  <td className="px-4 py-3 font-semibold text-gray-950">
+                    BRS-01
+                  </td>
                   <td className="px-4 py-3">Beras Ramos Premium 5kg</td>
                   <td className="px-4 py-3">Sembako</td>
-                  <td className="px-4 py-3 text-right font-medium text-gray-900">120</td>
-                  <td className="px-4 py-3 text-right text-gray-900">{formatIDR(72000)}</td>
+                  <td className="px-4 py-3 text-right font-medium text-gray-900">
+                    120
+                  </td>
+                  <td className="px-4 py-3 text-right text-gray-900">
+                    {formatIDR(72000)}
+                  </td>
                 </tr>
                 <tr className="border-b bg-white hover:bg-gray-50">
-                  <td className="px-4 py-3 font-semibold text-gray-950">GLA-01</td>
+                  <td className="px-4 py-3 font-semibold text-gray-950">
+                    GLA-01
+                  </td>
                   <td className="px-4 py-3">Gula Pasir Gulaku 1kg</td>
                   <td className="px-4 py-3">Sembako</td>
-                  <td className="px-4 py-3 text-right font-medium text-gray-900">150</td>
-                  <td className="px-4 py-3 text-right text-gray-900">{formatIDR(17500)}</td>
+                  <td className="px-4 py-3 text-right font-medium text-gray-900">
+                    150
+                  </td>
+                  <td className="px-4 py-3 text-right text-gray-900">
+                    {formatIDR(17500)}
+                  </td>
                 </tr>
                 <tr className="border-b bg-white hover:bg-gray-50">
-                  <td className="px-4 py-3 font-semibold text-gray-950">MYK-01</td>
+                  <td className="px-4 py-3 font-semibold text-gray-950">
+                    MYK-01
+                  </td>
                   <td className="px-4 py-3">Minyak Goreng Bimoli 2L</td>
                   <td className="px-4 py-3">Sembako</td>
-                  <td className="px-4 py-3 text-right font-medium text-gray-900">85</td>
-                  <td className="px-4 py-3 text-right text-gray-900">{formatIDR(36000)}</td>
+                  <td className="px-4 py-3 text-right font-medium text-gray-900">
+                    85
+                  </td>
+                  <td className="px-4 py-3 text-right text-gray-900">
+                    {formatIDR(36000)}
+                  </td>
                 </tr>
                 <tr className="border-b bg-white hover:bg-gray-50">
-                  <td className="px-4 py-3 font-semibold text-gray-950">TEH-01</td>
+                  <td className="px-4 py-3 font-semibold text-gray-950">
+                    TEH-01
+                  </td>
                   <td className="px-4 py-3">Teh Celup Sariwangi 25s</td>
                   <td className="px-4 py-3">Minuman</td>
-                  <td className="px-4 py-3 text-right font-medium text-gray-900">200</td>
-                  <td className="px-4 py-3 text-right text-gray-900">{formatIDR(7500)}</td>
+                  <td className="px-4 py-3 text-right font-medium text-gray-900">
+                    200
+                  </td>
+                  <td className="px-4 py-3 text-right text-gray-900">
+                    {formatIDR(7500)}
+                  </td>
                 </tr>
               </tbody>
             </table>

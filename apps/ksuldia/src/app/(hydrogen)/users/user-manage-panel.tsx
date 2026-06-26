@@ -22,7 +22,6 @@ type ManagedUser = {
   email: string;
   role: string;
   isActive: boolean;
-
 };
 
 type UserManagePanelProps = {
@@ -112,8 +111,6 @@ export default function UserManagePanel({
   useEffect(() => {
     if (linkState.success) router.refresh();
   }, [linkState.success, router]);
-
-
 
   return (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">

@@ -13,7 +13,12 @@ import {
 import EmptyState from "@/app/(hydrogen)/_components/empty-state";
 import { formatNumber } from "@/lib/format";
 import { useActionFeedback } from "@/app/shared/use-action-feedback";
-import { createProductAction, updateProductAction, adjustProductStockAction, ProductActionState } from "./actions";
+import {
+  createProductAction,
+  updateProductAction,
+  adjustProductStockAction,
+  ProductActionState,
+} from "./actions";
 import { Button } from "@/components/ui/button";
 
 type Product = {
@@ -54,15 +59,15 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
   });
 
   // Actions
-  const [createState, dispatchCreate] = useActionState<ProductActionState, FormData>(
-    createProductAction,
-    { success: false, message: "" }
-  );
+  const [createState, dispatchCreate] = useActionState<
+    ProductActionState,
+    FormData
+  >(createProductAction, { success: false, message: "" });
 
-  const [updateState, dispatchUpdate] = useActionState<ProductActionState, FormData>(
-    updateProductAction,
-    { success: false, message: "" }
-  );
+  const [updateState, dispatchUpdate] = useActionState<
+    ProductActionState,
+    FormData
+  >(updateProductAction, { success: false, message: "" });
 
   const [adjState, dispatchAdj] = useActionState<ProductActionState, FormData>(
     adjustProductStockAction,
@@ -112,7 +117,9 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
         <button
           type="button"
           className={`inline-flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
-            tab === "list" ? "border-teal-700 text-teal-700" : "border-transparent text-gray-500 hover:text-gray-800"
+            tab === "list"
+              ? "border-teal-700 text-teal-700"
+              : "border-transparent text-gray-500 hover:text-gray-800"
           }`}
           onClick={() => setTab("list")}
         >
@@ -125,7 +132,9 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
         <button
           type="button"
           className={`inline-flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
-            tab === "create" ? "border-teal-700 text-teal-700" : "border-transparent text-gray-500 hover:text-gray-800"
+            tab === "create"
+              ? "border-teal-700 text-teal-700"
+              : "border-transparent text-gray-500 hover:text-gray-800"
           }`}
           onClick={() => setTab("create")}
         >
@@ -136,11 +145,15 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
 
       {/* Tab Contents */}
       {tab === "create" ? (
-        <div className="p-6 max-w-xl">
-          <h2 className="text-lg font-bold text-gray-900 mb-4">Daftarkan Produk Baru</h2>
+        <div className="max-w-xl p-6">
+          <h2 className="mb-4 text-lg font-bold text-gray-900">
+            Daftarkan Produk Baru
+          </h2>
           <form action={dispatchCreate} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Kode / Barcode Produk</label>
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Kode / Barcode Produk
+              </label>
               <input
                 type="text"
                 name="code"
@@ -149,12 +162,16 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                 placeholder="Contoh: IND-001"
               />
               {createState.errors?.code && (
-                <p className="text-xs text-red-600 mt-1">{createState.errors.code[0]}</p>
+                <p className="mt-1 text-xs text-red-600">
+                  {createState.errors.code[0]}
+                </p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Nama Produk</label>
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Nama Produk
+              </label>
               <input
                 type="text"
                 name="name"
@@ -163,12 +180,16 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                 placeholder="Contoh: Beras Ramos 5kg"
               />
               {createState.errors?.name && (
-                <p className="text-xs text-red-600 mt-1">{createState.errors.name[0]}</p>
+                <p className="mt-1 text-xs text-red-600">
+                  {createState.errors.name[0]}
+                </p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Kategori Produk (Optional)</label>
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Kategori Produk (Optional)
+              </label>
               <input
                 type="text"
                 name="category"
@@ -179,7 +200,9 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
 
             <div className="grid grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Stok Awal</label>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Stok Awal
+                </label>
                 <input
                   type="number"
                   name="stock"
@@ -189,7 +212,9 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Harga Beli (Rp)</label>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Harga Beli (Rp)
+                </label>
                 <input
                   type="number"
                   name="purchasePrice"
@@ -199,7 +224,9 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Harga Jual (Rp)</label>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Harga Jual (Rp)
+                </label>
                 <input
                   type="number"
                   name="sellingPrice"
@@ -210,7 +237,10 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
             </div>
 
             <div className="pt-2">
-              <Button type="submit" className="bg-teal-700 text-white hover:bg-teal-800">
+              <Button
+                type="submit"
+                className="bg-teal-700 text-white hover:bg-teal-800"
+              >
                 Simpan Produk
               </Button>
             </div>
@@ -219,7 +249,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
       ) : (
         <div>
           {/* Filters */}
-          <div className="grid grid-cols-1 md:grid-cols-[1fr_200px] gap-4 p-4 border-b border-gray-200">
+          <div className="grid grid-cols-1 gap-4 border-b border-gray-200 p-4 md:grid-cols-[1fr_200px]">
             <label className="relative">
               <PiMagnifyingGlassBold className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
               <input
@@ -268,35 +298,54 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {filtered.map((p) => {
-                    const margin = Number(p.sellingPrice) - Number(p.purchasePrice);
-                    const markupPct = Number(p.purchasePrice) > 0 ? (margin / Number(p.purchasePrice)) * 100 : 0;
+                    const margin =
+                      Number(p.sellingPrice) - Number(p.purchasePrice);
+                    const markupPct =
+                      Number(p.purchasePrice) > 0
+                        ? (margin / Number(p.purchasePrice)) * 100
+                        : 0;
                     return (
                       <tr key={p.id} className="hover:bg-gray-50/50">
-                        <td className="px-4 py-3 font-semibold text-gray-950">{p.code}</td>
-                        <td className="px-4 py-3 font-medium text-gray-900">{p.name}</td>
+                        <td className="px-4 py-3 font-semibold text-gray-950">
+                          {p.code}
+                        </td>
+                        <td className="px-4 py-3 font-medium text-gray-900">
+                          {p.name}
+                        </td>
                         <td className="px-4 py-3">
                           {p.category ? (
-                            <span className="inline-flex rounded-full bg-teal-50 border border-teal-100 px-2 py-0.5 text-xs text-teal-800">
+                            <span className="inline-flex rounded-full border border-teal-100 bg-teal-50 px-2 py-0.5 text-xs text-teal-800">
                               {p.category}
                             </span>
                           ) : (
-                            <span className="text-gray-400 text-xs">-</span>
+                            <span className="text-xs text-gray-400">-</span>
                           )}
                         </td>
-                        <td className={`px-4 py-3 text-center font-bold ${p.stock <= 5 ? "text-rose-600" : "text-gray-900"}`}>
+                        <td
+                          className={`px-4 py-3 text-center font-bold ${p.stock <= 5 ? "text-rose-600" : "text-gray-900"}`}
+                        >
                           {p.stock}
                         </td>
-                        <td className="px-4 py-3 text-right">Rp {formatNumber(Number(p.purchasePrice))}</td>
-                        <td className="px-4 py-3 text-right font-semibold">Rp {formatNumber(Number(p.sellingPrice))}</td>
-                        <td className="px-4 py-3 text-right text-xs text-gray-500">
-                          <span className="font-semibold text-green-700">Rp {formatNumber(margin)}</span> ({markupPct.toFixed(0)}%)
+                        <td className="px-4 py-3 text-right">
+                          Rp {formatNumber(Number(p.purchasePrice))}
                         </td>
-                        <td className="px-4 py-3 text-center flex items-center justify-center gap-1.5">
+                        <td className="px-4 py-3 text-right font-semibold">
+                          Rp {formatNumber(Number(p.sellingPrice))}
+                        </td>
+                        <td className="px-4 py-3 text-right text-xs text-gray-500">
+                          <span className="font-semibold text-green-700">
+                            Rp {formatNumber(margin)}
+                          </span>{" "}
+                          ({markupPct.toFixed(0)}%)
+                        </td>
+                        <td className="flex items-center justify-center gap-1.5 px-4 py-3 text-center">
                           <Button
                             size="sm"
                             variant="primary-soft"
-                            className="text-teal-700 border-teal-600 hover:bg-teal-50"
-                            onClick={() => setEditModal({ isOpen: true, product: p })}
+                            className="border-teal-600 text-teal-700 hover:bg-teal-50"
+                            onClick={() =>
+                              setEditModal({ isOpen: true, product: p })
+                            }
                           >
                             <PiPencilSimpleBold className="mr-1 h-3.5 w-3.5" />
                             Ubah
@@ -304,8 +353,10 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                           <Button
                             size="sm"
                             variant="neutral"
-                            className="text-amber-700 border-amber-600 hover:bg-amber-50"
-                            onClick={() => setAdjModal({ isOpen: true, product: p })}
+                            className="border-amber-600 text-amber-700 hover:bg-amber-50"
+                            onClick={() =>
+                              setAdjModal({ isOpen: true, product: p })
+                            }
                           >
                             Opname
                           </Button>
@@ -331,12 +382,20 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
               <PiXBold className="h-5 w-5" />
             </button>
 
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Ubah Data Produk</h3>
+            <h3 className="mb-4 text-lg font-bold text-gray-900">
+              Ubah Data Produk
+            </h3>
             <form action={dispatchUpdate} className="space-y-4">
-              <input type="hidden" name="productId" value={editModal.product.id} />
+              <input
+                type="hidden"
+                name="productId"
+                value={editModal.product.id}
+              />
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Kode / Barcode</label>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Kode / Barcode
+                </label>
                 <input
                   type="text"
                   name="code"
@@ -347,7 +406,9 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Nama Produk</label>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Nama Produk
+                </label>
                 <input
                   type="text"
                   name="name"
@@ -358,7 +419,9 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Kategori
+                </label>
                 <input
                   type="text"
                   name="category"
@@ -369,7 +432,9 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Harga Beli (Rp)</label>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
+                    Harga Beli (Rp)
+                  </label>
                   <input
                     type="number"
                     name="purchasePrice"
@@ -380,7 +445,9 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Harga Jual (Rp)</label>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
+                    Harga Jual (Rp)
+                  </label>
                   <input
                     type="number"
                     name="sellingPrice"
@@ -391,7 +458,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                 </div>
               </div>
 
-              <div className="flex gap-2 pt-2 justify-end">
+              <div className="flex justify-end gap-2 pt-2">
                 <Button
                   type="button"
                   variant="neutral"
@@ -399,7 +466,10 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                 >
                   Batal
                 </Button>
-                <Button type="submit" className="bg-teal-700 text-white hover:bg-teal-800">
+                <Button
+                  type="submit"
+                  className="bg-teal-700 text-white hover:bg-teal-800"
+                >
                   Simpan Perubahan
                 </Button>
               </div>
@@ -419,17 +489,30 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
               <PiXBold className="h-5 w-5" />
             </button>
 
-            <h3 className="text-lg font-bold text-gray-900 mb-2">Penyesuaian Stok (Opname Fisik)</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              Produk: <span className="font-semibold text-gray-900">{adjModal.product.name} ({adjModal.product.code})</span> <br />
-              Stok Sistem Saat Ini: <span className="font-bold text-teal-800">{adjModal.product.stock} unit</span>
+            <h3 className="mb-2 text-lg font-bold text-gray-900">
+              Penyesuaian Stok (Opname Fisik)
+            </h3>
+            <p className="mb-4 text-sm text-gray-600">
+              Produk:{" "}
+              <span className="font-semibold text-gray-900">
+                {adjModal.product.name} ({adjModal.product.code})
+              </span>{" "}
+              <br />
+              Stok Sistem Saat Ini:{" "}
+              <span className="font-bold text-teal-800">
+                {adjModal.product.stock} unit
+              </span>
             </p>
 
             <form action={dispatchAdj} className="space-y-4">
-              <input type="hidden" name="productId" value={adjModal.product.id} />
+              <input
+                type="hidden"
+                name="productId"
+                value={adjModal.product.id}
+              />
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="mb-1 block text-sm font-medium text-gray-700">
                   Jumlah Perubahan (Positif / Negatif)
                 </label>
                 <input
@@ -442,7 +525,9 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Alasan Penyesuaian</label>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Alasan Penyesuaian
+                </label>
                 <input
                   type="text"
                   name="reason"
@@ -452,7 +537,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                 />
               </div>
 
-              <div className="flex gap-2 pt-2 justify-end">
+              <div className="flex justify-end gap-2 pt-2">
                 <Button
                   type="button"
                   variant="neutral"
@@ -460,7 +545,10 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                 >
                   Batal
                 </Button>
-                <Button type="submit" className="bg-teal-700 text-white hover:bg-teal-800">
+                <Button
+                  type="submit"
+                  className="bg-teal-700 text-white hover:bg-teal-800"
+                >
                   Simpan Penyesuaian
                 </Button>
               </div>

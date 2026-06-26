@@ -14,7 +14,11 @@ import {
 import EmptyState from "@/app/(hydrogen)/_components/empty-state";
 import { formatNumber } from "@/lib/format";
 import { useActionFeedback } from "@/app/shared/use-action-feedback";
-import { createLoanAction, payInstallmentAction, LoanActionState } from "./actions";
+import {
+  createLoanAction,
+  payInstallmentAction,
+  LoanActionState,
+} from "./actions";
 import { Button } from "@/components/ui/button";
 
 type Installment = {
@@ -58,7 +62,10 @@ type PinjamanWorkspaceProps = {
   eligibleMembers: EligibleMember[];
 };
 
-export default function PinjamanWorkspace({ loans, eligibleMembers }: PinjamanWorkspaceProps) {
+export default function PinjamanWorkspace({
+  loans,
+  eligibleMembers,
+}: PinjamanWorkspaceProps) {
   const [tab, setTab] = useState<"list" | "create" | "detail">("list");
   const [query, setQuery] = useState("");
   const [selectedLoanId, setSelectedLoanId] = useState<string | null>(null);
@@ -91,10 +98,10 @@ export default function PinjamanWorkspace({ loans, eligibleMembers }: PinjamanWo
   });
 
   // Action states
-  const [createState, dispatchCreate] = useActionState<LoanActionState, FormData>(
-    createLoanAction,
-    { success: false, message: "" }
-  );
+  const [createState, dispatchCreate] = useActionState<
+    LoanActionState,
+    FormData
+  >(createLoanAction, { success: false, message: "" });
 
   const [payState, dispatchPay] = useActionState<LoanActionState, FormData>(
     payInstallmentAction,
@@ -104,7 +111,12 @@ export default function PinjamanWorkspace({ loans, eligibleMembers }: PinjamanWo
   // Use action feedback
   useActionFeedback(createState, () => {
     setTab("list");
-    setFormDataVal({ memberId: "", amount: 10000000, interestRate: 1.0, tenor: 10 });
+    setFormDataVal({
+      memberId: "",
+      amount: 10000000,
+      interestRate: 1.0,
+      tenor: 10,
+    });
   });
 
   useActionFeedback(payState, () => {
@@ -130,7 +142,7 @@ export default function PinjamanWorkspace({ loans, eligibleMembers }: PinjamanWo
     const provision = monthlyInterest; // 1x monthly interest
     const crk = amount / tenor; // 1x monthly principal installment
     const receivedAmount = amount - provision - crk;
-    const installmentAmount = (amount / tenor) + monthlyInterest;
+    const installmentAmount = amount / tenor + monthlyInterest;
 
     return {
       monthlyInterest,
@@ -161,8 +173,9 @@ export default function PinjamanWorkspace({ loans, eligibleMembers }: PinjamanWo
   // Setup default values for installment payment when modal opens
   const openPayModal = (loan: LoanWithMember, inst: Installment) => {
     const monthlyPrincipal = Number(loan.amount) / loan.tenor;
-    const monthlyInterest = Number(loan.amount) * (Number(loan.interestRate) / 100);
-    
+    const monthlyInterest =
+      Number(loan.amount) * (Number(loan.interestRate) / 100);
+
     setPayModal({
       isOpen: true,
       installment: inst,
@@ -179,7 +192,7 @@ export default function PinjamanWorkspace({ loans, eligibleMembers }: PinjamanWo
     const base = payModal.principal + payModal.interest;
     if (payModal.addPenalty) {
       // 5% of monthly installment
-      const installmentAmount = (payModal.principal + payModal.interest);
+      const installmentAmount = payModal.principal + payModal.interest;
       const penaltyAmount = installmentAmount * 0.05;
       return {
         penalty: penaltyAmount,
@@ -199,7 +212,9 @@ export default function PinjamanWorkspace({ loans, eligibleMembers }: PinjamanWo
         <button
           type="button"
           className={`inline-flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
-            tab === "list" ? "border-teal-700 text-teal-700" : "border-transparent text-gray-500 hover:text-gray-800"
+            tab === "list"
+              ? "border-teal-700 text-teal-700"
+              : "border-transparent text-gray-500 hover:text-gray-800"
           }`}
           onClick={() => setTab("list")}
         >
@@ -214,7 +229,9 @@ export default function PinjamanWorkspace({ loans, eligibleMembers }: PinjamanWo
           <button
             type="button"
             className={`inline-flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
-              tab === "detail" ? "border-teal-700 text-teal-700" : "border-transparent text-gray-500 hover:text-gray-800"
+              tab === "detail"
+                ? "border-teal-700 text-teal-700"
+                : "border-transparent text-gray-500 hover:text-gray-800"
             }`}
             onClick={() => setTab("detail")}
           >
@@ -226,7 +243,9 @@ export default function PinjamanWorkspace({ loans, eligibleMembers }: PinjamanWo
         <button
           type="button"
           className={`inline-flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
-            tab === "create" ? "border-teal-700 text-teal-700" : "border-transparent text-gray-500 hover:text-gray-800"
+            tab === "create"
+              ? "border-teal-700 text-teal-700"
+              : "border-transparent text-gray-500 hover:text-gray-800"
           }`}
           onClick={() => setTab("create")}
         >
@@ -237,17 +256,23 @@ export default function PinjamanWorkspace({ loans, eligibleMembers }: PinjamanWo
 
       {/* Tab Contents */}
       {tab === "create" ? (
-        <div className="p-6 grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-8">
-          <div className="space-y-4 max-w-xl">
-            <h2 className="text-lg font-bold text-gray-900 mb-4">Pengajuan & Pencairan Kredit</h2>
+        <div className="grid grid-cols-1 gap-8 p-6 lg:grid-cols-[1fr_400px]">
+          <div className="max-w-xl space-y-4">
+            <h2 className="mb-4 text-lg font-bold text-gray-900">
+              Pengajuan & Pencairan Kredit
+            </h2>
             <form action={dispatchCreate} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Pilih Anggota Penerima</label>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Pilih Anggota Penerima
+                </label>
                 <select
                   name="memberId"
                   required
                   value={formDataVal.memberId}
-                  onChange={(e) => setFormDataVal({ ...formDataVal, memberId: e.target.value })}
+                  onChange={(e) =>
+                    setFormDataVal({ ...formDataVal, memberId: e.target.value })
+                  }
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
                 >
                   <option value="">-- Pilih Anggota --</option>
@@ -258,60 +283,93 @@ export default function PinjamanWorkspace({ loans, eligibleMembers }: PinjamanWo
                   ))}
                 </select>
                 {createState.errors?.memberId && (
-                  <p className="text-xs text-red-600 mt-1">{createState.errors.memberId[0]}</p>
+                  <p className="mt-1 text-xs text-red-600">
+                    {createState.errors.memberId[0]}
+                  </p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Nominal Pinjaman (Rupiah)</label>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Nominal Pinjaman (Rupiah)
+                </label>
                 <input
                   type="number"
                   name="amount"
                   required
                   value={formDataVal.amount}
-                  onChange={(e) => setFormDataVal({ ...formDataVal, amount: Number(e.target.value) })}
+                  onChange={(e) =>
+                    setFormDataVal({
+                      ...formDataVal,
+                      amount: Number(e.target.value),
+                    })
+                  }
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
                 />
                 {createState.errors?.amount && (
-                  <p className="text-xs text-red-600 mt-1">{createState.errors.amount[0]}</p>
+                  <p className="mt-1 text-xs text-red-600">
+                    {createState.errors.amount[0]}
+                  </p>
                 )}
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Bunga Flat Bulanan (%)</label>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
+                    Bunga Flat Bulanan (%)
+                  </label>
                   <input
                     type="number"
                     name="interestRate"
                     step="0.01"
                     required
                     value={formDataVal.interestRate}
-                    onChange={(e) => setFormDataVal({ ...formDataVal, interestRate: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setFormDataVal({
+                        ...formDataVal,
+                        interestRate: Number(e.target.value),
+                      })
+                    }
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
                   />
                   {createState.errors?.interestRate && (
-                    <p className="text-xs text-red-600 mt-1">{createState.errors.interestRate[0]}</p>
+                    <p className="mt-1 text-xs text-red-600">
+                      {createState.errors.interestRate[0]}
+                    </p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Tenor Jangka Waktu (Bulan)</label>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
+                    Tenor Jangka Waktu (Bulan)
+                  </label>
                   <input
                     type="number"
                     name="tenor"
                     required
                     value={formDataVal.tenor}
-                    onChange={(e) => setFormDataVal({ ...formDataVal, tenor: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setFormDataVal({
+                        ...formDataVal,
+                        tenor: Number(e.target.value),
+                      })
+                    }
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
                   />
                   {createState.errors?.tenor && (
-                    <p className="text-xs text-red-600 mt-1">{createState.errors.tenor[0]}</p>
+                    <p className="mt-1 text-xs text-red-600">
+                      {createState.errors.tenor[0]}
+                    </p>
                   )}
                 </div>
               </div>
 
               <div className="pt-2">
-                <Button type="submit" className="bg-teal-700 text-white hover:bg-teal-800" disabled={!formDataVal.memberId}>
+                <Button
+                  type="submit"
+                  className="bg-teal-700 text-white hover:bg-teal-800"
+                  disabled={!formDataVal.memberId}
+                >
                   Cairkan Pinjaman
                 </Button>
               </div>
@@ -319,13 +377,17 @@ export default function PinjamanWorkspace({ loans, eligibleMembers }: PinjamanWo
           </div>
 
           {/* Calculator Info Panel */}
-          <div className="rounded-lg border border-teal-100 bg-teal-50/50 p-6 space-y-4 h-fit">
-            <h3 className="font-bold text-teal-800 border-b border-teal-200 pb-2">Simulasi Potongan & Angsuran</h3>
-            
+          <div className="h-fit space-y-4 rounded-lg border border-teal-100 bg-teal-50/50 p-6">
+            <h3 className="border-b border-teal-200 pb-2 font-bold text-teal-800">
+              Simulasi Potongan & Angsuran
+            </h3>
+
             <div className="space-y-3 text-sm text-gray-700">
               <div className="flex justify-between">
                 <span>Nilai Hutang:</span>
-                <span className="font-semibold">Rp {formatNumber(formDataVal.amount)}</span>
+                <span className="font-semibold">
+                  Rp {formatNumber(formDataVal.amount)}
+                </span>
               </div>
               <div className="flex justify-between border-b border-teal-100 pb-2">
                 <span>Tenor:</span>
@@ -333,24 +395,38 @@ export default function PinjamanWorkspace({ loans, eligibleMembers }: PinjamanWo
               </div>
 
               <div className="flex justify-between">
-                <span className="flex items-center text-rose-700">Potongan Provisi (1x Bunga):</span>
-                <span className="font-semibold text-rose-700">- Rp {formatNumber(liveCalc.provision)}</span>
+                <span className="flex items-center text-rose-700">
+                  Potongan Provisi (1x Bunga):
+                </span>
+                <span className="font-semibold text-rose-700">
+                  - Rp {formatNumber(liveCalc.provision)}
+                </span>
               </div>
               <div className="flex justify-between border-b border-teal-100 pb-2">
-                <span className="flex items-center text-rose-700">Potongan CRK (1x Angsuran):</span>
-                <span className="font-semibold text-rose-700">- Rp {formatNumber(liveCalc.crk)}</span>
+                <span className="flex items-center text-rose-700">
+                  Potongan CRK (1x Angsuran):
+                </span>
+                <span className="font-semibold text-rose-700">
+                  - Rp {formatNumber(liveCalc.crk)}
+                </span>
               </div>
 
               <div className="flex justify-between pt-1 font-bold text-gray-900">
                 <span>Sisa Diterima Peminjam:</span>
-                <span className="text-teal-700 text-lg">Rp {formatNumber(liveCalc.receivedAmount)}</span>
+                <span className="text-lg text-teal-700">
+                  Rp {formatNumber(liveCalc.receivedAmount)}
+                </span>
               </div>
 
-              <div className="border-t border-teal-200 my-4 pt-3 space-y-2">
-                <p className="text-xs text-gray-500 font-semibold uppercase">Detail Kewajiban Bulanan</p>
+              <div className="my-4 space-y-2 border-t border-teal-200 pt-3">
+                <p className="text-xs font-semibold uppercase text-gray-500">
+                  Detail Kewajiban Bulanan
+                </p>
                 <div className="flex justify-between">
                   <span>Angsuran Pokok:</span>
-                  <span>Rp {formatNumber(formDataVal.amount / formDataVal.tenor)}</span>
+                  <span>
+                    Rp {formatNumber(formDataVal.amount / formDataVal.tenor)}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Bunga Berjalan ({formDataVal.interestRate}%):</span>
@@ -365,19 +441,23 @@ export default function PinjamanWorkspace({ loans, eligibleMembers }: PinjamanWo
           </div>
         </div>
       ) : tab === "detail" ? (
-        <div className="p-6 space-y-6">
+        <div className="space-y-6 p-6">
           {selectedLoan && (
             <div>
               {/* Info Header */}
-              <div className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-100 pb-4 mb-4">
+              <div className="mb-4 flex flex-wrap items-center justify-between gap-4 border-b border-gray-100 pb-4">
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Kartu Angsuran Pinjaman</p>
+                  <p className="text-sm font-medium text-gray-500">
+                    Kartu Angsuran Pinjaman
+                  </p>
                   <h2 className="text-xl font-bold text-gray-900">
                     [{selectedLoan.member.no}] {selectedLoan.member.name}
                   </h2>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-medium text-gray-500">Status Pinjaman</p>
+                  <p className="text-sm font-medium text-gray-500">
+                    Status Pinjaman
+                  </p>
                   <span
                     className={`inline-flex rounded-md border px-3 py-1 text-sm font-bold ${
                       selectedLoan.status === "ACTIVE"
@@ -385,41 +465,64 @@ export default function PinjamanWorkspace({ loans, eligibleMembers }: PinjamanWo
                         : "border-green-200 bg-green-50 text-green-800"
                     }`}
                   >
-                    {selectedLoan.status === "ACTIVE" ? "AKTIF / BELUM LUNAS" : "LUNAS"}
+                    {selectedLoan.status === "ACTIVE"
+                      ? "AKTIF / BELUM LUNAS"
+                      : "LUNAS"}
                   </span>
                 </div>
               </div>
 
               {/* Loan parameters */}
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-4 bg-gray-50 p-4 rounded-lg mb-6">
+              <div className="mb-6 grid grid-cols-2 gap-4 rounded-lg bg-gray-50 p-4 md:grid-cols-5">
                 <div>
-                  <p className="text-xs text-gray-500 font-medium">Hutang Awal</p>
-                  <p className="font-semibold text-gray-950">Rp {formatNumber(Number(selectedLoan.amount))}</p>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500 font-medium">Tenor & Bunga</p>
+                  <p className="text-xs font-medium text-gray-500">
+                    Hutang Awal
+                  </p>
                   <p className="font-semibold text-gray-950">
-                    {selectedLoan.tenor} bln @ {Number(selectedLoan.interestRate)}%
+                    Rp {formatNumber(Number(selectedLoan.amount))}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 font-medium">Potongan Provisi</p>
-                  <p className="font-semibold text-gray-950">Rp {formatNumber(Number(selectedLoan.provision))}</p>
+                  <p className="text-xs font-medium text-gray-500">
+                    Tenor & Bunga
+                  </p>
+                  <p className="font-semibold text-gray-950">
+                    {selectedLoan.tenor} bln @{" "}
+                    {Number(selectedLoan.interestRate)}%
+                  </p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 font-medium">Potongan CRK</p>
-                  <p className="font-semibold text-gray-950">Rp {formatNumber(Number(selectedLoan.crk))}</p>
+                  <p className="text-xs font-medium text-gray-500">
+                    Potongan Provisi
+                  </p>
+                  <p className="font-semibold text-gray-950">
+                    Rp {formatNumber(Number(selectedLoan.provision))}
+                  </p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 font-medium">Diterima Bersih</p>
-                  <p className="font-semibold text-teal-800">Rp {formatNumber(Number(selectedLoan.receivedAmount))}</p>
+                  <p className="text-xs font-medium text-gray-500">
+                    Potongan CRK
+                  </p>
+                  <p className="font-semibold text-gray-950">
+                    Rp {formatNumber(Number(selectedLoan.crk))}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-gray-500">
+                    Diterima Bersih
+                  </p>
+                  <p className="font-semibold text-teal-800">
+                    Rp {formatNumber(Number(selectedLoan.receivedAmount))}
+                  </p>
                 </div>
               </div>
 
               {/* Installments Ledger */}
               <div className="space-y-3">
-                <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wider">Jadwal Angsuran Bulanan</h3>
-                <div className="overflow-x-auto rounded-lg border border-gray-150">
+                <h3 className="text-sm font-bold uppercase tracking-wider text-gray-700">
+                  Jadwal Angsuran Bulanan
+                </h3>
+                <div className="border-gray-150 overflow-x-auto rounded-lg border">
                   <table className="w-full text-left text-sm text-gray-700">
                     <thead className="bg-gray-50 text-xs font-semibold uppercase text-gray-500">
                       <tr>
@@ -428,7 +531,9 @@ export default function PinjamanWorkspace({ loans, eligibleMembers }: PinjamanWo
                         <th className="px-4 py-3 text-right">Pokok</th>
                         <th className="px-4 py-3 text-right">Bunga</th>
                         <th className="px-4 py-3 text-right">Denda</th>
-                        <th className="px-4 py-3 text-right font-bold">Total Tagihan</th>
+                        <th className="px-4 py-3 text-right font-bold">
+                          Total Tagihan
+                        </th>
                         <th className="px-4 py-3 text-center">Status</th>
                         <th className="px-4 py-3 text-center">Tanggal Bayar</th>
                         <th className="px-4 py-3 text-center">Aksi</th>
@@ -436,13 +541,18 @@ export default function PinjamanWorkspace({ loans, eligibleMembers }: PinjamanWo
                     </thead>
                     <tbody className="divide-y divide-gray-100">
                       {selectedLoan.installments.map((inst) => {
-                        const monthlyPrincipal = Number(selectedLoan.amount) / selectedLoan.tenor;
-                        const monthlyInterest = Number(selectedLoan.amount) * (Number(selectedLoan.interestRate) / 100);
+                        const monthlyPrincipal =
+                          Number(selectedLoan.amount) / selectedLoan.tenor;
+                        const monthlyInterest =
+                          Number(selectedLoan.amount) *
+                          (Number(selectedLoan.interestRate) / 100);
                         const isPaid = inst.status === "PAID";
 
                         return (
                           <tr key={inst.id} className="hover:bg-gray-50/50">
-                            <td className="px-4 py-3 font-semibold text-gray-900">{inst.monthNumber}</td>
+                            <td className="px-4 py-3 font-semibold text-gray-900">
+                              {inst.monthNumber}
+                            </td>
                             <td className="px-4 py-3">
                               {new Intl.DateTimeFormat("id-ID", {
                                 day: "2-digit",
@@ -451,16 +561,31 @@ export default function PinjamanWorkspace({ loans, eligibleMembers }: PinjamanWo
                               }).format(new Date(inst.dueDate))}
                             </td>
                             <td className="px-4 py-3 text-right font-medium">
-                              Rp {formatNumber(isPaid ? Number(inst.principalPaid) : monthlyPrincipal)}
+                              Rp{" "}
+                              {formatNumber(
+                                isPaid
+                                  ? Number(inst.principalPaid)
+                                  : monthlyPrincipal
+                              )}
                             </td>
                             <td className="px-4 py-3 text-right font-medium">
-                              Rp {formatNumber(isPaid ? Number(inst.interestPaid) : monthlyInterest)}
+                              Rp{" "}
+                              {formatNumber(
+                                isPaid
+                                  ? Number(inst.interestPaid)
+                                  : monthlyInterest
+                              )}
                             </td>
                             <td className="px-4 py-3 text-right font-medium text-rose-700">
                               Rp {formatNumber(Number(inst.penaltyPaid))}
                             </td>
-                            <td className="px-4 py-3 text-right font-bold text-teal-800 bg-teal-50/5">
-                              Rp {formatNumber(isPaid ? Number(inst.totalPaid) : (monthlyPrincipal + monthlyInterest))}
+                            <td className="bg-teal-50/5 px-4 py-3 text-right font-bold text-teal-800">
+                              Rp{" "}
+                              {formatNumber(
+                                isPaid
+                                  ? Number(inst.totalPaid)
+                                  : monthlyPrincipal + monthlyInterest
+                              )}
                             </td>
                             <td className="px-4 py-3 text-center">
                               {isPaid ? (
@@ -474,27 +599,27 @@ export default function PinjamanWorkspace({ loans, eligibleMembers }: PinjamanWo
                               )}
                             </td>
                             <td className="px-4 py-3 text-center text-gray-500">
-                              {inst.paidAt ? (
-                                new Intl.DateTimeFormat("id-ID", {
-                                  day: "2-digit",
-                                  month: "short",
-                                  year: "numeric",
-                                }).format(new Date(inst.paidAt))
-                              ) : (
-                                "-"
-                              )}
+                              {inst.paidAt
+                                ? new Intl.DateTimeFormat("id-ID", {
+                                    day: "2-digit",
+                                    month: "short",
+                                    year: "numeric",
+                                  }).format(new Date(inst.paidAt))
+                                : "-"}
                             </td>
                             <td className="px-4 py-3 text-center">
                               {!isPaid && selectedLoan.status === "ACTIVE" ? (
                                 <Button
                                   size="sm"
                                   className="bg-teal-700 text-white hover:bg-teal-800"
-                                  onClick={() => openPayModal(selectedLoan, inst)}
+                                  onClick={() =>
+                                    openPayModal(selectedLoan, inst)
+                                  }
                                 >
                                   Bayar
                                 </Button>
                               ) : (
-                                <span className="text-gray-400 text-xs">-</span>
+                                <span className="text-xs text-gray-400">-</span>
                               )}
                             </td>
                           </tr>
@@ -511,7 +636,7 @@ export default function PinjamanWorkspace({ loans, eligibleMembers }: PinjamanWo
         <div>
           {/* Filters */}
           <div className="flex border-b border-gray-200 p-4">
-            <label className="relative flex-1 max-w-md">
+            <label className="relative max-w-md flex-1">
               <PiMagnifyingGlassBold className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
               <input
                 value={query}
@@ -546,12 +671,18 @@ export default function PinjamanWorkspace({ loans, eligibleMembers }: PinjamanWo
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {filtered.map((l) => {
-                    const paidCount = l.installments.filter((i) => i.status === "PAID").length;
+                    const paidCount = l.installments.filter(
+                      (i) => i.status === "PAID"
+                    ).length;
                     return (
                       <tr key={l.id} className="hover:bg-gray-50/50">
                         <td className="px-4 py-3">
-                          <p className="font-semibold text-gray-900">{l.member.name}</p>
-                          <p className="text-xs text-gray-400">No. RAT {l.member.no}</p>
+                          <p className="font-semibold text-gray-900">
+                            {l.member.name}
+                          </p>
+                          <p className="text-xs text-gray-400">
+                            No. RAT {l.member.no}
+                          </p>
                         </td>
                         <td className="px-4 py-3">
                           {new Intl.DateTimeFormat("id-ID", {
@@ -563,7 +694,9 @@ export default function PinjamanWorkspace({ loans, eligibleMembers }: PinjamanWo
                         <td className="px-4 py-3 text-right font-semibold text-gray-950">
                           Rp {formatNumber(Number(l.amount))}
                         </td>
-                        <td className="px-4 py-3 text-center font-medium">{l.tenor} Bln</td>
+                        <td className="px-4 py-3 text-center font-medium">
+                          {l.tenor} Bln
+                        </td>
                         <td className="px-4 py-3 text-right font-bold text-teal-800">
                           Rp {formatNumber(Number(l.installmentAmount))}
                         </td>
@@ -583,10 +716,12 @@ export default function PinjamanWorkspace({ loans, eligibleMembers }: PinjamanWo
                             <span className="text-xs text-gray-500">
                               {paidCount} / {l.tenor}
                             </span>
-                            <div className="w-16 bg-gray-200 rounded-full h-1.5">
+                            <div className="h-1.5 w-16 rounded-full bg-gray-200">
                               <div
-                                className="bg-teal-600 h-1.5 rounded-full"
-                                style={{ width: `${(paidCount / l.tenor) * 100}%` }}
+                                className="h-1.5 rounded-full bg-teal-600"
+                                style={{
+                                  width: `${(paidCount / l.tenor) * 100}%`,
+                                }}
                               />
                             </div>
                           </div>
@@ -616,7 +751,7 @@ export default function PinjamanWorkspace({ loans, eligibleMembers }: PinjamanWo
       {/* Pay Installment Modal */}
       {payModal.isOpen && payModal.installment && payModal.loan && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="relative w-full max-w-md rounded-lg border border-gray-200 bg-white p-6 shadow-xl animate-in fade-in zoom-in duration-200">
+          <div className="animate-in fade-in zoom-in relative w-full max-w-md rounded-lg border border-gray-200 bg-white p-6 shadow-xl duration-200">
             <button
               onClick={() =>
                 setPayModal({
@@ -634,55 +769,92 @@ export default function PinjamanWorkspace({ loans, eligibleMembers }: PinjamanWo
               <PiXBold className="h-5 w-5" />
             </button>
 
-            <h3 className="text-lg font-bold text-gray-900 mb-2">Pencatatan Pembayaran Angsuran</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              Anggota: <span className="font-semibold text-gray-900">{payModal.loan.member.name}</span> <br />
-              Angsuran Ke- <span className="font-semibold text-teal-800">{payModal.installment.monthNumber}</span> dari {payModal.loan.tenor} bulan
+            <h3 className="mb-2 text-lg font-bold text-gray-900">
+              Pencatatan Pembayaran Angsuran
+            </h3>
+            <p className="mb-4 text-sm text-gray-600">
+              Anggota:{" "}
+              <span className="font-semibold text-gray-900">
+                {payModal.loan.member.name}
+              </span>{" "}
+              <br />
+              Angsuran Ke-{" "}
+              <span className="font-semibold text-teal-800">
+                {payModal.installment.monthNumber}
+              </span>{" "}
+              dari {payModal.loan.tenor} bulan
             </p>
 
             <form action={dispatchPay} className="space-y-4">
-              <input type="hidden" name="installmentId" value={payModal.installment.id} />
-              <input type="hidden" name="principalPaid" value={payModal.principal} />
-              <input type="hidden" name="interestPaid" value={payModal.interest} />
-              <input type="hidden" name="penaltyPaid" value={payModalTotal.penalty} />
+              <input
+                type="hidden"
+                name="installmentId"
+                value={payModal.installment.id}
+              />
+              <input
+                type="hidden"
+                name="principalPaid"
+                value={payModal.principal}
+              />
+              <input
+                type="hidden"
+                name="interestPaid"
+                value={payModal.interest}
+              />
+              <input
+                type="hidden"
+                name="penaltyPaid"
+                value={payModalTotal.penalty}
+              />
 
-              <div className="space-y-2 p-3 bg-gray-50 rounded-md">
+              <div className="space-y-2 rounded-md bg-gray-50 p-3">
                 <div className="flex justify-between text-sm text-gray-700">
                   <span>Angsuran Pokok:</span>
-                  <span className="font-medium">Rp {formatNumber(payModal.principal)}</span>
+                  <span className="font-medium">
+                    Rp {formatNumber(payModal.principal)}
+                  </span>
                 </div>
-                <div className="flex justify-between text-sm text-gray-700 border-b border-gray-200 pb-2">
+                <div className="flex justify-between border-b border-gray-200 pb-2 text-sm text-gray-700">
                   <span>Bunga (1% flat):</span>
-                  <span className="font-medium">Rp {formatNumber(payModal.interest)}</span>
+                  <span className="font-medium">
+                    Rp {formatNumber(payModal.interest)}
+                  </span>
                 </div>
 
                 <div className="pt-2">
-                  <label className="flex items-center gap-2 cursor-pointer">
+                  <label className="flex cursor-pointer items-center gap-2">
                     <input
                       type="checkbox"
                       checked={payModal.addPenalty}
-                      onChange={(e) => setPayModal({ ...payModal, addPenalty: e.target.checked })}
+                      onChange={(e) =>
+                        setPayModal({
+                          ...payModal,
+                          addPenalty: e.target.checked,
+                        })
+                      }
                       className="rounded border-gray-300 text-teal-600 focus:ring-teal-500"
                     />
-                    <span className="text-xs font-semibold text-rose-800 uppercase tracking-wide">
+                    <span className="text-xs font-semibold uppercase tracking-wide text-rose-800">
                       Kenakan Denda Keterlambatan (5%)
                     </span>
                   </label>
                   {payModal.addPenalty && (
-                    <div className="flex justify-between text-sm text-rose-700 mt-2 font-medium">
+                    <div className="mt-2 flex justify-between text-sm font-medium text-rose-700">
                       <span>Denda (5% dari nominal angsuran):</span>
                       <span>Rp {formatNumber(payModalTotal.penalty)}</span>
                     </div>
                   )}
                 </div>
 
-                <div className="flex justify-between pt-3 border-t border-gray-200 font-bold text-gray-900">
+                <div className="flex justify-between border-t border-gray-200 pt-3 font-bold text-gray-900">
                   <span>Total yang Dibayar:</span>
-                  <span className="text-teal-700 text-lg">Rp {formatNumber(payModalTotal.total)}</span>
+                  <span className="text-lg text-teal-700">
+                    Rp {formatNumber(payModalTotal.total)}
+                  </span>
                 </div>
               </div>
 
-              <div className="flex gap-2 justify-end">
+              <div className="flex justify-end gap-2">
                 <Button
                   type="button"
                   variant="neutral"
@@ -700,7 +872,10 @@ export default function PinjamanWorkspace({ loans, eligibleMembers }: PinjamanWo
                 >
                   Batal
                 </Button>
-                <Button type="submit" className="bg-teal-700 text-white hover:bg-teal-800">
+                <Button
+                  type="submit"
+                  className="bg-teal-700 text-white hover:bg-teal-800"
+                >
                   Konfirmasi Pembayaran
                 </Button>
               </div>

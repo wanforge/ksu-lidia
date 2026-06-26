@@ -19,7 +19,10 @@ export async function updateOwnPhotoAction(
 ): Promise<PhotoActionState> {
   const session = await getSession();
   if (!session?.user) {
-    return { success: false, message: "Sesi tidak valid. Silakan login ulang." };
+    return {
+      success: false,
+      message: "Sesi tidak valid. Silakan login ulang.",
+    };
   }
 
   const file = formData.get("photo");
@@ -43,7 +46,8 @@ export async function updateOwnPhotoAction(
 
     return { success: true, message: "Foto profil diperbarui." };
   } catch (e) {
-    const msg = e instanceof Error ? PHOTO_ERROR_MESSAGES[e.message] : undefined;
+    const msg =
+      e instanceof Error ? PHOTO_ERROR_MESSAGES[e.message] : undefined;
     return { success: false, message: msg ?? "Gagal mengunggah foto." };
   }
 }
@@ -55,7 +59,10 @@ export async function removeOwnPhotoAction(
 ): Promise<PhotoActionState> {
   const session = await getSession();
   if (!session?.user) {
-    return { success: false, message: "Sesi tidak valid. Silakan login ulang." };
+    return {
+      success: false,
+      message: "Sesi tidak valid. Silakan login ulang.",
+    };
   }
 
   try {

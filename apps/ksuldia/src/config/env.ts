@@ -77,10 +77,11 @@ export type ServerEnv = z.infer<typeof schema>;
 export const env: ServerEnv = schema.parse(process.env);
 
 /** Base URL kanonik dari sumber server tepercaya — untuk membangun link absolut. */
-export const appBaseUrl = (env.NEXTAUTH_URL ?? env.APP_PUBLIC_URL ?? "").replace(
-  /\/+$/,
+export const appBaseUrl = (
+  env.NEXTAUTH_URL ??
+  env.APP_PUBLIC_URL ??
   ""
-);
+).replace(/\/+$/, "");
 
 /**
  * Daftar masalah konfigurasi "wajib"/produksi (untuk halaman diagnostics atau
@@ -99,7 +100,9 @@ export function getServerEnvIssues(): string[] {
       env.FILESYSTEM_DISK === "s3" &&
       (!env.AWS_ACCESS_KEY_ID || !env.AWS_SECRET_ACCESS_KEY || !env.AWS_BUCKET)
     ) {
-      issues.push("Kredensial S3 (AWS_ACCESS_KEY_ID/SECRET/BUCKET) belum lengkap.");
+      issues.push(
+        "Kredensial S3 (AWS_ACCESS_KEY_ID/SECRET/BUCKET) belum lengkap."
+      );
     }
   }
   return issues;

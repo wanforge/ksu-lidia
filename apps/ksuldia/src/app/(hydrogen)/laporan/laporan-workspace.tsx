@@ -73,7 +73,9 @@ export default function LaporanWorkspace({
   cashBookTxs,
   storeTxs,
 }: LaporanWorkspaceProps) {
-  const [tab, setTab] = useState<"savings" | "loans" | "cashbook" | "store">("savings");
+  const [tab, setTab] = useState<"savings" | "loans" | "cashbook" | "store">(
+    "savings"
+  );
   const [searchQuery, setSearchQuery] = useState("");
 
   const formatIDR = (val: number) => {
@@ -87,9 +89,13 @@ export default function LaporanWorkspace({
   // --- TAB 1: SAVINGS COMPUTATIONS ---
   const savingsData = useMemo(() => {
     return members.map((m) => {
-      const pokok = Number(m.savingsAccounts.find((a) => a.type === "POKOK")?.balance) || 0;
-      const wajib = Number(m.savingsAccounts.find((a) => a.type === "WAJIB")?.balance) || 0;
-      const sukarela = Number(m.savingsAccounts.find((a) => a.type === "SUKARELA")?.balance) || 0;
+      const pokok =
+        Number(m.savingsAccounts.find((a) => a.type === "POKOK")?.balance) || 0;
+      const wajib =
+        Number(m.savingsAccounts.find((a) => a.type === "WAJIB")?.balance) || 0;
+      const sukarela =
+        Number(m.savingsAccounts.find((a) => a.type === "SUKARELA")?.balance) ||
+        0;
       const total = pokok + wajib + sukarela;
       return {
         id: m.id,
@@ -131,9 +137,14 @@ export default function LaporanWorkspace({
       const provision = Number(l.provision) || 0;
       const crk = Number(l.crk) || 0;
       const installmentAmount = Number(l.installmentAmount) || 0;
-      
-      const paidInstallments = l.installments.filter((i) => i.status === "PAID");
-      const totalPrincipalPaid = paidInstallments.reduce((sum, i) => sum + (Number(i.principalPaid) || 0), 0);
+
+      const paidInstallments = l.installments.filter(
+        (i) => i.status === "PAID"
+      );
+      const totalPrincipalPaid = paidInstallments.reduce(
+        (sum, i) => sum + (Number(i.principalPaid) || 0),
+        0
+      );
       const remainingBalance = amount - totalPrincipalPaid;
 
       return {
@@ -223,7 +234,7 @@ export default function LaporanWorkspace({
         purchases: janPurchases,
         invEnd: janInventoryEnd,
         hpp: janHpp,
-        grossProfit: (janSales + janConsignment) - janHpp,
+        grossProfit: janSales + janConsignment - janHpp,
       },
       feb: {
         sales: febSales,
@@ -233,7 +244,7 @@ export default function LaporanWorkspace({
         purchases: febPurchases,
         invEnd: febInventoryEnd,
         hpp: febHpp,
-        grossProfit: (febSales + febConsignment) - febHpp,
+        grossProfit: febSales + febConsignment - febHpp,
       },
       mar: {
         sales: marSales,
@@ -243,7 +254,7 @@ export default function LaporanWorkspace({
         purchases: marPurchases,
         invEnd: marInventoryEnd,
         hpp: marHpp,
-        grossProfit: (marSales + marConsignment) - marHpp,
+        grossProfit: marSales + marConsignment - marHpp,
       },
     };
   }, []);
@@ -260,7 +271,8 @@ export default function LaporanWorkspace({
             Laporan Keuangan & Buku Besar
           </h1>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-gray-600">
-            Akses rekapitulasi data simpanan anggota, rincian kredit outstanding, mutasi kas simpan pinjam, serta laporan rugi/laba toko.
+            Akses rekapitulasi data simpanan anggota, rincian kredit
+            outstanding, mutasi kas simpan pinjam, serta laporan rugi/laba toko.
           </p>
         </div>
         <button
@@ -333,7 +345,7 @@ export default function LaporanWorkspace({
       </div>
 
       {/* Tab Contents */}
-      <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
         {/* Search Header for filterable tabs */}
         {tab !== "store" && (
           <div className="border-b border-gray-200 p-4">
@@ -354,43 +366,83 @@ export default function LaporanWorkspace({
         {tab === "savings" && (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm text-gray-500">
-              <thead className="bg-gray-50 text-xs uppercase text-gray-700 border-b border-gray-200">
+              <thead className="border-b border-gray-200 bg-gray-50 text-xs uppercase text-gray-700">
                 <tr>
-                  <th scope="col" className="px-6 py-4">No. Anggota</th>
-                  <th scope="col" className="px-6 py-4">Nama Lengkap</th>
-                  <th scope="col" className="px-6 py-4 text-right">Simpanan Pokok</th>
-                  <th scope="col" className="px-6 py-4 text-right">Simpanan Wajib</th>
-                  <th scope="col" className="px-6 py-4 text-right">Simpanan Sukarela</th>
-                  <th scope="col" className="px-6 py-4 text-right font-bold text-gray-900">Total Simpanan</th>
+                  <th scope="col" className="px-6 py-4">
+                    No. Anggota
+                  </th>
+                  <th scope="col" className="px-6 py-4">
+                    Nama Lengkap
+                  </th>
+                  <th scope="col" className="px-6 py-4 text-right">
+                    Simpanan Pokok
+                  </th>
+                  <th scope="col" className="px-6 py-4 text-right">
+                    Simpanan Wajib
+                  </th>
+                  <th scope="col" className="px-6 py-4 text-right">
+                    Simpanan Sukarela
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 text-right font-bold text-gray-900"
+                  >
+                    Total Simpanan
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {filteredSavings.map((s) => (
-                  <tr key={s.id} className="hover:bg-gray-50/70 transition">
-                    <td className="px-6 py-4 font-semibold text-gray-900">#{s.no}</td>
-                    <td className="px-6 py-4 font-medium text-gray-950">{s.name}</td>
-                    <td className="px-6 py-4 text-right text-gray-900">{formatIDR(s.pokok)}</td>
-                    <td className="px-6 py-4 text-right text-gray-900">{formatIDR(s.wajib)}</td>
-                    <td className="px-6 py-4 text-right text-gray-900">{formatIDR(s.sukarela)}</td>
-                    <td className="px-6 py-4 text-right font-bold text-red-800">{formatIDR(s.total)}</td>
+                  <tr key={s.id} className="transition hover:bg-gray-50/70">
+                    <td className="px-6 py-4 font-semibold text-gray-900">
+                      #{s.no}
+                    </td>
+                    <td className="px-6 py-4 font-medium text-gray-950">
+                      {s.name}
+                    </td>
+                    <td className="px-6 py-4 text-right text-gray-900">
+                      {formatIDR(s.pokok)}
+                    </td>
+                    <td className="px-6 py-4 text-right text-gray-900">
+                      {formatIDR(s.wajib)}
+                    </td>
+                    <td className="px-6 py-4 text-right text-gray-900">
+                      {formatIDR(s.sukarela)}
+                    </td>
+                    <td className="px-6 py-4 text-right font-bold text-red-800">
+                      {formatIDR(s.total)}
+                    </td>
                   </tr>
                 ))}
                 {filteredSavings.length === 0 && (
                   <tr>
-                    <td colSpan={6} className="px-6 py-10 text-center text-gray-400">
+                    <td
+                      colSpan={6}
+                      className="px-6 py-10 text-center text-gray-400"
+                    >
                       Tidak ada data simpanan ditemukan.
                     </td>
                   </tr>
                 )}
               </tbody>
               {filteredSavings.length > 0 && (
-                <tfoot className="bg-red-50/50 border-t border-gray-200 font-bold text-gray-950">
+                <tfoot className="border-t border-gray-200 bg-red-50/50 font-bold text-gray-950">
                   <tr>
-                    <td colSpan={2} className="px-6 py-4 text-left">JUMLAH REKAPITULASI</td>
-                    <td className="px-6 py-4 text-right">{formatIDR(savingsTotals.pokok)}</td>
-                    <td className="px-6 py-4 text-right">{formatIDR(savingsTotals.wajib)}</td>
-                    <td className="px-6 py-4 text-right">{formatIDR(savingsTotals.sukarela)}</td>
-                    <td className="px-6 py-4 text-right text-red-900">{formatIDR(savingsTotals.total)}</td>
+                    <td colSpan={2} className="px-6 py-4 text-left">
+                      JUMLAH REKAPITULASI
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      {formatIDR(savingsTotals.pokok)}
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      {formatIDR(savingsTotals.wajib)}
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      {formatIDR(savingsTotals.sukarela)}
+                    </td>
+                    <td className="px-6 py-4 text-right text-red-900">
+                      {formatIDR(savingsTotals.total)}
+                    </td>
                   </tr>
                 </tfoot>
               )}
@@ -402,45 +454,84 @@ export default function LaporanWorkspace({
         {tab === "loans" && (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm text-gray-500">
-              <thead className="bg-gray-50 text-xs uppercase text-gray-700 border-b border-gray-200">
+              <thead className="border-b border-gray-200 bg-gray-50 text-xs uppercase text-gray-700">
                 <tr>
-                  <th scope="col" className="px-6 py-4">No. Anggota</th>
-                  <th scope="col" className="px-6 py-4">Nama Lengkap</th>
-                  <th scope="col" className="px-6 py-4">Tgl Cair</th>
-                  <th scope="col" className="px-6 py-4 text-right">Jumlah Pinjaman</th>
-                  <th scope="col" className="px-6 py-4 text-right">Provisi</th>
-                  <th scope="col" className="px-6 py-4 text-right">Cad. Resiko</th>
-                  <th scope="col" className="px-6 py-4 text-right">Sisa Hutang Pokok</th>
+                  <th scope="col" className="px-6 py-4">
+                    No. Anggota
+                  </th>
+                  <th scope="col" className="px-6 py-4">
+                    Nama Lengkap
+                  </th>
+                  <th scope="col" className="px-6 py-4">
+                    Tgl Cair
+                  </th>
+                  <th scope="col" className="px-6 py-4 text-right">
+                    Jumlah Pinjaman
+                  </th>
+                  <th scope="col" className="px-6 py-4 text-right">
+                    Provisi
+                  </th>
+                  <th scope="col" className="px-6 py-4 text-right">
+                    Cad. Resiko
+                  </th>
+                  <th scope="col" className="px-6 py-4 text-right">
+                    Sisa Hutang Pokok
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {filteredLoans.map((l) => (
-                  <tr key={l.id} className="hover:bg-gray-50/70 transition">
-                    <td className="px-6 py-4 font-semibold text-gray-900">#{l.no}</td>
-                    <td className="px-6 py-4 font-medium text-gray-950">{l.name}</td>
+                  <tr key={l.id} className="transition hover:bg-gray-50/70">
+                    <td className="px-6 py-4 font-semibold text-gray-900">
+                      #{l.no}
+                    </td>
+                    <td className="px-6 py-4 font-medium text-gray-950">
+                      {l.name}
+                    </td>
                     <td className="px-6 py-4 text-gray-600">{l.date}</td>
-                    <td className="px-6 py-4 text-right text-gray-900 font-semibold">{formatIDR(l.amount)}</td>
-                    <td className="px-6 py-4 text-right text-gray-900">{formatIDR(l.provision)}</td>
-                    <td className="px-6 py-4 text-right text-gray-900">{formatIDR(l.crk)}</td>
-                    <td className="px-6 py-4 text-right font-bold text-red-800">{formatIDR(l.remainingBalance)}</td>
+                    <td className="px-6 py-4 text-right font-semibold text-gray-900">
+                      {formatIDR(l.amount)}
+                    </td>
+                    <td className="px-6 py-4 text-right text-gray-900">
+                      {formatIDR(l.provision)}
+                    </td>
+                    <td className="px-6 py-4 text-right text-gray-900">
+                      {formatIDR(l.crk)}
+                    </td>
+                    <td className="px-6 py-4 text-right font-bold text-red-800">
+                      {formatIDR(l.remainingBalance)}
+                    </td>
                   </tr>
                 ))}
                 {filteredLoans.length === 0 && (
                   <tr>
-                    <td colSpan={7} className="px-6 py-10 text-center text-gray-400">
+                    <td
+                      colSpan={7}
+                      className="px-6 py-10 text-center text-gray-400"
+                    >
                       Tidak ada data pinjaman aktif ditemukan.
                     </td>
                   </tr>
                 )}
               </tbody>
               {filteredLoans.length > 0 && (
-                <tfoot className="bg-red-50/50 border-t border-gray-200 font-bold text-gray-950">
+                <tfoot className="border-t border-gray-200 bg-red-50/50 font-bold text-gray-950">
                   <tr>
-                    <td colSpan={3} className="px-6 py-4 text-left">JUMLAH REKAPITULASI</td>
-                    <td className="px-6 py-4 text-right">{formatIDR(loansTotals.amount)}</td>
-                    <td className="px-6 py-4 text-right">{formatIDR(loansTotals.provision)}</td>
-                    <td className="px-6 py-4 text-right">{formatIDR(loansTotals.crk)}</td>
-                    <td className="px-6 py-4 text-right text-red-900">{formatIDR(loansTotals.remainingBalance)}</td>
+                    <td colSpan={3} className="px-6 py-4 text-left">
+                      JUMLAH REKAPITULASI
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      {formatIDR(loansTotals.amount)}
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      {formatIDR(loansTotals.provision)}
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      {formatIDR(loansTotals.crk)}
+                    </td>
+                    <td className="px-6 py-4 text-right text-red-900">
+                      {formatIDR(loansTotals.remainingBalance)}
+                    </td>
                   </tr>
                 </tfoot>
               )}
@@ -452,20 +543,30 @@ export default function LaporanWorkspace({
         {tab === "cashbook" && (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm text-gray-500">
-              <thead className="bg-gray-50 text-xs uppercase text-gray-700 border-b border-gray-200">
+              <thead className="border-b border-gray-200 bg-gray-50 text-xs uppercase text-gray-700">
                 <tr>
-                  <th scope="col" className="px-6 py-4">Tanggal</th>
-                  <th scope="col" className="px-6 py-4">Anggota</th>
-                  <th scope="col" className="px-6 py-4">Keterangan</th>
-                  <th scope="col" className="px-6 py-4 text-right">Penerimaan (Debet)</th>
-                  <th scope="col" className="px-6 py-4 text-right">Pengeluaran (Kredit)</th>
+                  <th scope="col" className="px-6 py-4">
+                    Tanggal
+                  </th>
+                  <th scope="col" className="px-6 py-4">
+                    Anggota
+                  </th>
+                  <th scope="col" className="px-6 py-4">
+                    Keterangan
+                  </th>
+                  <th scope="col" className="px-6 py-4 text-right">
+                    Penerimaan (Debet)
+                  </th>
+                  <th scope="col" className="px-6 py-4 text-right">
+                    Pengeluaran (Kredit)
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {filteredCashBook.map((t) => {
                   const isDeposit = t.type === "DEPOSIT";
                   return (
-                    <tr key={t.id} className="hover:bg-gray-50/70 transition">
+                    <tr key={t.id} className="transition hover:bg-gray-50/70">
                       <td className="px-6 py-4 text-gray-600">
                         {new Date(t.date).toLocaleDateString("id-ID", {
                           year: "numeric",
@@ -476,7 +577,9 @@ export default function LaporanWorkspace({
                       <td className="px-6 py-4 font-semibold text-gray-900">
                         {t.member.name} (#{t.member.no})
                       </td>
-                      <td className="px-6 py-4 text-gray-700">{t.description || `${t.type} - ${t.savingsType}`}</td>
+                      <td className="px-6 py-4 text-gray-700">
+                        {t.description || `${t.type} - ${t.savingsType}`}
+                      </td>
                       <td className="px-6 py-4 text-right font-medium text-emerald-700">
                         {isDeposit ? formatIDR(Number(t.amount)) : "-"}
                       </td>
@@ -488,7 +591,10 @@ export default function LaporanWorkspace({
                 })}
                 {filteredCashBook.length === 0 && (
                   <tr>
-                    <td colSpan={5} className="px-6 py-10 text-center text-gray-400">
+                    <td
+                      colSpan={5}
+                      className="px-6 py-10 text-center text-gray-400"
+                    >
                       Tidak ada transaksi buku kas ditemukan.
                     </td>
                   </tr>
@@ -501,75 +607,155 @@ export default function LaporanWorkspace({
         {/* Tab 4: Rugi/Laba Toko P&L */}
         {tab === "store" && (
           <div className="overflow-x-auto p-6">
-            <div className="max-w-4xl mx-auto border border-gray-200 rounded-lg overflow-hidden">
+            <div className="mx-auto max-w-4xl overflow-hidden rounded-lg border border-gray-200">
               <table className="w-full text-left text-sm text-gray-950">
-                <thead className="bg-red-800 text-white text-xs uppercase font-bold">
+                <thead className="bg-red-800 text-xs font-bold uppercase text-white">
                   <tr>
-                    <th scope="col" className="px-6 py-3.5">Uraian Rugi / Laba Toko</th>
-                    <th scope="col" className="px-6 py-3.5 text-right">Januari 2026</th>
-                    <th scope="col" className="px-6 py-3.5 text-right">Februari 2026</th>
-                    <th scope="col" className="px-6 py-3.5 text-right">Maret 2026</th>
+                    <th scope="col" className="px-6 py-3.5">
+                      Uraian Rugi / Laba Toko
+                    </th>
+                    <th scope="col" className="px-6 py-3.5 text-right">
+                      Januari 2026
+                    </th>
+                    <th scope="col" className="px-6 py-3.5 text-right">
+                      Februari 2026
+                    </th>
+                    <th scope="col" className="px-6 py-3.5 text-right">
+                      Maret 2026
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {/* PENERIMAAN SECTION */}
                   <tr className="bg-red-50/30 font-bold text-red-900">
-                    <td colSpan={4} className="px-6 py-3 uppercase tracking-wider text-xs">I. Penerimaan</td>
+                    <td
+                      colSpan={4}
+                      className="px-6 py-3 text-xs uppercase tracking-wider"
+                    >
+                      I. Penerimaan
+                    </td>
                   </tr>
                   <tr>
-                    <td className="px-6 py-3.5 pl-10 text-gray-700">Penjualan Barang Toko</td>
-                    <td className="px-6 py-3.5 text-right font-semibold">{formatIDR(storePlData.jan.sales)}</td>
-                    <td className="px-6 py-3.5 text-right font-semibold">{formatIDR(storePlData.feb.sales)}</td>
-                    <td className="px-6 py-3.5 text-right font-semibold">{formatIDR(storePlData.mar.sales)}</td>
+                    <td className="px-6 py-3.5 pl-10 text-gray-700">
+                      Penjualan Barang Toko
+                    </td>
+                    <td className="px-6 py-3.5 text-right font-semibold">
+                      {formatIDR(storePlData.jan.sales)}
+                    </td>
+                    <td className="px-6 py-3.5 text-right font-semibold">
+                      {formatIDR(storePlData.feb.sales)}
+                    </td>
+                    <td className="px-6 py-3.5 text-right font-semibold">
+                      {formatIDR(storePlData.mar.sales)}
+                    </td>
                   </tr>
                   <tr>
-                    <td className="px-6 py-3.5 pl-10 text-gray-700">Penerimaan Lain (Laba Konsinyasi)</td>
-                    <td className="px-6 py-3.5 text-right text-gray-700">{formatIDR(storePlData.jan.consignment)}</td>
-                    <td className="px-6 py-3.5 text-right text-gray-700">{formatIDR(storePlData.feb.consignment)}</td>
-                    <td className="px-6 py-3.5 text-right text-gray-700">{formatIDR(storePlData.mar.consignment)}</td>
+                    <td className="px-6 py-3.5 pl-10 text-gray-700">
+                      Penerimaan Lain (Laba Konsinyasi)
+                    </td>
+                    <td className="px-6 py-3.5 text-right text-gray-700">
+                      {formatIDR(storePlData.jan.consignment)}
+                    </td>
+                    <td className="px-6 py-3.5 text-right text-gray-700">
+                      {formatIDR(storePlData.feb.consignment)}
+                    </td>
+                    <td className="px-6 py-3.5 text-right text-gray-700">
+                      {formatIDR(storePlData.mar.consignment)}
+                    </td>
                   </tr>
-                  <tr className="font-bold bg-gray-50 text-gray-900">
+                  <tr className="bg-gray-50 font-bold text-gray-900">
                     <td className="px-6 py-3.5 pl-6">Total Penerimaan</td>
-                    <td className="px-6 py-3.5 text-right">{formatIDR(storePlData.jan.totalReceipts)}</td>
-                    <td className="px-6 py-3.5 text-right">{formatIDR(storePlData.feb.totalReceipts)}</td>
-                    <td className="px-6 py-3.5 text-right">{formatIDR(storePlData.mar.totalReceipts)}</td>
+                    <td className="px-6 py-3.5 text-right">
+                      {formatIDR(storePlData.jan.totalReceipts)}
+                    </td>
+                    <td className="px-6 py-3.5 text-right">
+                      {formatIDR(storePlData.feb.totalReceipts)}
+                    </td>
+                    <td className="px-6 py-3.5 text-right">
+                      {formatIDR(storePlData.mar.totalReceipts)}
+                    </td>
                   </tr>
 
                   {/* HPP SECTION */}
-                  <tr className="bg-red-50/30 font-bold text-red-900 border-t-2 border-gray-200">
-                    <td colSpan={4} className="px-6 py-3 uppercase tracking-wider text-xs">II. Harga Pokok Penjualan (HPP)</td>
+                  <tr className="border-t-2 border-gray-200 bg-red-50/30 font-bold text-red-900">
+                    <td
+                      colSpan={4}
+                      className="px-6 py-3 text-xs uppercase tracking-wider"
+                    >
+                      II. Harga Pokok Penjualan (HPP)
+                    </td>
                   </tr>
                   <tr>
-                    <td className="px-6 py-3.5 pl-10 text-gray-700">Persediaan Awal Barang</td>
-                    <td className="px-6 py-3.5 text-right text-gray-600">{formatIDR(storePlData.jan.invStart)}</td>
-                    <td className="px-6 py-3.5 text-right text-gray-600">{formatIDR(storePlData.feb.invStart)}</td>
-                    <td className="px-6 py-3.5 text-right text-gray-600">{formatIDR(storePlData.mar.invStart)}</td>
+                    <td className="px-6 py-3.5 pl-10 text-gray-700">
+                      Persediaan Awal Barang
+                    </td>
+                    <td className="px-6 py-3.5 text-right text-gray-600">
+                      {formatIDR(storePlData.jan.invStart)}
+                    </td>
+                    <td className="px-6 py-3.5 text-right text-gray-600">
+                      {formatIDR(storePlData.feb.invStart)}
+                    </td>
+                    <td className="px-6 py-3.5 text-right text-gray-600">
+                      {formatIDR(storePlData.mar.invStart)}
+                    </td>
                   </tr>
                   <tr>
-                    <td className="px-6 py-3.5 pl-10 text-gray-700">Pembelian Barang Baru</td>
-                    <td className="px-6 py-3.5 text-right text-gray-600">{formatIDR(storePlData.jan.purchases)}</td>
-                    <td className="px-6 py-3.5 text-right text-gray-600">{formatIDR(storePlData.feb.purchases)}</td>
-                    <td className="px-6 py-3.5 text-right text-gray-600">{formatIDR(storePlData.mar.purchases)}</td>
+                    <td className="px-6 py-3.5 pl-10 text-gray-700">
+                      Pembelian Barang Baru
+                    </td>
+                    <td className="px-6 py-3.5 text-right text-gray-600">
+                      {formatIDR(storePlData.jan.purchases)}
+                    </td>
+                    <td className="px-6 py-3.5 text-right text-gray-600">
+                      {formatIDR(storePlData.feb.purchases)}
+                    </td>
+                    <td className="px-6 py-3.5 text-right text-gray-600">
+                      {formatIDR(storePlData.mar.purchases)}
+                    </td>
                   </tr>
                   <tr>
-                    <td className="px-6 py-3.5 pl-10 text-gray-700">Persediaan Akhir Barang</td>
-                    <td className="px-6 py-3.5 text-right text-gray-600">({formatIDR(storePlData.jan.invEnd)})</td>
-                    <td className="px-6 py-3.5 text-right text-gray-600">({formatIDR(storePlData.feb.invEnd)})</td>
-                    <td className="px-6 py-3.5 text-right text-gray-600">({formatIDR(storePlData.mar.invEnd)})</td>
+                    <td className="px-6 py-3.5 pl-10 text-gray-700">
+                      Persediaan Akhir Barang
+                    </td>
+                    <td className="px-6 py-3.5 text-right text-gray-600">
+                      ({formatIDR(storePlData.jan.invEnd)})
+                    </td>
+                    <td className="px-6 py-3.5 text-right text-gray-600">
+                      ({formatIDR(storePlData.feb.invEnd)})
+                    </td>
+                    <td className="px-6 py-3.5 text-right text-gray-600">
+                      ({formatIDR(storePlData.mar.invEnd)})
+                    </td>
                   </tr>
-                  <tr className="font-bold bg-gray-50 text-gray-900">
-                    <td className="px-6 py-3.5 pl-6">Harga Pokok Penjualan (HPP)</td>
-                    <td className="px-6 py-3.5 text-right text-gray-900">{formatIDR(storePlData.jan.hpp)}</td>
-                    <td className="px-6 py-3.5 text-right text-gray-900">{formatIDR(storePlData.feb.hpp)}</td>
-                    <td className="px-6 py-3.5 text-right text-gray-900">{formatIDR(storePlData.mar.hpp)}</td>
+                  <tr className="bg-gray-50 font-bold text-gray-900">
+                    <td className="px-6 py-3.5 pl-6">
+                      Harga Pokok Penjualan (HPP)
+                    </td>
+                    <td className="px-6 py-3.5 text-right text-gray-900">
+                      {formatIDR(storePlData.jan.hpp)}
+                    </td>
+                    <td className="px-6 py-3.5 text-right text-gray-900">
+                      {formatIDR(storePlData.feb.hpp)}
+                    </td>
+                    <td className="px-6 py-3.5 text-right text-gray-900">
+                      {formatIDR(storePlData.mar.hpp)}
+                    </td>
                   </tr>
 
                   {/* GROSS PROFIT SECTION */}
-                  <tr className="font-bold bg-red-800 text-white border-t-2 border-gray-250">
-                    <td className="px-6 py-4 uppercase">III. Laba Bruto Toko</td>
-                    <td className="px-6 py-4 text-right font-extrabold text-lg">{formatIDR(storePlData.jan.grossProfit)}</td>
-                    <td className="px-6 py-4 text-right font-extrabold text-lg">{formatIDR(storePlData.feb.grossProfit)}</td>
-                    <td className="px-6 py-4 text-right font-extrabold text-lg">{formatIDR(storePlData.mar.grossProfit)}</td>
+                  <tr className="border-gray-250 border-t-2 bg-red-800 font-bold text-white">
+                    <td className="px-6 py-4 uppercase">
+                      III. Laba Bruto Toko
+                    </td>
+                    <td className="px-6 py-4 text-right text-lg font-extrabold">
+                      {formatIDR(storePlData.jan.grossProfit)}
+                    </td>
+                    <td className="px-6 py-4 text-right text-lg font-extrabold">
+                      {formatIDR(storePlData.feb.grossProfit)}
+                    </td>
+                    <td className="px-6 py-4 text-right text-lg font-extrabold">
+                      {formatIDR(storePlData.mar.grossProfit)}
+                    </td>
                   </tr>
                 </tbody>
               </table>

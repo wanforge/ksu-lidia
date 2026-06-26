@@ -117,8 +117,6 @@ export default function UserCreateForm() {
           </select>
           <FieldError messages={state.errors?.role} />
         </label>
-
-
       </div>
 
       <div className="flex justify-end border-t border-gray-200 px-5 py-4">

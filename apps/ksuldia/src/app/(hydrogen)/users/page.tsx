@@ -40,13 +40,8 @@ async function getUsersData(): Promise<UsersData> {
   const now = new Date();
 
   try {
-    const [
-      rawUsers,
-      deletedUsers,
-      totalUsers,
-      activeUsers,
-      adminUsers,
-    ] = await Promise.all([
+    const [rawUsers, deletedUsers, totalUsers, activeUsers, adminUsers] =
+      await Promise.all([
         prisma.user.findMany({
           where: { deletedAt: null },
           orderBy: [{ createdAt: "desc" }, { name: "asc" }],

@@ -82,7 +82,7 @@ export default function AnimatedLogoShort({
           strokeWidth="16"
           strokeLinejoin="round"
         />
-        
+
         {/* Inner Shield Glow */}
         <path
           d="M256,60 L420,125 L420,330 C420,410 256,455 256,455 C256,455 92,410 92,330 L92,125 Z"
@@ -176,14 +176,7 @@ export default function AnimatedLogoShort({
             strokeLinejoin="round"
           />
           {/* Shopfront door */}
-          <rect
-            x="248"
-            y="374"
-            width="16"
-            height="21"
-            fill="#d4af37"
-            rx="2"
-          />
+          <rect x="248" y="374" width="16" height="21" fill="#d4af37" rx="2" />
         </g>
       </g>
     </svg>

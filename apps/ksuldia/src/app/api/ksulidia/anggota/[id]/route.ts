@@ -9,7 +9,10 @@ export async function GET(
 ) {
   const session = await getSession();
 
-  if (!session?.user || !hasPermission(session.user.role, PERMISSIONS.SIMPAN_PINJAM_VIEW)) {
+  if (
+    !session?.user ||
+    !hasPermission(session.user.role, PERMISSIONS.SIMPAN_PINJAM_VIEW)
+  ) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -40,6 +43,9 @@ export async function GET(
 
     return NextResponse.json(member);
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || "Failed to fetch member details" }, { status: 500 });
+    return NextResponse.json(
+      { error: error.message || "Failed to fetch member details" },
+      { status: 500 }
+    );
   }
 }

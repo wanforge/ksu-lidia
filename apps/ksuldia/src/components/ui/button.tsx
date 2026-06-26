@@ -96,60 +96,56 @@ type ButtonAsAnchor = CommonProps &
 
 export type ButtonProps = ButtonAsButton | ButtonAsAnchor;
 
-export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(
-  (props, ref) => {
-    const {
-      variant = "primary",
-      size = "sm",
-      isLoading = false,
-      className,
-      children,
-      ...rest
-    } = props;
+export const Button = forwardRef<
+  HTMLButtonElement | HTMLAnchorElement,
+  ButtonProps
+>((props, ref) => {
+  const {
+    variant = "primary",
+    size = "sm",
+    isLoading = false,
+    className,
+    children,
+    ...rest
+  } = props;
 
-    const classes = cn(
-      base,
-      sizeStyles[size],
-      variantStyles[variant],
-      className
-    );
+  const classes = cn(base, sizeStyles[size], variantStyles[variant], className);
 
-    if (props.as === "a") {
-      const { as: _as, ...anchorRest } =
-        rest as React.AnchorHTMLAttributes<HTMLAnchorElement> & { as?: "a" };
-      return (
-        <a
-          ref={ref as React.Ref<HTMLAnchorElement>}
-          className={classes}
-          {...anchorRest}
-        >
-          {isLoading && <Spinner />}
-          {children}
-        </a>
-      );
-    }
-
-    const {
-      as: _as,
-      type = "button",
-      disabled,
-      ...buttonRest
-    } = rest as React.ButtonHTMLAttributes<HTMLButtonElement> & { as?: "button" };
-
+  if (props.as === "a") {
+    const { as: _as, ...anchorRest } =
+      rest as React.AnchorHTMLAttributes<HTMLAnchorElement> & { as?: "a" };
     return (
-      <button
-        ref={ref as React.Ref<HTMLButtonElement>}
-        type={type}
-        disabled={disabled || isLoading}
+      <a
+        ref={ref as React.Ref<HTMLAnchorElement>}
         className={classes}
-        {...buttonRest}
+        {...anchorRest}
       >
         {isLoading && <Spinner />}
         {children}
-      </button>
+      </a>
     );
   }
-);
+
+  const {
+    as: _as,
+    type = "button",
+    disabled,
+    ...buttonRest
+  } = rest as React.ButtonHTMLAttributes<HTMLButtonElement> & { as?: "button" };
+
+  return (
+    <button
+      ref={ref as React.Ref<HTMLButtonElement>}
+      type={type}
+      disabled={disabled || isLoading}
+      className={classes}
+      {...buttonRest}
+    >
+      {isLoading && <Spinner />}
+      {children}
+    </button>
+  );
+});
 
 Button.displayName = "Button";
 

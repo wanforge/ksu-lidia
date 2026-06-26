@@ -1,8 +1,8 @@
 /**
  * Akun demo pengembang — "Sugeng Sulistiyawan" (unit IT).
  *
- * Dipakai oleh seeder agar selalu tersedia satu pengguna demo 
- * untuk SETIAP role. 
+ * Dipakai oleh seeder agar selalu tersedia satu pengguna demo
+ * untuk SETIAP role.
  *
  * Nonaktifkan dengan SEED_DEMO_USER=false. Ubah password dengan
  * SEED_DEMO_PASSWORD. Semua bersifat idempotent.

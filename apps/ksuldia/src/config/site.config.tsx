@@ -11,7 +11,8 @@ enum MODE {
 
 export const siteConfig = {
   title: "KSU Lidia - Koperasi Simpan Pinjam & Toko GKJ Manahan",
-  description: "Sistem Informasi Manajemen Anggota, Simpan Pinjam, dan Retail Toko KSU Lidia GKJ Manahan.",
+  description:
+    "Sistem Informasi Manajemen Anggota, Simpan Pinjam, dan Retail Toko KSU Lidia GKJ Manahan.",
   logo: logoImg,
   icon: logoIconImg,
   mode: MODE.LIGHT,

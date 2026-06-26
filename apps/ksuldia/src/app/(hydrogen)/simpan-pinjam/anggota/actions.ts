@@ -5,7 +5,11 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { ensureAuditContext } from "@/lib/audit-context";
 import { routes } from "@/config/routes";
-import { createMemberSchema, updateMemberSchema, savingsTransactionSchema } from "@/validators/ksulidia.schema";
+import {
+  createMemberSchema,
+  updateMemberSchema,
+  savingsTransactionSchema,
+} from "@/validators/ksulidia.schema";
 import { SavingsType, SavingsTxType } from "@prisma/client";
 
 export type MemberActionState = {
@@ -20,11 +24,16 @@ export async function createMemberAction(
 ): Promise<MemberActionState> {
   const session = await getSession();
   ensureAuditContext(
-    session?.user ? { actorId: session.user.id, actorRole: session.user.role } : undefined
+    session?.user
+      ? { actorId: session.user.id, actorRole: session.user.role }
+      : undefined
   );
 
   if (!session?.user) {
-    return { success: false, message: "Sesi Anda telah kedaluwarsa. Silakan sign in kembali." };
+    return {
+      success: false,
+      message: "Sesi Anda telah kedaluwarsa. Silakan sign in kembali.",
+    };
   }
 
   const no = formData.get("no");
@@ -108,7 +117,9 @@ export async function updateMemberAction(
 ): Promise<MemberActionState> {
   const session = await getSession();
   ensureAuditContext(
-    session?.user ? { actorId: session.user.id, actorRole: session.user.role } : undefined
+    session?.user
+      ? { actorId: session.user.id, actorRole: session.user.role }
+      : undefined
   );
 
   if (!session?.user) {
@@ -120,7 +131,12 @@ export async function updateMemberAction(
   const phone = formData.get("phone") || undefined;
   const address = formData.get("address") || undefined;
 
-  const parsed = updateMemberSchema.safeParse({ memberId, name, phone, address });
+  const parsed = updateMemberSchema.safeParse({
+    memberId,
+    name,
+    phone,
+    address,
+  });
   if (!parsed.success) {
     return {
       success: false,
@@ -155,7 +171,9 @@ export async function postSavingsTransactionAction(
 ): Promise<MemberActionState> {
   const session = await getSession();
   ensureAuditContext(
-    session?.user ? { actorId: session.user.id, actorRole: session.user.role } : undefined
+    session?.user
+      ? { actorId: session.user.id, actorRole: session.user.role }
+      : undefined
   );
 
   if (!session?.user) {
@@ -168,7 +186,13 @@ export async function postSavingsTransactionAction(
   const amount = formData.get("amount");
   const description = formData.get("description") || undefined;
 
-  const parsed = savingsTransactionSchema.safeParse({ memberId, type, savingsType, amount, description });
+  const parsed = savingsTransactionSchema.safeParse({
+    memberId,
+    type,
+    savingsType,
+    amount,
+    description,
+  });
   if (!parsed.success) {
     return {
       success: false,
@@ -195,12 +219,20 @@ export async function postSavingsTransactionAction(
 
       const currentBalance = Number(account.balance);
 
-      if (parsed.data.type === SavingsTxType.WITHDRAWAL && currentBalance < parsed.data.amount) {
-        throw new Error(`Saldo tidak cukup. Saldo saat ini: Rp ${currentBalance.toLocaleString("id-ID")}`);
+      if (
+        parsed.data.type === SavingsTxType.WITHDRAWAL &&
+        currentBalance < parsed.data.amount
+      ) {
+        throw new Error(
+          `Saldo tidak cukup. Saldo saat ini: Rp ${currentBalance.toLocaleString("id-ID")}`
+        );
       }
 
       // Update savings account balance
-      const balanceChange = parsed.data.type === SavingsTxType.DEPOSIT ? parsed.data.amount : -parsed.data.amount;
+      const balanceChange =
+        parsed.data.type === SavingsTxType.DEPOSIT
+          ? parsed.data.amount
+          : -parsed.data.amount;
       const newBalance = currentBalance + balanceChange;
 
       await tx.savingsAccount.update({
@@ -215,7 +247,11 @@ export async function postSavingsTransactionAction(
           type: parsed.data.type,
           savingsType: parsed.data.savingsType,
           amount: parsed.data.amount,
-          description: parsed.data.description || (parsed.data.type === SavingsTxType.DEPOSIT ? "Setoran tunai" : "Penarikan tunai"),
+          description:
+            parsed.data.description ||
+            (parsed.data.type === SavingsTxType.DEPOSIT
+              ? "Setoran tunai"
+              : "Penarikan tunai"),
           date: new Date(),
         },
       });

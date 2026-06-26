@@ -131,9 +131,7 @@ export default function SearchList({ onClose }: { onClose?: () => void }) {
       <div className="flex items-start justify-between gap-3 border-b border-gray-200 px-5 py-4">
         <div>
           <h2 className="text-base font-semibold text-gray-950">Pencarian</h2>
-          <p className="mt-0.5 text-xs text-gray-500">
-            Cari halaman aplikasi.
-          </p>
+          <p className="mt-0.5 text-xs text-gray-500">Cari halaman aplikasi.</p>
         </div>
         <button
           type="button"

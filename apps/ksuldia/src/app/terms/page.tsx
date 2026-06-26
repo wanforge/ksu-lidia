@@ -64,9 +64,9 @@ export default function TermsPage() {
 
       <h2>5. Ketersediaan &amp; Penyangkalan</h2>
       <p>
-        Aplikasi disediakan &quot;sebagaimana adanya&quot; (as is). Pengelola dan
-        Pemilik berupaya menjaga ketersediaan dan keamanan, namun tidak menjamin
-        operasi bebas gangguan. Pengelola data bertanggung jawab atas
+        Aplikasi disediakan &quot;sebagaimana adanya&quot; (as is). Pengelola
+        dan Pemilik berupaya menjaga ketersediaan dan keamanan, namun tidak
+        menjamin operasi bebas gangguan. Pengelola data bertanggung jawab atas
         pencadangan dan kepatuhan operasional di lingkungannya.
       </p>
 
@@ -77,15 +77,17 @@ export default function TermsPage() {
       </p>
 
       <h2>7. Hukum yang Berlaku</h2>
-      <p>
-        Ketentuan ini tunduk pada hukum Republik Indonesia.
-      </p>
+      <p>Ketentuan ini tunduk pada hukum Republik Indonesia.</p>
 
       <h2>8. Kontak</h2>
       <p>
         Pertanyaan dapat diajukan ke{" "}
         <a href={`mailto:${supportEmail}`}>{supportEmail}</a> atau{" "}
-        <a href="https://wanforge.asia" target="_blank" rel="noopener noreferrer">
+        <a
+          href="https://wanforge.asia"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           wanforge.asia
         </a>
         .

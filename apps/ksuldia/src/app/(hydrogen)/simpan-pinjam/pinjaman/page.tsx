@@ -8,7 +8,10 @@ export const dynamic = "force-dynamic";
 export default async function PinjamanPage() {
   const session = await getSession();
 
-  if (!session?.user || !hasPermission(session.user.role, PERMISSIONS.SIMPAN_PINJAM_VIEW)) {
+  if (
+    !session?.user ||
+    !hasPermission(session.user.role, PERMISSIONS.SIMPAN_PINJAM_VIEW)
+  ) {
     return (
       <div className="mx-auto w-full max-w-[900px] rounded-md border border-rose-200 bg-rose-50 px-5 py-4 text-sm font-medium text-rose-800">
         Hanya pengguna berwenang yang dapat mengelola Pinjaman & Kredit.
@@ -51,8 +54,10 @@ export default async function PinjamanPage() {
             Pinjaman & Kredit
           </h1>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-gray-600">
-            Kelola pencairan pinjaman baru beserta potongan provisi (1% flat dari total bunga) dan Cadangan Resiko Kredit (CRK - 1x angsuran pokok).
-            Catat pembayaran angsuran bulanan, dan hitung denda keterlambatan (5% dari nominal angsuran) secara otomatis.
+            Kelola pencairan pinjaman baru beserta potongan provisi (1% flat
+            dari total bunga) dan Cadangan Resiko Kredit (CRK - 1x angsuran
+            pokok). Catat pembayaran angsuran bulanan, dan hitung denda
+            keterlambatan (5% dari nominal angsuran) secara otomatis.
           </p>
         </div>
       </section>

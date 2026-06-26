@@ -5,7 +5,10 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { ensureAuditContext } from "@/lib/audit-context";
 import { routes } from "@/config/routes";
-import { createLoanSchema, payInstallmentSchema } from "@/validators/ksulidia.schema";
+import {
+  createLoanSchema,
+  payInstallmentSchema,
+} from "@/validators/ksulidia.schema";
 import { LoanStatus, InstallmentStatus } from "@prisma/client";
 
 export type LoanActionState = {
@@ -20,11 +23,16 @@ export async function createLoanAction(
 ): Promise<LoanActionState> {
   const session = await getSession();
   ensureAuditContext(
-    session?.user ? { actorId: session.user.id, actorRole: session.user.role } : undefined
+    session?.user
+      ? { actorId: session.user.id, actorRole: session.user.role }
+      : undefined
   );
 
   if (!session?.user) {
-    return { success: false, message: "Sesi Anda telah kedaluwarsa. Silakan sign in kembali." };
+    return {
+      success: false,
+      message: "Sesi Anda telah kedaluwarsa. Silakan sign in kembali.",
+    };
   }
 
   const memberId = formData.get("memberId");
@@ -32,7 +40,12 @@ export async function createLoanAction(
   const interestRate = formData.get("interestRate") ?? 1.0; // default 1% flat
   const tenor = formData.get("tenor") ?? 10; // default 10 months
 
-  const parsed = createLoanSchema.safeParse({ memberId, amount, interestRate, tenor });
+  const parsed = createLoanSchema.safeParse({
+    memberId,
+    amount,
+    interestRate,
+    tenor,
+  });
   if (!parsed.success) {
     return {
       success: false,
@@ -67,7 +80,7 @@ export async function createLoanAction(
     // receivedAmount = loanAmount - provision - crk
     const receivedAmount = loanAmount - provision - crk;
     // monthly installment amount = monthly principal + monthly interest
-    const installmentAmount = (loanAmount / months) + (loanAmount * (rate / 100));
+    const installmentAmount = loanAmount / months + loanAmount * (rate / 100);
 
     await prisma.$transaction(async (tx) => {
       const loan = await tx.loan.create({
@@ -121,7 +134,9 @@ export async function payInstallmentAction(
 ): Promise<LoanActionState> {
   const session = await getSession();
   ensureAuditContext(
-    session?.user ? { actorId: session.user.id, actorRole: session.user.role } : undefined
+    session?.user
+      ? { actorId: session.user.id, actorRole: session.user.role }
+      : undefined
   );
 
   if (!session?.user) {
@@ -133,7 +148,12 @@ export async function payInstallmentAction(
   const interestPaid = formData.get("interestPaid");
   const penaltyPaid = formData.get("penaltyPaid") ?? 0;
 
-  const parsed = payInstallmentSchema.safeParse({ installmentId, principalPaid, interestPaid, penaltyPaid });
+  const parsed = payInstallmentSchema.safeParse({
+    installmentId,
+    principalPaid,
+    interestPaid,
+    penaltyPaid,
+  });
   if (!parsed.success) {
     return {
       success: false,
@@ -157,7 +177,10 @@ export async function payInstallmentAction(
         throw new Error("Angsuran ini sudah lunas dibayar.");
       }
 
-      const totalPaid = parsed.data.principalPaid + parsed.data.interestPaid + parsed.data.penaltyPaid;
+      const totalPaid =
+        parsed.data.principalPaid +
+        parsed.data.interestPaid +
+        parsed.data.penaltyPaid;
 
       // Update installment
       await tx.loanInstallment.update({

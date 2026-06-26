@@ -1,15 +1,23 @@
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import EmptyState from "@/app/(hydrogen)/_components/empty-state";
-import { PiUserCircleDuotone, PiShieldCheckDuotone, PiClockCountdownDuotone } from "react-icons/pi";
+import {
+  PiUserCircleDuotone,
+  PiShieldCheckDuotone,
+  PiClockCountdownDuotone,
+} from "react-icons/pi";
 
 export const dynamic = "force-dynamic";
 
 function InfoItem({ label, value }: { label: string; value?: string | null }) {
   return (
     <div className="flex flex-col gap-1 border-b border-gray-100 pb-3">
-      <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">{label}</span>
-      <span className="text-sm font-semibold text-gray-900">{value || "-"}</span>
+      <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+        {label}
+      </span>
+      <span className="text-sm font-semibold text-gray-900">
+        {value || "-"}
+      </span>
     </div>
   );
 }
@@ -77,9 +85,13 @@ export default async function MePage() {
         </div>
 
         <div className="flex flex-wrap gap-2">
-          <span className={`inline-flex rounded-md border px-2 py-1 text-xs font-semibold ${
-            user.isActive ? "border-teal-200 bg-teal-50 text-teal-800" : "border-gray-200 bg-gray-50 text-gray-600"
-          }`}>
+          <span
+            className={`inline-flex rounded-md border px-2 py-1 text-xs font-semibold ${
+              user.isActive
+                ? "border-teal-200 bg-teal-50 text-teal-800"
+                : "border-gray-200 bg-gray-50 text-gray-600"
+            }`}
+          >
             {user.isActive ? "Aktif" : "Tidak Aktif"}
           </span>
           <span className="inline-flex rounded-md border border-gray-200 bg-gray-50 px-2 py-1 text-xs font-semibold text-gray-700">
@@ -104,14 +116,25 @@ export default async function MePage() {
 
         {/* Details Card */}
         <div className="rounded-xl border border-gray-200 bg-white p-6">
-          <h3 className="mb-4 text-base font-bold text-gray-950">Detail Informasi Akun</h3>
+          <h3 className="mb-4 text-base font-bold text-gray-950">
+            Detail Informasi Akun
+          </h3>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <InfoItem label="Nama Lengkap" value={user.name} />
             <InfoItem label="Alamat Email" value={user.email} />
             <InfoItem label="Hak Akses (Role)" value={user.role} />
-            <InfoItem label="Status Akun" value={user.isActive ? "Aktif" : "Tidak Aktif"} />
-            <InfoItem label="Login Terakhir" value={formatDate(user.lastLoginAt)} />
-            <InfoItem label="Tanggal Registrasi" value={formatDate(user.createdAt)} />
+            <InfoItem
+              label="Status Akun"
+              value={user.isActive ? "Aktif" : "Tidak Aktif"}
+            />
+            <InfoItem
+              label="Login Terakhir"
+              value={formatDate(user.lastLoginAt)}
+            />
+            <InfoItem
+              label="Tanggal Registrasi"
+              value={formatDate(user.createdAt)}
+            />
           </div>
         </div>
       </section>

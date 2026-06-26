@@ -8,7 +8,10 @@ export const dynamic = "force-dynamic";
 export default async function StatistikPage() {
   const session = await getSession();
 
-  if (!session?.user || !hasPermission(session.user.role, PERMISSIONS.SIMPAN_PINJAM_VIEW)) {
+  if (
+    !session?.user ||
+    !hasPermission(session.user.role, PERMISSIONS.SIMPAN_PINJAM_VIEW)
+  ) {
     return (
       <div className="mx-auto w-full max-w-[900px] rounded-md border border-rose-200 bg-rose-50 px-5 py-4 text-sm font-medium text-rose-800">
         Hanya pengguna berwenang yang dapat melihat data statistik KSU Lidia.
@@ -48,7 +51,7 @@ export default async function StatistikPage() {
   let totalLoanRemaining = 0;
   let totalInterestEarned = 0; // accumulated paid interest
   let totalProvisionEarned = 0; // total provision fees
-  let totalPenaltyEarned = 0;   // total penalty paid
+  let totalPenaltyEarned = 0; // total penalty paid
 
   loans.forEach((l) => {
     const loanAmt = Number(l.amount) || 0;
@@ -63,11 +66,12 @@ export default async function StatistikPage() {
         totalPenaltyEarned += Number(inst.penaltyPaid) || 0;
       }
     });
-    totalLoanRemaining += (loanAmt - principalPaid);
+    totalLoanRemaining += loanAmt - principalPaid;
   });
 
   // Profit from savings & loans (bunga + provisi + denda)
-  const totalSpProfit = totalInterestEarned + totalProvisionEarned + totalPenaltyEarned;
+  const totalSpProfit =
+    totalInterestEarned + totalProvisionEarned + totalPenaltyEarned;
 
   // 4. Fetch store transactions
   const storeTx = await prisma.productTransaction.findMany();
@@ -84,7 +88,10 @@ export default async function StatistikPage() {
   });
 
   // Calculate monthly sales & purchases for chart (real database data)
-  const monthlyMap: Record<number, { monthName: string; sales: number; purchases: number }> = {
+  const monthlyMap: Record<
+    number,
+    { monthName: string; sales: number; purchases: number }
+  > = {
     0: { monthName: "Jan", sales: 0, purchases: 0 },
     1: { monthName: "Feb", sales: 0, purchases: 0 },
     2: { monthName: "Mar", sales: 0, purchases: 0 },

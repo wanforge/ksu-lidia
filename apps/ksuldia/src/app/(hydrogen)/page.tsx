@@ -80,7 +80,8 @@ export default async function Home() {
           {firstName ? `${firstName} 👋` : "Selamat datang 👋"}
         </h1>
         <p className="mt-1 text-sm text-gray-600">
-          Selamat datang di panel admin utama base project Anda. Silakan pilih menu di bawah untuk memulai.
+          Selamat datang di panel admin utama base project Anda. Silakan pilih
+          menu di bawah untuk memulai.
         </p>
       </section>
 

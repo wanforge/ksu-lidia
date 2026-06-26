@@ -11,7 +11,7 @@ const ICON = (
       strokeLinejoin="round"
       className="apl-shield"
     />
-    
+
     {/* Inner Shield Glow */}
     <path
       d="M256,60 L420,125 L420,330 C420,410 256,455 256,455 C256,455 92,410 92,330 L92,125 Z"
@@ -92,10 +92,7 @@ const ICON = (
         strokeDasharray="6 4"
       />
       {/* Shopfront body */}
-      <path
-        d="M236,395 L236,370 L256,350 L276,370 L276,395 Z"
-        fill="#991b1b"
-      />
+      <path d="M236,395 L236,370 L256,350 L276,370 L276,395 Z" fill="#991b1b" />
       {/* Shopfront roof */}
       <path
         d="M230,370 L256,346 L282,370"
@@ -106,14 +103,7 @@ const ICON = (
         strokeLinejoin="round"
       />
       {/* Shopfront door */}
-      <rect
-        x="248"
-        y="374"
-        width="16"
-        height="21"
-        fill="#d4af37"
-        rx="2"
-      />
+      <rect x="248" y="374" width="16" height="21" fill="#d4af37" rx="2" />
     </g>
   </g>
 );

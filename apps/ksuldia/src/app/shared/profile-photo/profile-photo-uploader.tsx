@@ -56,7 +56,11 @@ export default function ProfilePhotoUploader() {
             uploadPending ? "cursor-not-allowed opacity-60" : ""
           }`}
         >
-          {uploadPending ? "Mengunggah..." : image ? "Ubah foto" : "Tambah foto"}
+          {uploadPending
+            ? "Mengunggah..."
+            : image
+              ? "Ubah foto"
+              : "Tambah foto"}
           <input
             type="file"
             name="photo"

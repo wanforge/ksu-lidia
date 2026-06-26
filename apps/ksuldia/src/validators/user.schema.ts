@@ -6,22 +6,19 @@ const passwordSchema = z
   .min(8, "Password minimal 8 karakter.")
   .max(128, "Password terlalu panjang.");
 
+export const createUserSchema = z.object({
+  name: z.string().trim().min(2, "Nama user wajib diisi."),
+  email: z.string().trim().email("Email tidak valid.").toLowerCase(),
+  password: passwordSchema,
+  role: z.nativeEnum(UserRole),
+});
 
-export const createUserSchema = z
-  .object({
-    name: z.string().trim().min(2, "Nama user wajib diisi."),
-    email: z.string().trim().email("Email tidak valid.").toLowerCase(),
-    password: passwordSchema,
-    role: z.nativeEnum(UserRole),
-  });
-
-export const updateUserSchema = z
-  .object({
-    userId: z.string().trim().min(1, "User wajib dipilih."),
-    name: z.string().trim().min(2, "Nama user wajib diisi."),
-    role: z.nativeEnum(UserRole),
-    isActive: z.boolean(),
-  });
+export const updateUserSchema = z.object({
+  userId: z.string().trim().min(1, "User wajib dipilih."),
+  name: z.string().trim().min(2, "Nama user wajib diisi."),
+  role: z.nativeEnum(UserRole),
+  isActive: z.boolean(),
+});
 
 export const deleteUserSchema = z.object({
   userId: z.string().trim().min(1, "User wajib dipilih."),

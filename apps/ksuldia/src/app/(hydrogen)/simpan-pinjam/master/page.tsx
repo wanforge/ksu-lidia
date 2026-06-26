@@ -13,7 +13,8 @@ export default async function MasterConfigPage() {
   if (!session?.user || session.user.role !== UserRole.ADMIN) {
     return (
       <div className="mx-auto w-full max-w-[900px] rounded-md border border-rose-200 bg-rose-50 px-5 py-4 text-sm font-medium text-rose-800">
-        Hanya administrator yang memiliki wewenang untuk merubah konfigurasi master KSU Lidia.
+        Hanya administrator yang memiliki wewenang untuk merubah konfigurasi
+        master KSU Lidia.
       </div>
     );
   }
@@ -28,7 +29,8 @@ export default async function MasterConfigPage() {
     minPokok: 100000,
     wajibMonthly: 10000,
     cooperativeName: "KSU Lidia GKJ Manahan",
-    cooperativeAddress: "Jl. Adi Sucipto No. 12, Manahan, Surakarta, Jawa Tengah",
+    cooperativeAddress:
+      "Jl. Adi Sucipto No. 12, Manahan, Surakarta, Jawa Tengah",
   };
 
   try {
@@ -49,7 +51,9 @@ export default async function MasterConfigPage() {
             Pengaturan Master Koperasi
           </h1>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-gray-600">
-            Atur parameter dasar koperasi: persentase bunga pinjaman bulanan, potongan biaya provisi pencairan, cadangan resiko kredit (CRK), iuran wajib bulanan, dan identitas lembaga.
+            Atur parameter dasar koperasi: persentase bunga pinjaman bulanan,
+            potongan biaya provisi pencairan, cadangan resiko kredit (CRK),
+            iuran wajib bulanan, dan identitas lembaga.
           </p>
         </div>
       </section>

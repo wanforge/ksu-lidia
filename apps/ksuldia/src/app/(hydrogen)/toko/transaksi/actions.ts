@@ -20,11 +20,16 @@ export async function recordTransactionAction(
 ): Promise<TxActionState> {
   const session = await getSession();
   ensureAuditContext(
-    session?.user ? { actorId: session.user.id, actorRole: session.user.role } : undefined
+    session?.user
+      ? { actorId: session.user.id, actorRole: session.user.role }
+      : undefined
   );
 
   if (!session?.user) {
-    return { success: false, message: "Sesi Anda telah kedaluwarsa. Silakan sign in kembali." };
+    return {
+      success: false,
+      message: "Sesi Anda telah kedaluwarsa. Silakan sign in kembali.",
+    };
   }
 
   const type = formData.get("type"); // PURCHASE | SALE
@@ -38,7 +43,11 @@ export async function recordTransactionAction(
     return { success: false, message: "Format item transaksi tidak valid." };
   }
 
-  const parsed = createProductTransactionSchema.safeParse({ type, notes, items });
+  const parsed = createProductTransactionSchema.safeParse({
+    type,
+    notes,
+    items,
+  });
   if (!parsed.success) {
     return {
       success: false,
@@ -72,12 +81,16 @@ export async function recordTransactionAction(
         });
 
         if (!product) {
-          throw new Error(`Produk dengan ID ${item.productId} tidak ditemukan.`);
+          throw new Error(
+            `Produk dengan ID ${item.productId} tidak ditemukan.`
+          );
         }
 
         if (parsed.data.type === ProductTxType.SALE) {
           if (product.stock < item.quantity) {
-            throw new Error(`Stok produk "${product.name}" tidak mencukupi. Sisa: ${product.stock}, diminta: ${item.quantity}`);
+            throw new Error(
+              `Stok produk "${product.name}" tidak mencukupi. Sisa: ${product.stock}, diminta: ${item.quantity}`
+            );
           }
 
           // Decrease stock
@@ -111,7 +124,10 @@ export async function recordTransactionAction(
 
     revalidatePath(routes.toko.transaksi);
     revalidatePath(routes.toko.produk);
-    return { success: true, message: `Transaksi ${parsed.data.type === ProductTxType.SALE ? "Penjualan" : "Pembelian"} berhasil dicatat.` };
+    return {
+      success: true,
+      message: `Transaksi ${parsed.data.type === ProductTxType.SALE ? "Penjualan" : "Pembelian"} berhasil dicatat.`,
+    };
   } catch (error: any) {
     return {
       success: false,

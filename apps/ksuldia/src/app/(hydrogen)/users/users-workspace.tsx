@@ -102,8 +102,7 @@ export default function UsersWorkspace({
       if (roleFilter && u.role !== roleFilter) return false;
       if (!q) return true;
       return (
-        u.name.toLowerCase().includes(q) ||
-        u.email.toLowerCase().includes(q)
+        u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)
       );
     });
   }, [users, query, roleFilter]);
@@ -159,9 +158,9 @@ export default function UsersWorkspace({
           <div className="flex items-start gap-2 border-b border-gray-100 bg-rose-50/50 px-5 py-3 text-xs text-rose-800">
             <PiTrashDuotone className="mt-0.5 h-4 w-4 shrink-0" />
             <p>
-              Penghapusan user bersifat <strong>soft-delete</strong> — data tetap
-              tersimpan dan akunnya dinonaktifkan. Pulihkan untuk mengaktifkan
-              kembali.
+              Penghapusan user bersifat <strong>soft-delete</strong> — data
+              tetap tersimpan dan akunnya dinonaktifkan. Pulihkan untuk
+              mengaktifkan kembali.
             </p>
           </div>
           {deletedUsers.length === 0 ? (
@@ -333,7 +332,6 @@ export default function UsersWorkspace({
                                   email: user.email,
                                   role: user.role,
                                   isActive: user.isActive,
-
                                 }}
                                 isSelf={user.id === currentUserId}
                               />

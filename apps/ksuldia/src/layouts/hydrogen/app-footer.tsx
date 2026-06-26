@@ -18,11 +18,19 @@ export default function AppFooter() {
           . Hak cipta dilindungi undang-undang.
         </span>
         <span className="flex items-center gap-3">
-          <Link href="/privacy" className="transition-colors hover:text-gray-900 dark:hover:text-gray-200">
+          <Link
+            href="/privacy"
+            className="transition-colors hover:text-gray-900 dark:hover:text-gray-200"
+          >
             Kebijakan Privasi
           </Link>
-          <span aria-hidden className="opacity-40">·</span>
-          <Link href="/terms" className="transition-colors hover:text-gray-900 dark:hover:text-gray-200">
+          <span aria-hidden className="opacity-40">
+            ·
+          </span>
+          <Link
+            href="/terms"
+            className="transition-colors hover:text-gray-900 dark:hover:text-gray-200"
+          >
             Ketentuan Layanan
           </Link>
         </span>

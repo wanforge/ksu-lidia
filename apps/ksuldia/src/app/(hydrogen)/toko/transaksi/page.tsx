@@ -8,7 +8,10 @@ export const dynamic = "force-dynamic";
 export default async function TransaksiPage() {
   const session = await getSession();
 
-  if (!session?.user || !hasPermission(session.user.role, PERMISSIONS.TOKO_VIEW)) {
+  if (
+    !session?.user ||
+    !hasPermission(session.user.role, PERMISSIONS.TOKO_VIEW)
+  ) {
     return (
       <div className="mx-auto w-full max-w-[900px] rounded-md border border-rose-200 bg-rose-50 px-5 py-4 text-sm font-medium text-rose-800">
         Hanya pengguna berwenang yang dapat mengelola Transaksi Toko Lidia.
@@ -44,8 +47,9 @@ export default async function TransaksiPage() {
             Transaksi & Mutasi Toko
           </h1>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-gray-600">
-            Catat dan pantau transaksi pembelian stok (restock dari supplier) serta rekap transaksi penjualan produk.
-            Sistem otomatis memperbarui kuantitas inventaris barang secara real-time.
+            Catat dan pantau transaksi pembelian stok (restock dari supplier)
+            serta rekap transaksi penjualan produk. Sistem otomatis memperbarui
+            kuantitas inventaris barang secara real-time.
           </p>
         </div>
       </section>

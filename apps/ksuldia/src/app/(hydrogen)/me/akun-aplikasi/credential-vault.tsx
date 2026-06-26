@@ -116,7 +116,9 @@ function CredentialForm({
 
   useEffect(() => {
     if (state.success) {
-      notify.success(isEdit ? "Kredensial diperbarui." : "Kredensial ditambahkan.");
+      notify.success(
+        isEdit ? "Kredensial diperbarui." : "Kredensial ditambahkan."
+      );
       onCancel();
     } else if (state.error) {
       notify.error(state.error);

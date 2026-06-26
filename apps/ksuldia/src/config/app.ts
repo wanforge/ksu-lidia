@@ -25,9 +25,7 @@ export const appConfig = {
   /** Email domain used for placeholders and the seeded admin account. */
   emailDomain: env("NEXT_PUBLIC_ORG_EMAIL_DOMAIN") ?? "instansi.go.id",
   /** Product tagline / description. */
-  tagline:
-    env("NEXT_PUBLIC_APP_TAGLINE") ??
-    "Sistem Informasi KSU Lidia",
+  tagline: env("NEXT_PUBLIC_APP_TAGLINE") ?? "Sistem Informasi KSU Lidia",
   /** Copyright holder shown in footers and metadata. */
   copyrightHolder:
     env("NEXT_PUBLIC_COPYRIGHT_HOLDER") ??

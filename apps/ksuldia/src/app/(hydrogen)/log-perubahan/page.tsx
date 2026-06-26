@@ -340,10 +340,8 @@ export default async function DataChangeLogPage({
                           ? `${formatNumber(row.rowCount)} baris`
                           : null,
                       operation: row.operation,
-                      operationLabel: semanticOperation(
-                        row.operation,
-                        row.diff
-                      ).label,
+                      operationLabel: semanticOperation(row.operation, row.diff)
+                        .label,
                       operationToneClass: semanticOperation(
                         row.operation,
                         row.diff

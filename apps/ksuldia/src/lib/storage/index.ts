@@ -27,7 +27,11 @@ export const TRASH_PREFIX = ".trash";
 export const EMPLOYEE_PHOTO_COLLECTION = "employee-photos";
 export const USER_PHOTO_COLLECTION = "user-photos";
 export const MAX_PHOTO_SIZE = 5 * 1024 * 1024; // 5 MB
-export const PHOTO_MIME_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+export const PHOTO_MIME_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+]);
 
 export type SavedDocumentFile = {
   originalName: string;
@@ -113,7 +117,8 @@ export async function readEmployeeDocumentFile(
 function validatePhotoUpload(file: File) {
   if (file.size <= 0) throw new Error("EMPTY_FILE");
   if (file.size > MAX_PHOTO_SIZE) throw new Error("FILE_TOO_LARGE");
-  if (!PHOTO_MIME_TYPES.has(file.type)) throw new Error("UNSUPPORTED_FILE_TYPE");
+  if (!PHOTO_MIME_TYPES.has(file.type))
+    throw new Error("UNSUPPORTED_FILE_TYPE");
 }
 
 /**

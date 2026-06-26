@@ -1,8 +1,17 @@
 import { z } from "zod";
-import { SavingsType, SavingsTxType, LoanStatus, InstallmentStatus, ProductTxType } from "@prisma/client";
+import {
+  SavingsType,
+  SavingsTxType,
+  LoanStatus,
+  InstallmentStatus,
+  ProductTxType,
+} from "@prisma/client";
 
 export const createMemberSchema = z.object({
-  no: z.coerce.number().int().positive("Nomor anggota harus bilangan bulat positif"),
+  no: z.coerce
+    .number()
+    .int()
+    .positive("Nomor anggota harus bilangan bulat positif"),
   name: z.string().min(2, "Nama minimal 2 karakter"),
   phone: z.string().optional(),
   address: z.string().optional(),
@@ -32,9 +41,15 @@ export const createLoanSchema = z.object({
 
 export const payInstallmentSchema = z.object({
   installmentId: z.string().uuid("ID angsuran tidak valid"),
-  principalPaid: z.coerce.number().nonnegative("Pokok dibayar tidak boleh negatif"),
-  interestPaid: z.coerce.number().nonnegative("Bunga dibayar tidak boleh negatif"),
-  penaltyPaid: z.coerce.number().nonnegative("Denda dibayar tidak boleh negatif"),
+  principalPaid: z.coerce
+    .number()
+    .nonnegative("Pokok dibayar tidak boleh negatif"),
+  interestPaid: z.coerce
+    .number()
+    .nonnegative("Bunga dibayar tidak boleh negatif"),
+  penaltyPaid: z.coerce
+    .number()
+    .nonnegative("Denda dibayar tidak boleh negatif"),
 });
 
 export const createProductSchema = z.object({
@@ -42,7 +57,9 @@ export const createProductSchema = z.object({
   name: z.string().min(2, "Nama produk minimal 2 karakter"),
   category: z.string().optional(),
   stock: z.coerce.number().int().nonnegative("Stok awal tidak boleh negatif"),
-  purchasePrice: z.coerce.number().nonnegative("Harga beli tidak boleh negatif"),
+  purchasePrice: z.coerce
+    .number()
+    .nonnegative("Harga beli tidak boleh negatif"),
   sellingPrice: z.coerce.number().nonnegative("Harga jual tidak boleh negatif"),
 });
 
@@ -51,7 +68,9 @@ export const updateProductSchema = z.object({
   code: z.string().min(2, "Kode minimal 2 karakter"),
   name: z.string().min(2, "Nama produk minimal 2 karakter"),
   category: z.string().optional(),
-  purchasePrice: z.coerce.number().nonnegative("Harga beli tidak boleh negatif"),
+  purchasePrice: z.coerce
+    .number()
+    .nonnegative("Harga beli tidak boleh negatif"),
   sellingPrice: z.coerce.number().nonnegative("Harga jual tidak boleh negatif"),
 });
 
@@ -70,5 +89,7 @@ export const createProductTransactionItemSchema = z.object({
 export const createProductTransactionSchema = z.object({
   type: z.nativeEnum(ProductTxType),
   notes: z.string().optional(),
-  items: z.array(createProductTransactionItemSchema).min(1, "Minimal pilih 1 item"),
+  items: z
+    .array(createProductTransactionItemSchema)
+    .min(1, "Minimal pilih 1 item"),
 });

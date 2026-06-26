@@ -8,7 +8,10 @@ export const dynamic = "force-dynamic";
 export default async function ProdukPage() {
   const session = await getSession();
 
-  if (!session?.user || !hasPermission(session.user.role, PERMISSIONS.TOKO_VIEW)) {
+  if (
+    !session?.user ||
+    !hasPermission(session.user.role, PERMISSIONS.TOKO_VIEW)
+  ) {
     return (
       <div className="mx-auto w-full max-w-[900px] rounded-md border border-rose-200 bg-rose-50 px-5 py-4 text-sm font-medium text-rose-800">
         Hanya pengguna berwenang yang dapat melihat data Toko Lidia.
@@ -32,7 +35,8 @@ export default async function ProdukPage() {
             Katalog Produk & Inventaris
           </h1>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-gray-600">
-            Daftarkan produk baru, kelola harga beli serta harga jual barang, dan sesuaikan stok fisik barang toko (opname) secara berkala.
+            Daftarkan produk baru, kelola harga beli serta harga jual barang,
+            dan sesuaikan stok fisik barang toko (opname) secara berkala.
           </p>
         </div>
       </section>
