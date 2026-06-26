@@ -34,6 +34,14 @@ export const PERMISSIONS = {
   // Vault akun aplikasi
   VAULT_VIEW: "vault.view", // lihat & kelola vault sendiri
   VAULT_MANAGE_ANY: "vault.manageAny", // lihat & kelola vault semua user (ADMIN)
+
+  // Simpan Pinjam
+  SIMPAN_PINJAM_VIEW: "simpanPinjam.view",
+  SIMPAN_PINJAM_MANAGE: "simpanPinjam.manage",
+
+  // Toko
+  TOKO_VIEW: "toko.view",
+  TOKO_MANAGE: "toko.manage",
 } as const;
 
 export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];
@@ -48,6 +56,10 @@ const OPERATOR_PERMISSIONS: Permission[] = [
   PERMISSIONS.AUDIT_VIEW,
   PERMISSIONS.PORTAL_VIEW,
   PERMISSIONS.VAULT_VIEW,
+  PERMISSIONS.SIMPAN_PINJAM_VIEW,
+  PERMISSIONS.SIMPAN_PINJAM_MANAGE,
+  PERMISSIONS.TOKO_VIEW,
+  PERMISSIONS.TOKO_MANAGE,
 ];
 
 const VERIFIER_PERMISSIONS: Permission[] = [
@@ -55,12 +67,16 @@ const VERIFIER_PERMISSIONS: Permission[] = [
   PERMISSIONS.AUDIT_VIEW,
   PERMISSIONS.PORTAL_VIEW,
   PERMISSIONS.VAULT_VIEW,
+  PERMISSIONS.SIMPAN_PINJAM_VIEW,
+  PERMISSIONS.TOKO_VIEW,
 ];
 
 const VIEWER_PERMISSIONS: Permission[] = [
   PERMISSIONS.DASHBOARD_VIEW,
   PERMISSIONS.PORTAL_VIEW,
   PERMISSIONS.VAULT_VIEW,
+  PERMISSIONS.SIMPAN_PINJAM_VIEW,
+  PERMISSIONS.TOKO_VIEW,
 ];
 
 const EMPLOYEE_PERMISSIONS: Permission[] = [

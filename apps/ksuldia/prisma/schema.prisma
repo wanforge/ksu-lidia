@@ -163,3 +163,175 @@ model AccountCredential {
   @@index([category])
   @@map("account_credentials")
 }
+
+// ---------------------------------------------------------------------------
+// KSU Lidia Simpan Pinjam & Toko Models
+// ---------------------------------------------------------------------------
+
+enum SavingsType {
+  POKOK
+  WAJIB
+  SUKARELA
+}
+
+enum SavingsTxType {
+  DEPOSIT
+  WITHDRAWAL
+}
+
+enum LoanStatus {
+  ACTIVE
+  PAID
+  DEFAULTED
+}
+
+enum InstallmentStatus {
+  UNPAID
+  PAID
+  LATE
+}
+
+enum ProductTxType {
+  PURCHASE
+  SALE
+  ADJUSTMENT
+}
+
+model Member {
+  id        String    @id @default(uuid(7))
+  no        Int       @unique
+  name      String
+  isActive  Boolean   @default(true)
+  phone     String?
+  address   String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  savingsAccounts     SavingsAccount[]
+  savingsTransactions SavingsTransaction[]
+  loans               Loan[]
+
+  @@map("members")
+}
+
+model SavingsAccount {
+  id        String      @id @default(uuid(7))
+  memberId  String
+  type      SavingsType
+  balance   Decimal     @default(0) @db.Decimal(15, 2)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([memberId, type])
+  @@index([memberId])
+  @@map("savings_accounts")
+}
+
+model SavingsTransaction {
+  id          String        @id @default(uuid(7))
+  memberId    String
+  type        SavingsTxType
+  savingsType SavingsType
+  amount      Decimal       @db.Decimal(15, 2)
+  description String?
+  date        DateTime      @default(now())
+  createdAt   DateTime      @default(now())
+
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@index([memberId])
+  @@index([date])
+  @@map("savings_transactions")
+}
+
+model Loan {
+  id                String      @id @default(uuid(7))
+  memberId          String
+  amount            Decimal     @db.Decimal(15, 2)
+  interestRate      Decimal     @db.Decimal(5, 2)
+  tenor             Int
+  provision         Decimal     @db.Decimal(15, 2)
+  crk               Decimal     @db.Decimal(15, 2)
+  receivedAmount    Decimal     @db.Decimal(15, 2)
+  installmentAmount Decimal     @db.Decimal(15, 2)
+  status            LoanStatus  @default(ACTIVE)
+  dateDisbursed     DateTime    @default(now())
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  member       Member            @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  installments LoanInstallment[]
+
+  @@index([memberId])
+  @@map("loans")
+}
+
+model LoanInstallment {
+  id            String            @id @default(uuid(7))
+  loanId        String
+  monthNumber   Int
+  principalPaid Decimal           @default(0) @db.Decimal(15, 2)
+  interestPaid  Decimal           @default(0) @db.Decimal(15, 2)
+  penaltyPaid   Decimal           @default(0) @db.Decimal(15, 2)
+  totalPaid     Decimal           @default(0) @db.Decimal(15, 2)
+  dueDate       DateTime
+  paidAt        DateTime?
+  status        InstallmentStatus @default(UNPAID)
+
+  loan Loan @relation(fields: [loanId], references: [id], onDelete: Cascade)
+
+  @@unique([loanId, monthNumber])
+  @@index([loanId])
+  @@map("loan_installments")
+}
+
+model Product {
+  id            String   @id @default(uuid(7))
+  code          String   @unique
+  name          String
+  category      String?
+  stock         Int      @default(0)
+  purchasePrice Decimal  @db.Decimal(15, 2)
+  sellingPrice  Decimal  @db.Decimal(15, 2)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  transactionItems ProductTransactionItem[]
+
+  @@map("products")
+}
+
+model ProductTransaction {
+  id          String        @id @default(uuid(7))
+  type        ProductTxType
+  totalAmount Decimal       @db.Decimal(15, 2)
+  notes       String?
+  date        DateTime      @default(now())
+  createdAt   DateTime      @default(now())
+
+  items ProductTransactionItem[]
+
+  @@index([date])
+  @@map("product_transactions")
+}
+
+model ProductTransactionItem {
+  id            String             @id @default(uuid(7))
+  transactionId String
+  productId     String
+  quantity      Int
+  unitPrice     Decimal            @db.Decimal(15, 2)
+  totalPrice    Decimal            @db.Decimal(15, 2)
+
+  transaction ProductTransaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  product     Product            @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([transactionId])
+  @@index([productId])
+  @@map("product_transaction_items")
+}
+

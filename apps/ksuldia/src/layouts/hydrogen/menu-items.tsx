@@ -9,6 +9,10 @@ import {
   PiPulseDuotone,
   PiUserCircleDuotone,
   PiVaultDuotone,
+  PiUsersDuotone,
+  PiCoinsDuotone,
+  PiStorefrontDuotone,
+  PiShoppingCartDuotone,
 } from "react-icons/pi";
 
 type MenuItem = {
@@ -35,6 +39,36 @@ export const menuItems: MenuItem[] = [
     href: routes.dashboard,
     icon: <PiGaugeDuotone />,
     permission: PERMISSIONS.DASHBOARD_VIEW,
+  },
+  {
+    name: "Simpan Pinjam",
+  },
+  {
+    name: "Daftar Anggota",
+    href: routes.simpanPinjam.anggota,
+    icon: <PiUsersDuotone />,
+    permission: PERMISSIONS.SIMPAN_PINJAM_VIEW,
+  },
+  {
+    name: "Pinjaman & Kredit",
+    href: routes.simpanPinjam.pinjaman,
+    icon: <PiCoinsDuotone />,
+    permission: PERMISSIONS.SIMPAN_PINJAM_VIEW,
+  },
+  {
+    name: "Toko Lidia",
+  },
+  {
+    name: "Katalog Produk",
+    href: routes.toko.produk,
+    icon: <PiStorefrontDuotone />,
+    permission: PERMISSIONS.TOKO_VIEW,
+  },
+  {
+    name: "Transaksi & Stok",
+    href: routes.toko.transaksi,
+    icon: <PiShoppingCartDuotone />,
+    permission: PERMISSIONS.TOKO_VIEW,
   },
   {
     name: "Akses Pribadi",

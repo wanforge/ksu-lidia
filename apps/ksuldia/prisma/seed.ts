@@ -2,6 +2,7 @@ import { PrismaClient, UserRole } from "@prisma/client";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import bcrypt from "bcryptjs";
 import { seedDemoUser } from "./data/demo";
+import { seedKsuLidiaData } from "./data/ksulidia-seeder";
 
 const adapter = new PrismaMariaDb(process.env.DATABASE_URL ?? "");
 const prisma = new PrismaClient({ adapter });
@@ -72,6 +73,9 @@ async function main() {
 
   // Seed demo user account
   await seedDemoUser(prisma, emailDomain);
+
+  // Seed KSU Lidia member data
+  await seedKsuLidiaData(prisma);
 
   console.log("✅  Seeding complete!");
 }
