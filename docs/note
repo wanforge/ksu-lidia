@@ -1,0 +1,33 @@
+Nama Aplikasi: KSU Lidia
+Koperasi Serba Usaha
+
+---
+
+[09.14, 18/6/2026] Tulus TIK: nah kuwi, excel e ra rumusan
+[09.14, 18/6/2026] Tulus TIK: cobo cek o
+[09.14, 18/6/2026] Tulus TIK: masalahe asli mak2 mbokde2
+[09.14, 18/6/2026] Tulus TIK: ra iso gunakne rumus
+
+---
+
+laba simpan pinjam didapat dari
+- bunga
+- provisi
+- denda
+
+ketika hutang 10jt, maka akan terpotong
+provisi 1x bunga
+Cad Resiko Kredit 1x angsuran
+denda 5% dari angsuran
+
+contoh : hutang 10 jt
+yg diterima 8.9jt
+
+angsuran per bulan 1jt
+
+bunganya 10jt * 1% = 100rb / bulan berjalan
+
+jika tidak bayar
+
+kena denda saja 5% dari 1 jt yaitu 50rb
+

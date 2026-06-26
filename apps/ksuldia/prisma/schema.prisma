@@ -1,0 +1,165 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum UserRole {
+  ADMIN
+  OPERATOR
+  VERIFIER
+  VIEWER
+  EMPLOYEE
+}
+
+enum AttachmentSource {
+  BACK_OFFICE
+  EMPLOYEE_PORTAL
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  RESTORE
+  UPLOAD
+  DOWNLOAD
+  EXPORT
+  VERIFY
+  REJECT
+  REQUEST_REVISION
+  LOGIN
+  LOGOUT
+  PASSWORD_RESET_ISSUED
+  PASSWORD_RESET_USED
+  PASSWORD_CHANGED
+}
+
+// ---------------------------------------------------------------------------
+// Models
+// ---------------------------------------------------------------------------
+
+model User {
+  id                String    @id @default(uuid(7))
+  name              String
+  email             String    @unique
+  password          String
+  role              UserRole  @default(OPERATOR)
+  isActive          Boolean   @default(true)
+  createdById       String?
+  passwordChangedAt DateTime?
+  lastLoginAt       DateTime?
+  credentialSalt    String?
+  image             String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  deletedAt         DateTime?
+
+  passwordResetTokens       PasswordResetToken[]   @relation("PasswordResetTokenUser")
+  issuedPasswordResetTokens PasswordResetToken[]   @relation("PasswordResetTokenIssuer")
+  accountCredentials        AccountCredential[]
+
+  @@map("users")
+}
+
+model PasswordResetToken {
+  id         String    @id @default(uuid(7))
+  userId     String
+  issuedById String?
+  tokenHash  String    @unique
+  expiresAt  DateTime
+  usedAt     DateTime?
+  revokedAt  DateTime?
+  createdAt  DateTime  @default(now())
+
+  user     User  @relation("PasswordResetTokenUser", fields: [userId], references: [id], onDelete: Cascade)
+  issuedBy User? @relation("PasswordResetTokenIssuer", fields: [issuedById], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([issuedById])
+  @@index([expiresAt])
+  @@map("password_reset_tokens")
+}
+
+model AuditLog {
+  id            String            @id @default(uuid(7))
+  actorId       String?
+  actorRole     UserRole?
+  action        AuditAction
+  entityType    String
+  entityId      String
+  correlationId String?
+  source        AttachmentSource?
+  summary       String?
+  metadata      Json?
+  createdAt     DateTime          @default(now())
+
+  @@index([actorId])
+  @@index([action])
+  @@index([entityType, entityId])
+  @@index([correlationId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+// Low-level change log: every write (create/update/delete/upsert + *Many) that
+// goes through the Prisma client is recorded here automatically by the client
+// extension in src/lib/prisma.ts. Complements the human-readable AuditLog.
+// operation/actorRole stored as String (no DB enum, per project convention).
+model DataChangeLog {
+  id            String   @id @default(uuid(7))
+  model         String
+  table         String?
+  operation     String
+  recordId      String?
+  rowCount      Int?
+  actorId       String?
+  actorRole     String?
+  correlationId String?
+  payload       Json?
+  before        Json?
+  after         Json?
+  diff          Json?
+  createdAt     DateTime @default(now())
+
+  @@index([model])
+  @@index([recordId])
+  @@index([actorId])
+  @@index([correlationId])
+  @@index([createdAt])
+  @@map("data_change_logs")
+}
+
+// Vault akun aplikasi per-pengguna: menyimpan kredensial (username + password)
+// untuk sistem-sistem yang dipakai pegawai (SIMRS, WiFi, presensi, dll.).
+// Password dan catatan disimpan terenkripsi AES-256-GCM; kunci turunan dari
+// CREDENTIAL_ENCRYPTION_KEY env var + userId + credentialSalt di User.
+model AccountCredential {
+  id          String    @id @default(uuid(7))
+  userId      String
+  name        String
+  category    String    @default("lainnya")
+  loginUrl    String?
+  username    String?
+  passwordEnc String    @db.Text
+  notesEnc    String?   @db.Text
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([category])
+  @@map("account_credentials")
+}

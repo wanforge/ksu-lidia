@@ -1,0 +1,32 @@
+{
+  "name": "ksu-lidia-workspace",
+  "version": "0.0.77",
+  "description": "KSU Lidia — Sistem Informasi KSU Lidia",
+  "private": true,
+  "scripts": {
+    "dev": "turbo dev --filter=ksuldia",
+    "lint": "turbo lint --filter=ksuldia",
+    "type:check": "turbo type:check --filter=ksuldia",
+    "build": "turbo build --filter=ksuldia",
+    "start": "turbo start --filter=ksuldia",
+    "format": "turbo format --filter=ksuldia",
+    "format:check": "turbo format:check --filter=ksuldia",
+    "gen-icons": "turbo gen-icons --filter=core",
+    "clean": "turbo clean --filter=ksuldia && rm -rf node_modules .turbo",
+    "cache:clean": "turbo cache:clean --filter=ksuldia && rm -rf .turbo",
+    "version:patch": "npm version patch --no-git-tag-version && pnpm --filter=ksuldia version:patch",
+    "version:minor": "npm version minor --no-git-tag-version && pnpm --filter=ksuldia version:minor",
+    "version:major": "npm version major --no-git-tag-version && pnpm --filter=ksuldia version:major",
+    "version:show": "node -p \"require('./package.json').version\" && pnpm --filter=ksuldia version:show",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "eslint": "9.23.0",
+    "husky": "^9.1.7",
+    "prettier": "^3.8.2",
+    "prettier-plugin-tailwindcss": "^0.6.14",
+    "turbo": "2.4.4",
+    "typescript-config": "workspace:*"
+  },
+  "packageManager": "pnpm@9.1.4"
+}
