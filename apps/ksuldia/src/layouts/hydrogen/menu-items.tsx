@@ -8,7 +8,6 @@ import {
   PiIdentificationCardDuotone,
   PiPulseDuotone,
   PiUserCircleDuotone,
-  PiVaultDuotone,
   PiUsersDuotone,
   PiCoinsDuotone,
   PiStorefrontDuotone,
@@ -99,12 +98,6 @@ export const menuItems: MenuItem[] = [
     href: routes.me.dashboard,
     icon: <PiUserCircleDuotone />,
     permission: PERMISSIONS.PORTAL_VIEW,
-  },
-  {
-    name: "Akun Aplikasi",
-    href: routes.me.vault,
-    icon: <PiVaultDuotone />,
-    permission: PERMISSIONS.VAULT_VIEW,
   },
   {
     name: "Administrasi",

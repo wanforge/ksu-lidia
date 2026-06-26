@@ -22,7 +22,6 @@ export const routes = {
   },
   me: {
     dashboard: "/me",
-    vault: "/me/akun-aplikasi",
   },
   signIn: "/signin",
   profile: "/me",

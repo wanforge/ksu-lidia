@@ -39,10 +39,6 @@ export default function PrivacyPage() {
           <strong>Data akun pengguna:</strong> nama, email, kata sandi
           (tersimpan dalam bentuk hash), peran (role), dan log aktivitas.
         </li>
-        <li>
-          <strong>Kredensial akun aplikasi (vault):</strong> bila dipakai,
-          disimpan terenkripsi.
-        </li>
       </ul>
 
       <h2>2. Tujuan Pemrosesan</h2>
@@ -56,10 +52,7 @@ export default function PrivacyPage() {
 
       <h2>3. Penyimpanan &amp; Keamanan</h2>
       <ul>
-        <li>
-          Kata sandi di-hash dengan bcrypt; kredensial vault dienkripsi
-          (AES-256-GCM).
-        </li>
+        <li>Kata sandi di-hash menggunakan algoritma bcrypt.</li>
         <li>
           Seluruh berkas foto profil dan lampiran disimpan pada penyimpanan
           terkontrol (disk lokal server atau object storage S3) dan hanya dapat

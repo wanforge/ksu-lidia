@@ -8,10 +8,6 @@ import {
 import { prisma } from "@/lib/prisma";
 import { recordAuditLog } from "@/lib/audit";
 import { hashPassword } from "@/lib/password";
-import {
-  generateCredentialSalt,
-  reEncryptUserCredentials,
-} from "@/lib/credential-crypto";
 
 const DEFAULT_RESET_TOKEN_TTL_HOURS = 24;
 
@@ -246,27 +242,13 @@ export async function resetUserPasswordByAdmin(
   await assertAdmin(adminId);
 
   return prisma.$transaction(async (tx) => {
-    const current = await tx.user.findFirst({
-      where: { id: userId },
-      select: { credentialSalt: true, email: true },
-    });
-
-    const oldSalt = current?.credentialSalt ?? null;
-    const newSalt = generateCredentialSalt();
-
     const user = await tx.user.update({
       where: { id: userId },
       data: {
         password: await hashPassword(newPassword),
         passwordChangedAt: new Date(),
-        credentialSalt: newSalt,
       },
     });
-
-    // Re-encrypt vault credentials with new derived key
-    if (oldSalt) {
-      await reEncryptUserCredentials(tx, userId, oldSalt, newSalt);
-    }
 
     await tx.passwordResetToken.updateMany({
       where: { userId, usedAt: null, revokedAt: null },
@@ -350,7 +332,6 @@ export async function consumePasswordResetToken(
           role: true,
           isActive: true,
           deletedAt: true,
-          credentialSalt: true,
         },
       },
     },
@@ -368,21 +349,13 @@ export async function consumePasswordResetToken(
   }
 
   return prisma.$transaction(async (tx) => {
-    const oldSalt = resetToken.user.credentialSalt ?? null;
-    const newSalt = generateCredentialSalt();
-
     const user = await tx.user.update({
       where: { id: resetToken.userId },
       data: {
         password: await hashPassword(newPassword),
         passwordChangedAt: new Date(),
-        credentialSalt: newSalt,
       },
     });
-
-    if (oldSalt) {
-      await reEncryptUserCredentials(tx, resetToken.userId, oldSalt, newSalt);
-    }
 
     await tx.passwordResetToken.update({
       where: { id: resetToken.id },

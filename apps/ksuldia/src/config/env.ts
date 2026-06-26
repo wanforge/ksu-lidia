@@ -56,9 +56,6 @@ const schema = z.object({
     .preprocess((v) => String(v).toLowerCase() === "true", z.boolean())
     .catch(false),
 
-  // Enkripsi vault kredensial
-  CREDENTIAL_ENCRYPTION_KEY: optStr,
-
   // CAPTCHA (server)
   RECAPTCHA_SECRET_KEY: optStr,
   TURNSTILE_SECRET_KEY: optStr,
@@ -94,8 +91,6 @@ export function getServerEnvIssues(): string[] {
   if (env.NODE_ENV === "production") {
     if (!appBaseUrl)
       issues.push("NEXTAUTH_URL atau APP_PUBLIC_URL wajib diatur di produksi.");
-    if (!env.CREDENTIAL_ENCRYPTION_KEY)
-      issues.push("CREDENTIAL_ENCRYPTION_KEY wajib diatur di produksi.");
     if (
       env.FILESYSTEM_DISK === "s3" &&
       (!env.AWS_ACCESS_KEY_ID || !env.AWS_SECRET_ACCESS_KEY || !env.AWS_BUCKET)

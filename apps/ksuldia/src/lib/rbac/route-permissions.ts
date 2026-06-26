@@ -28,12 +28,6 @@ const ROUTE_RULES: RouteRule[] = [
   },
   { match: "prefix", path: "/sistem", permission: PERMISSIONS.SYSTEM_VIEW },
 
-  // Vault akun aplikasi milik sendiri — lebih spesifik dari /me.
-  {
-    match: "prefix",
-    path: "/me/akun-aplikasi",
-    permission: PERMISSIONS.VAULT_VIEW,
-  },
   { match: "prefix", path: "/me", permission: PERMISSIONS.PORTAL_VIEW },
 ];
 

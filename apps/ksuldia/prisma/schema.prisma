@@ -54,7 +54,6 @@ model User {
   createdById       String?
   passwordChangedAt DateTime?
   lastLoginAt       DateTime?
-  credentialSalt    String?
   image             String?
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
@@ -62,7 +61,6 @@ model User {
 
   passwordResetTokens       PasswordResetToken[] @relation("PasswordResetTokenUser")
   issuedPasswordResetTokens PasswordResetToken[] @relation("PasswordResetTokenIssuer")
-  accountCredentials        AccountCredential[]
 
   @@map("users")
 }
@@ -133,31 +131,6 @@ model DataChangeLog {
   @@index([correlationId])
   @@index([createdAt])
   @@map("data_change_logs")
-}
-
-// Vault akun aplikasi per-pengguna: menyimpan kredensial (username + password)
-// untuk sistem-sistem yang dipakai pengguna (koperasi, WiFi, dll.).
-// Password dan catatan disimpan terenkripsi AES-256-GCM; kunci turunan dari
-// CREDENTIAL_ENCRYPTION_KEY env var + userId + credentialSalt di User.
-model AccountCredential {
-  id          String    @id @default(uuid(7))
-  userId      String
-  name        String
-  category    String    @default("lainnya")
-  loginUrl    String?
-  username    String?
-  passwordEnc String    @db.Text
-  notesEnc    String?   @db.Text
-  sortOrder   Int       @default(0)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  deletedAt   DateTime?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([category])
-  @@map("account_credentials")
 }
 
 // ---------------------------------------------------------------------------

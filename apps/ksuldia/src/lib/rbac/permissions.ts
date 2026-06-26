@@ -31,10 +31,6 @@ export const PERMISSIONS = {
   // Portal self-service (/me)
   PORTAL_VIEW: "portal.view",
 
-  // Vault akun aplikasi
-  VAULT_VIEW: "vault.view", // lihat & kelola vault sendiri
-  VAULT_MANAGE_ANY: "vault.manageAny", // lihat & kelola vault semua user (ADMIN)
-
   // Simpan Pinjam
   SIMPAN_PINJAM_VIEW: "simpanPinjam.view",
   SIMPAN_PINJAM_MANAGE: "simpanPinjam.manage",
@@ -54,7 +50,6 @@ const ALL_PERMISSIONS = Object.values(PERMISSIONS) as Permission[];
 const VIEWER_PERMISSIONS: Permission[] = [
   PERMISSIONS.DASHBOARD_VIEW,
   PERMISSIONS.PORTAL_VIEW,
-  PERMISSIONS.VAULT_VIEW,
   PERMISSIONS.SIMPAN_PINJAM_VIEW,
   PERMISSIONS.TOKO_VIEW,
 ];
