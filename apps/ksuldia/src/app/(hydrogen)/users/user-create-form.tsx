@@ -116,7 +116,6 @@ export default function UserCreateForm() {
             <option value="OPERATOR">Operator</option>
             <option value="VERIFIER">Verifikator</option>
             <option value="VIEWER">Viewer</option>
-            <option value="EMPLOYEE">Pegawai</option>
           </select>
           <FieldError messages={state.errors?.role} />
         </label>

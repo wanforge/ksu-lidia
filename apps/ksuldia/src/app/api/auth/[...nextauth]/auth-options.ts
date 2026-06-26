@@ -36,10 +36,7 @@ export const authOptions: NextAuthOptions = {
         action: AuditAction.LOGIN,
         entityType: "User",
         entityId: u.id,
-        source:
-          u.role === UserRole.EMPLOYEE
-            ? AttachmentSource.EMPLOYEE_PORTAL
-            : AttachmentSource.BACK_OFFICE,
+        source: AttachmentSource.BACK_OFFICE,
         summary: `Login ${u.email ?? ""}`.trim(),
       });
     },

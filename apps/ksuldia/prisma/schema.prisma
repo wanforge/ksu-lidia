@@ -18,12 +18,10 @@ enum UserRole {
   OPERATOR
   VERIFIER
   VIEWER
-  EMPLOYEE
 }
 
 enum AttachmentSource {
   BACK_OFFICE
-  EMPLOYEE_PORTAL
 }
 
 enum AuditAction {

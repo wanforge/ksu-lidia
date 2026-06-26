@@ -19,10 +19,10 @@ export const presetDark = {
 // Persona brand palette, taken from the logo (teal #037171 + sea variants).
 // Mirrors the --primary-* variables in globals.css.
 export const DEFAULT_PRESET_COLORS = {
-  lighter: "#02c3bd",
-  light: "#009f93",
-  default: "#037171",
-  dark: "#03312e",
+  lighter: "#ffedd5",
+  light: "#c2410c",
+  default: "#991b1b",
+  dark: "#7f1d1d",
   foreground: "#ffffff",
 };
 

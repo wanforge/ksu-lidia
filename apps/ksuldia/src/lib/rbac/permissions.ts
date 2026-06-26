@@ -79,17 +79,11 @@ const VIEWER_PERMISSIONS: Permission[] = [
   PERMISSIONS.TOKO_VIEW,
 ];
 
-const EMPLOYEE_PERMISSIONS: Permission[] = [
-  PERMISSIONS.PORTAL_VIEW,
-  PERMISSIONS.VAULT_VIEW,
-];
-
 export const ROLE_PERMISSIONS: Record<UserRole, readonly Permission[]> = {
   ADMIN: ALL_PERMISSIONS,
   OPERATOR: OPERATOR_PERMISSIONS,
   VERIFIER: VERIFIER_PERMISSIONS,
   VIEWER: VIEWER_PERMISSIONS,
-  EMPLOYEE: EMPLOYEE_PERMISSIONS,
 };
 
 // ── Helper ─────────────────────────────────────────────────────────────────────

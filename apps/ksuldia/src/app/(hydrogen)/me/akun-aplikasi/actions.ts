@@ -99,7 +99,7 @@ export async function createCredentialAction(
     action: AuditAction.CREATE,
     entityType: "AccountCredential",
     entityId: userId,
-    source: AttachmentSource.EMPLOYEE_PORTAL,
+    source: AttachmentSource.BACK_OFFICE,
     summary: `Menambah akun aplikasi: ${name}`,
   });
 
@@ -161,7 +161,7 @@ export async function updateCredentialAction(
     action: AuditAction.UPDATE,
     entityType: "AccountCredential",
     entityId: credentialId,
-    source: AttachmentSource.EMPLOYEE_PORTAL,
+    source: AttachmentSource.BACK_OFFICE,
     summary: `Mengubah akun aplikasi: ${name}`,
   });
 
@@ -195,7 +195,7 @@ export async function deleteCredentialAction(
     action: AuditAction.DELETE,
     entityType: "AccountCredential",
     entityId: credentialId,
-    source: AttachmentSource.EMPLOYEE_PORTAL,
+    source: AttachmentSource.BACK_OFFICE,
     summary: `Menghapus akun aplikasi: ${existing.name}`,
   });
 

@@ -14,7 +14,6 @@ const roleLabels: Record<string, string> = {
   OPERATOR: "Operator Arsip",
   VERIFIER: "Verifikator",
   VIEWER: "Pimpinan / Viewer",
-  EMPLOYEE: "Pegawai",
 };
 
 export default function ProfileMenu({

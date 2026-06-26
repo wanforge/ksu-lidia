@@ -35,7 +35,6 @@ const ROLE_OPTIONS = [
   { value: "OPERATOR", label: "Operator" },
   { value: "VERIFIER", label: "Verifikator" },
   { value: "VIEWER", label: "Viewer" },
-  { value: "EMPLOYEE", label: "Pegawai" },
 ];
 
 const inputClass =

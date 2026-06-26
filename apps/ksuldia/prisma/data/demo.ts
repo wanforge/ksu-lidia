@@ -31,7 +31,6 @@ export async function seedDemoUser(
     { email: `sugeng.operator@${emailDomain}`, role: UserRole.OPERATOR },
     { email: `sugeng.verifier@${emailDomain}`, role: UserRole.VERIFIER },
     { email: `sugeng.viewer@${emailDomain}`, role: UserRole.VIEWER },
-    { email: `sugeng@${emailDomain}`, role: UserRole.EMPLOYEE },
   ];
 
   const hashed = await bcrypt.hash(password, 12);

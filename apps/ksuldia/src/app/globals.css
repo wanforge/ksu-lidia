@@ -43,19 +43,19 @@
     --muted-foreground: 146 146 146; /* #929292 */
 
     /* ----------------------------------- */
-    /* primary/brand colors — sea palette */
+    /* primary/brand colors — red-orange-gold palette */
     /* ----------------------------------- */
-    --primary-lighter: 2 195 189; /* #02c3bd */
-    --primary-default: 3 113 113; /* #037171 */
-    --primary-dark: 3 49 46; /* #03312e */
+    --primary-lighter: 254 226 226; /* #fee2e2 */
+    --primary-default: 153 27 27; /* #991b1b (merah gelap) */
+    --primary-dark: 127 29 29; /* #7f1d1d (merah lebih gelap) */
     --primary-foreground: 255 255 255; /* #ffffff */
 
     /* ----------------------------------- */
     /* secondary colors */
     /* ----------------------------------- */
-    --secondary-lighter: 0 185 174; /* #00b9ae */
-    --secondary-default: 0 159 147; /* #009f93 */
-    --secondary-dark: 3 113 113; /* #037171 */
+    --secondary-lighter: 255 237 213; /* #ffedd5 */
+    --secondary-default: 194 65 12; /* #c2410c (orange gelap) */
+    --secondary-dark: 154 52 18; /* #9a3412 (orange lebih gelap) */
     --secondary-foreground: 255 255 255; /* #ffffff */
 
     /* ----------------------------------- */
@@ -87,14 +87,14 @@
     --green-dark: 17 132 60; /* #11843c */
 
     /* ----------------------------------- */
-    /* sea palette */
+    /* gold-red-orange palette references */
     /* ----------------------------------- */
-    --light-sea-green: 0 185 174; /* #00b9ae */
-    --stormy-teal: 3 113 113; /* #037171 */
-    --evergreen: 3 49 46; /* #03312e */
-    --strong-cyan: 2 195 189; /* #02c3bd */
-    --verdigris: 0 159 147; /* #009f93 */
-    --gold-accent: 240 165 0; /* #f0a500 */
+    --light-sea-green: 234 88 12; /* #ea580c */
+    --stormy-teal: 153 27 27; /* #991b1b */
+    --evergreen: 127 29 29; /* #7f1d1d */
+    --strong-cyan: 249 115 22; /* #f97316 */
+    --verdigris: 194 65 12; /* #c2410c */
+    --gold-accent: 212 175 55; /* #d4af37 (gold) */
   }
 
   /* dark theme */
@@ -134,19 +134,19 @@
     --muted-foreground: 102 102 102; /* #666666 */
 
     /* ----------------------------------- */
-    /* primary/brand colors — sea palette */
+    /* primary/brand colors — red-orange-gold palette */
     /* ----------------------------------- */
-    --primary-lighter: 3 49 46; /* #03312e */
-    --primary-default: 0 185 174; /* #00b9ae */
-    --primary-dark: 2 195 189; /* #02c3bd */
-    --primary-foreground: 3 49 46; /* #03312e */
+    --primary-lighter: 127 29 29; /* #7f1d1d */
+    --primary-default: 239 68 68; /* #ef4444 (merah terang di dark mode) */
+    --primary-dark: 248 113 113; /* #f87171 */
+    --primary-foreground: 255 255 255; /* #ffffff */
 
     /* ----------------------------------- */
     /* secondary colors */
     /* ----------------------------------- */
-    --secondary-lighter: 3 49 46; /* #03312e */
-    --secondary-default: 0 159 147; /* #009f93 */
-    --secondary-dark: 0 185 174; /* #00b9ae */
+    --secondary-lighter: 154 52 18; /* #9a3412 */
+    --secondary-default: 249 115 22; /* #f97316 (orange terang di dark mode) */
+    --secondary-dark: 251 146 60; /* #fb923c */
 
     /* ----------------------------------- */
     /* red/error colors */
@@ -173,14 +173,14 @@
     --green-dark: 185 249 207; /* #b9f9cf */
 
     /* ----------------------------------- */
-    /* sea palette */
+    /* gold-red-orange palette references */
     /* ----------------------------------- */
-    --light-sea-green: 0 185 174; /* #00b9ae */
-    --stormy-teal: 3 113 113; /* #037171 */
-    --evergreen: 3 49 46; /* #03312e */
-    --strong-cyan: 2 195 189; /* #02c3bd */
-    --verdigris: 0 159 147; /* #009f93 */
-    --gold-accent: 240 165 0; /* #f0a500 */
+    --light-sea-green: 249 115 22; /* #f97316 */
+    --stormy-teal: 239 68 68; /* #ef4444 */
+    --evergreen: 127 29 29; /* #7f1d1d */
+    --strong-cyan: 251 146 60; /* #fb923c */
+    --verdigris: 249 115 22; /* #f97316 */
+    --gold-accent: 212 175 55; /* #d4af37 (gold) */
 
     /* here you can customize other colors for dark theme if design required */
   }

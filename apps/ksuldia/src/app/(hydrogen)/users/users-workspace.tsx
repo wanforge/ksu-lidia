@@ -51,7 +51,6 @@ const roleLabels: Record<string, string> = {
   OPERATOR: "Operator",
   VERIFIER: "Verifikator",
   VIEWER: "Viewer",
-  EMPLOYEE: "Pegawai",
 };
 
 const roleTone: Record<string, string> = {
@@ -59,7 +58,6 @@ const roleTone: Record<string, string> = {
   OPERATOR: "border-cyan-200 bg-cyan-50 text-cyan-800",
   VERIFIER: "border-teal-200 bg-teal-50 text-teal-800",
   VIEWER: "border-gray-200 bg-gray-50 text-gray-700",
-  EMPLOYEE: "border-amber-200 bg-amber-50 text-amber-800",
 };
 
 function StatusPill({
