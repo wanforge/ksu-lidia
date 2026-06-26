@@ -130,16 +130,6 @@ export default function SignInForm() {
           </div>
         )}
       </Form>
-
-      <Text className="mt-8 text-center text-sm leading-loose text-gray-500">
-        Ada masalah masuk?{" "}
-        <Link
-          href={`mailto:${supportEmail}`}
-          className="text-primary hover:text-primary-dark font-semibold transition-colors"
-        >
-          Hubungi Tim IT
-        </Link>
-      </Text>
     </>
   );
 }

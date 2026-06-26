@@ -1,5 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" width="1200" height="360">
-  <g transform="matrix(0.9, 0, 0, 0.9, 25.6, 25.6)">
+  <!-- Icon (Left, scaled and translated) -->
+  <g transform="translate(45, 39) scale(0.55)">
     <path d="M256,40 L440,110 L440,340 C440,430 256,480 256,480 C256,480 72,430 72,340 L72,110 Z" fill="#991b1b" stroke="#d4af37" strokeWidth="16" strokeLinejoin="round" />
     <path d="M256,60 L420,125 L420,330 C420,410 256,455 256,455 C256,455 92,410 92,330 L92,125 Z" fill="none" stroke="#ea580c" strokeWidth="6" opacity="0.80" />
     <line x1="256" y1="360" x2="256" y2="150" stroke="#d4af37" strokeWidth="14" strokeLinecap="round" />
@@ -15,8 +16,13 @@
     <path d="M230,370 L256,346 L282,370" fill="none" stroke="#ffedd5" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
     <rect x="248" y="374" width="16" height="21" fill="#d4af37" rx="2" />
   </g>
+  
+  <!-- Separator Vertical Line -->
+  <line x1="355" y1="70" x2="355" y2="290" stroke="#d4af37" strokeWidth="6" strokeLinecap="round" opacity="0.3" />
+
+  <!-- Text -->
   <g transform="matrix(1,0,0,1,0,5.343361)">
-    <text x="390" y="185" fontFamily="Lexend, Inter, sans-serif" fontWeight="800" fontSize="115" fill="rgb(153, 27, 27)" letterSpacing="2">KSU <tspan fill="rgb(212, 175, 55)">LIDIA</tspan></text>
-    <text x="395" y="245" fontFamily="Lexend, Inter, sans-serif" fontWeight="600" fontSize="34" fill="rgb(194, 65, 12)" letterSpacing="1">Koperasi Simpan Pinjam &amp; Toko GKJ Manahan</text>
+    <text x="390" y="175" fontFamily="Lexend, Inter, sans-serif" fontWeight="800" fontSize="115" fill="rgb(153, 27, 27)" letterSpacing="3">KSU <tspan fill="rgb(212, 175, 55)">LIDIA</tspan></text>
+    <text x="392" y="250" fontFamily="Lexend, Inter, sans-serif" fontWeight="600" fontSize="34" fill="rgb(194, 65, 12)" letterSpacing="0.5">Koperasi Simpan Pinjam &amp; Toko GKJ Manahan</text>
   </g>
 </svg>

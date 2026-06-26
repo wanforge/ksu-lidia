@@ -1,0 +1,10 @@
+{
+  "interestRate": 1.0,
+  "provisionRate": 1.0,
+  "crkRate": 10.0,
+  "penaltyRate": 5.0,
+  "minPokok": 100000,
+  "wajibMonthly": 10000,
+  "cooperativeName": "KSU Lidia GKJ Manahan",
+  "cooperativeAddress": "Jl. Adi Sucipto No. 12, Manahan, Surakarta, Jawa Tengah"
+}

@@ -1,7 +1,7 @@
 import React from "react";
 
 const ICON = (
-  <g transform="matrix(0.9, 0, 0, 0.9, 25.6, 25.6)">
+  <g transform="translate(45, 39) scale(0.55)">
     {/* Shield Base */}
     <path
       d="M256,40 L440,110 L440,340 C440,430 256,480 256,480 C256,480 72,430 72,340 L72,110 Z"
@@ -143,11 +143,11 @@ export default function AnimatedLogo({
 
           /* ── Float bob (signin only) ────────────────────────────────── */
           @keyframes apl-bob {
-            0%   { transform: translate(  0px,  0px) rotate( 0.0deg); }
-            28%  { transform: translate( -2px, -8px) rotate(-0.5deg); }
-            55%  { transform: translate(  3px,-10px) rotate( 0.4deg); }
-            78%  { transform: translate( -1px, -5px) rotate(-0.2deg); }
-            100% { transform: translate(  0px,  0px) rotate( 0.0deg); }
+            0%   { transform: translate(0px, 0px) rotate(0.0deg); }
+            28%  { transform: translate(-1px, -4px) rotate(-0.2deg); }
+            55%  { transform: translate(2px, -5px) rotate(0.2deg); }
+            78%  { transform: translate(-1px, -2px) rotate(-0.1deg); }
+            100% { transform: translate(0px, 0px) rotate(0.0deg); }
           }
 
           /* ── Tree leaves breathing ─────────────────────────────────── */
@@ -198,31 +198,43 @@ export default function AnimatedLogo({
         `}</style>
       </defs>
 
+      {/* ── Separator vertical line ─────────────────────────────── */}
+      <line
+        x1="355"
+        y1="70"
+        x2="355"
+        y2="290"
+        stroke="#d4af37"
+        strokeWidth="6"
+        strokeLinecap="round"
+        opacity="0.3"
+      />
+
       {/* ── Text ─────────────────────────────────────────────────── */}
       <g transform="matrix(1,0,0,1,0,5.343361)" className="apl-txt">
         <text
           x="390"
-          y="185"
+          y="175"
           fontFamily="Lexend, Inter, sans-serif"
           fontWeight="800"
           fontSize="115"
           fill="rgb(153, 27, 27)"
-          letterSpacing="2"
-          className="dark:fill-red-400"
+          letterSpacing="3"
+          className="dark:fill-gray-100"
         >
-          KSU <tspan fill="rgb(212, 175, 55)" className="dark:fill-yellow-500">LIDIA</tspan>
+          KSU <tspan fill="rgb(212, 175, 55)">LIDIA</tspan>
         </text>
         <text
-          x="395"
-          y="245"
+          x="392"
+          y="250"
           fontFamily="Lexend, Inter, sans-serif"
           fontWeight="600"
           fontSize="34"
           fill="rgb(194, 65, 12)"
-          letterSpacing="1"
+          letterSpacing="0.5"
           className="dark:fill-orange-400"
         >
-          Koperasi Simpan Pinjam & Toko GKJ Manahan
+          Koperasi Simpan Pinjam &amp; Toko GKJ Manahan
         </text>
       </g>
 

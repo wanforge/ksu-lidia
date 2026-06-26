@@ -12,7 +12,10 @@ export const routes = {
   simpanPinjam: {
     anggota: "/simpan-pinjam/anggota",
     pinjaman: "/simpan-pinjam/pinjaman",
+    master: "/simpan-pinjam/master",
   },
+  statistik: "/statistik",
+  laporan: "/laporan",
   toko: {
     produk: "/toko/produk",
     transaksi: "/toko/transaksi",
