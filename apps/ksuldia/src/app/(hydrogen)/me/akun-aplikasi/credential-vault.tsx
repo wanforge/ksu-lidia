@@ -23,9 +23,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 export const CREDENTIAL_CATEGORIES = [
-  { value: "sistem_rs", label: "Sistem RS" },
-  { value: "kepegawaian", label: "Kepegawaian" },
-  { value: "presensi", label: "Presensi" },
+  { value: "sistem_koperasi", label: "Sistem Koperasi" },
   { value: "email", label: "Email / Komunikasi" },
   { value: "jaringan", label: "Jaringan / WiFi" },
   { value: "keuangan", label: "Keuangan" },
@@ -142,7 +140,7 @@ function CredentialForm({
             name="name"
             required
             defaultValue={credential?.name ?? ""}
-            placeholder="SIMRS, WiFi Gedung A, …"
+            placeholder="Koperasi, WiFi Kantor, …"
             className="w-full rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
           />
         </div>
@@ -172,7 +170,7 @@ function CredentialForm({
           <input
             name="username"
             defaultValue={credential?.username ?? ""}
-            placeholder="user@rsud.go.id"
+            placeholder="user@koperasi.id"
             className="w-full rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
           />
         </div>
@@ -198,7 +196,7 @@ function CredentialForm({
             name="loginUrl"
             type="url"
             defaultValue={credential?.loginUrl ?? ""}
-            placeholder="https://simrs.rsud.go.id"
+            placeholder="https://ksulidia.gkjmanahan.or.id"
             className="w-full rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
           />
         </div>

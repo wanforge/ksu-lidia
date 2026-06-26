@@ -60,8 +60,8 @@ model User {
   updatedAt         DateTime  @updatedAt
   deletedAt         DateTime?
 
-  passwordResetTokens       PasswordResetToken[]   @relation("PasswordResetTokenUser")
-  issuedPasswordResetTokens PasswordResetToken[]   @relation("PasswordResetTokenIssuer")
+  passwordResetTokens       PasswordResetToken[] @relation("PasswordResetTokenUser")
+  issuedPasswordResetTokens PasswordResetToken[] @relation("PasswordResetTokenIssuer")
   accountCredentials        AccountCredential[]
 
   @@map("users")
@@ -136,7 +136,7 @@ model DataChangeLog {
 }
 
 // Vault akun aplikasi per-pengguna: menyimpan kredensial (username + password)
-// untuk sistem-sistem yang dipakai pegawai (SIMRS, WiFi, presensi, dll.).
+// untuk sistem-sistem yang dipakai pengguna (koperasi, WiFi, dll.).
 // Password dan catatan disimpan terenkripsi AES-256-GCM; kunci turunan dari
 // CREDENTIAL_ENCRYPTION_KEY env var + userId + credentialSalt di User.
 model AccountCredential {
@@ -244,19 +244,19 @@ model SavingsTransaction {
 }
 
 model Loan {
-  id                String      @id @default(uuid(7))
+  id                String     @id @default(uuid(7))
   memberId          String
-  amount            Decimal     @db.Decimal(15, 2)
-  interestRate      Decimal     @db.Decimal(5, 2)
+  amount            Decimal    @db.Decimal(15, 2)
+  interestRate      Decimal    @db.Decimal(5, 2)
   tenor             Int
-  provision         Decimal     @db.Decimal(15, 2)
-  crk               Decimal     @db.Decimal(15, 2)
-  receivedAmount    Decimal     @db.Decimal(15, 2)
-  installmentAmount Decimal     @db.Decimal(15, 2)
-  status            LoanStatus  @default(ACTIVE)
-  dateDisbursed     DateTime    @default(now())
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
+  provision         Decimal    @db.Decimal(15, 2)
+  crk               Decimal    @db.Decimal(15, 2)
+  receivedAmount    Decimal    @db.Decimal(15, 2)
+  installmentAmount Decimal    @db.Decimal(15, 2)
+  status            LoanStatus @default(ACTIVE)
+  dateDisbursed     DateTime   @default(now())
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
 
   member       Member            @relation(fields: [memberId], references: [id], onDelete: Cascade)
   installments LoanInstallment[]
@@ -316,12 +316,12 @@ model ProductTransaction {
 }
 
 model ProductTransactionItem {
-  id            String             @id @default(uuid(7))
+  id            String  @id @default(uuid(7))
   transactionId String
   productId     String
   quantity      Int
-  unitPrice     Decimal            @db.Decimal(15, 2)
-  totalPrice    Decimal            @db.Decimal(15, 2)
+  unitPrice     Decimal @db.Decimal(15, 2)
+  totalPrice    Decimal @db.Decimal(15, 2)
 
   transaction ProductTransaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
   product     Product            @relation(fields: [productId], references: [id], onDelete: Cascade)
@@ -330,4 +330,3 @@ model ProductTransactionItem {
   @@index([productId])
   @@map("product_transaction_items")
 }
-

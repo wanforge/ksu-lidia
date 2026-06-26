@@ -202,7 +202,7 @@ export default function UsersWorkspace({
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Cari nama, email, NIP pegawai"
+                placeholder="Cari nama atau email..."
                 className="w-full rounded-md border border-gray-300 bg-white py-2 pl-9 pr-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-gray-700"
               />
             </label>

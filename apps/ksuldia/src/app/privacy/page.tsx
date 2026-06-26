@@ -13,26 +13,27 @@ export default function PrivacyPage() {
   return (
     <LegalShell
       title="Kebijakan Privasi"
-      subtitle={`Bagaimana ${appConfig.name} memproses dan melindungi data pribadi pegawai.`}
-      updatedAt="10 Juni 2026"
+      subtitle={`Bagaimana ${appConfig.name} memproses dan melindungi data pribadi Anda.`}
+      updatedAt="26 Juni 2026"
     >
       <p>
         Aplikasi <strong>{appConfig.name}</strong> ({appConfig.tagline}) adalah
-        sistem internal untuk mengelola dokumen kepegawaian. Kebijakan ini
-        menjelaskan bagaimana data pribadi diproses di dalam aplikasi. Pengelola
-        data (data controller) adalah <strong>{org}</strong>; aplikasi
-        dikembangkan dan disediakan oleh {appConfig.copyrightHolder}.
+        sistem internal untuk mengelola data anggota, simpan pinjam, dan
+        transaksi koperasi. Kebijakan ini menjelaskan bagaimana data pribadi
+        diproses di dalam aplikasi. Pengelola data (data controller) adalah{" "}
+        <strong>{org}</strong>; aplikasi disediakan oleh{" "}
+        {appConfig.copyrightHolder}.
       </p>
 
       <h2>1. Data yang Diproses</h2>
       <ul>
         <li>
-          <strong>Data identitas pegawai:</strong> nama, NIP, NIK, unit kerja,
-          jabatan, pangkat/golongan, pendidikan, status kepegawaian.
+          <strong>Data identitas anggota:</strong> nama, nomor anggota, NIK,
+          alamat, nomor telepon, status keanggotaan.
         </li>
         <li>
-          <strong>Dokumen kepegawaian:</strong> berkas lampiran (PDF/gambar)
-          beserta metadata seperti nomor dokumen dan masa berlaku.
+          <strong>Data transaksi simpan pinjam:</strong> mutasi simpanan (pokok,
+          wajib, sukarela) dan data kredit pinjaman beserta angsuran berjalan.
         </li>
         <li>
           <strong>Data akun pengguna:</strong> nama, email, kata sandi
@@ -46,10 +47,11 @@ export default function PrivacyPage() {
 
       <h2>2. Tujuan Pemrosesan</h2>
       <p>
-        Data diproses semata untuk administrasi kepegawaian internal:
-        penyimpanan, verifikasi kelengkapan dokumen, pelaporan, dan kontrol
-        akses. Aplikasi <strong>tidak</strong> menjual atau membagikan data ke
-        pihak ketiga untuk tujuan komersial.
+        Data diproses semata untuk administrasi koperasi internal: pengelolaan
+        simpan pinjam, pembukuan kas, pelaporan statistik keuangan, pencatatan
+        transaksi toko, dan kontrol akses keamanan. Aplikasi{" "}
+        <strong>tidak</strong> menjual atau membagikan data ke pihak ketiga
+        untuk tujuan komersial.
       </p>
 
       <h2>3. Penyimpanan &amp; Keamanan</h2>
@@ -59,13 +61,13 @@ export default function PrivacyPage() {
           (AES-256-GCM).
         </li>
         <li>
-          Berkas dokumen disimpan pada penyimpanan terkontrol (disk lokal server
-          atau object storage S3) dan hanya dapat diunduh melalui rute
-          terotorisasi.
+          Seluruh berkas foto profil dan lampiran disimpan pada penyimpanan
+          terkontrol (disk lokal server atau object storage S3) dan hanya dapat
+          diunduh melalui rute terotorisasi.
         </li>
         <li>
-          Nilai sensitif (mis. NIK/NIP) ditampilkan ter-mask bagi pengguna tanpa
-          hak akses penuh.
+          Nilai sensitif (mis. NIK) ditampilkan ter-mask bagi pengguna tanpa hak
+          akses penuh.
         </li>
         <li>
           Seluruh aktivitas penting dicatat pada audit log untuk akuntabilitas.
@@ -74,25 +76,23 @@ export default function PrivacyPage() {
 
       <h2>4. Akses &amp; Kontrol Peran</h2>
       <p>
-        Akses dibatasi berbasis peran (RBAC): Administrator, Operator,
-        Verifikator, Viewer, dan Pegawai. Setiap pengguna hanya dapat mengakses
-        data sesuai kewenangannya.
+        Akses dibatasi berbasis peran (RBAC): Administrator dan Viewer. Setiap
+        pengguna hanya dapat mengakses data sesuai kewenangannya.
       </p>
 
       <h2>5. Retensi Data</h2>
       <p>
-        Data disimpan selama diperlukan untuk kepentingan administrasi
-        kepegawaian dan/atau selama diwajibkan peraturan. Data yang dihapus
-        masuk ke mekanisme <em>soft-delete</em>/sampah sebelum dimusnahkan
-        permanen sesuai kebijakan pengelola data.
+        Data disimpan selama diperlukan untuk kepentingan administrasi koperasi
+        dan/atau selama diwajibkan peraturan. Data yang dihapus masuk ke
+        mekanisme <em>soft-delete</em>/sampah sebelum dimusnahkan permanen
+        sesuai kebijakan pengelola data.
       </p>
 
       <h2>6. Hak Subjek Data</h2>
       <p>
-        Pegawai sebagai subjek data dapat mengajukan akses, koreksi, atau
-        keberatan atas pemrosesan datanya melalui prosedur internal {org}.
-        Permintaan data dapat diajukan melalui fitur permintaan data di aplikasi
-        atau menghubungi pengelola.
+        Pengguna/Anggota sebagai subjek data dapat mengajukan akses, koreksi,
+        atau keberatan atas pemrosesan datanya melalui prosedur internal {org}.
+        Permintaan data dapat diajukan melalui pengelola.
       </p>
 
       <h2>7. Kontak</h2>

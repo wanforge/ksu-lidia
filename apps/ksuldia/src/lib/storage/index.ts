@@ -22,7 +22,7 @@ export const EMPLOYEE_DOCUMENT_COLLECTION = "employee-documents";
 // employee-documents/<id>/<file> → .trash/employee-documents/<id>/<file>.
 export const TRASH_PREFIX = ".trash";
 
-// Foto: pegawai (HR record) dan foto profil akun (user). Disimpan terpisah dari
+// Foto: foto profil akun (user). Disimpan terpisah dari
 // dokumen agar mudah dikelola/diserahkan lewat route serving sendiri.
 export const EMPLOYEE_PHOTO_COLLECTION = "employee-photos";
 export const USER_PHOTO_COLLECTION = "user-photos";
@@ -112,7 +112,7 @@ export async function readEmployeeDocumentFile(
   return getStorageDriver().read(storageKey);
 }
 
-// ── Foto (pegawai / profil akun) ─────────────────────────────────────────────
+// ── Foto Profil Akun ─────────────────────────────────────────────────────────
 
 function validatePhotoUpload(file: File) {
   if (file.size <= 0) throw new Error("EMPTY_FILE");
@@ -122,8 +122,8 @@ function validatePhotoUpload(file: File) {
 }
 
 /**
- * Simpan foto ke koleksi tertentu (employee-photos / user-photos) di bawah
- * folder pemilik. Mengembalikan storage key (disimpan di DB).
+ * Simpan foto ke koleksi tertentu (user-photos) di bawah
+ * folder pemilik. Mengmengembalikan storage key (disimpan di DB).
  */
 export async function savePhoto(
   collection: string,

@@ -34,7 +34,7 @@ export default function SearchTrigger({
           placeholderClassName
         )}
       >
-        Cari pegawai, dokumen…
+        Cari anggota, koperasi…
       </span>
       <span className="search-command lg:bg-primary lg:text-primary-foreground ms-auto hidden items-center text-sm text-gray-600 lg:flex lg:rounded-md lg:px-1.5 lg:py-1 lg:text-xs lg:font-semibold xl:justify-normal">
         <PiCommand strokeWidth={1.3} className="h-[15px] w-[15px]" />K

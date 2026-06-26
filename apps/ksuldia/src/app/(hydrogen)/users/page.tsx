@@ -149,8 +149,8 @@ export default async function UsersPage() {
             Manajemen User
           </h1>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-gray-600">
-            Kelola akun internal: tambah, ubah role, hubungkan pegawai, reset
-            password, dan nonaktifkan/hapus. Registrasi publik dinonaktifkan.
+            Kelola akun internal: tambah, ubah role, reset password, dan
+            nonaktifkan/hapus. Registrasi publik dinonaktifkan.
           </p>
         </div>
       </section>

@@ -34,7 +34,7 @@ export default async function SignInPage() {
           untuk melanjutkan.
         </>
       }
-      description={`Gunakan akun kepegawaian Anda untuk mengakses ${appConfig.name}.`}
+      description={`Gunakan akun Anda untuk mengakses ${appConfig.name}.`}
     >
       <SignInForm />
     </AuthWrapper>

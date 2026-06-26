@@ -187,14 +187,13 @@ export function runConfigChecks(): ConfigCheck[] {
   });
 
   // ── Seed / Development ────────────────────────────────────────────────────
-  const seedCount = val("SEED_EMPLOYEE_COUNT") || "2000 (default)";
-  const seedPreset = val("SEED_DOC_PRESET") || "medis (default)";
+  const seedCount = "300 (default)";
   checks.push({
-    key: "SEED_EMPLOYEE_COUNT",
-    label: "Jumlah Pegawai Seed",
+    key: "SEED_MEMBER_COUNT",
+    label: "Jumlah Anggota Seed",
     group: "Seed & Development",
     status: "info",
-    detail: `${seedCount} pegawai · preset dokumen: ${seedPreset}`,
+    detail: `${seedCount} anggota`,
   });
 
   checks.push({

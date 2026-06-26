@@ -24,7 +24,7 @@ const toneIconClass: Record<EmptyStateTone, string> = {
 };
 
 type EmptyStateProps = {
-  /** Big headline, e.g. "Belum ada dokumen pegawai". */
+  /** Big headline, e.g. "Belum ada data anggota". */
   title: string;
   /** Optional supporting line(s) under the title. */
   description?: ReactNode;

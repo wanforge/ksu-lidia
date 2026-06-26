@@ -82,15 +82,15 @@ export default async function VaultPage() {
       <section className="flex flex-col gap-4 border-b border-gray-200 pb-5 xl:flex-row xl:items-end xl:justify-between">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.14em] text-teal-700">
-            Portal Pegawai
+            Akses Pribadi
           </p>
           <h1 className="mt-2 text-2xl font-bold text-gray-950 md:text-3xl">
             Akun Aplikasi
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-gray-600">
-            Simpan username dan password aplikasi kerja Anda (SIMRS, presensi,
-            kepegawaian, WiFi, dll.). Semua data tersimpan terenkripsi dan hanya
-            bisa diakses oleh Anda.
+            Simpan username dan password aplikasi pendukung Anda (koperasi,
+            email, WiFi, dll.). Semua data tersimpan terenkripsi dan hanya bisa
+            diakses oleh Anda.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">

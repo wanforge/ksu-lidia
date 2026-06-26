@@ -317,7 +317,7 @@ export default async function AuditPage({
             Audit Log
           </h1>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-gray-600">
-            Jejak aksi penting untuk pegawai, dokumen, lampiran, verifikasi, dan
+            Jejak aksi penting untuk simpan pinjam, anggota, transaksi toko, dan
             lifecycle akun.
           </p>
         </div>

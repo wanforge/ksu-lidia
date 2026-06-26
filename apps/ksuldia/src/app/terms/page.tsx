@@ -33,10 +33,10 @@ export default function TermsPage() {
 
       <h2>2. Kewajiban Pengguna</h2>
       <ul>
-        <li>Menggunakan aplikasi hanya untuk tugas kedinasan yang sah.</li>
+        <li>Menggunakan aplikasi hanya untuk keperluan koperasi yang sah.</li>
         <li>
           Tidak menyalahgunakan, mendistribusikan, atau membocorkan data pribadi
-          pegawai yang diaksesnya.
+          anggota yang diaksesnya.
         </li>
         <li>
           Tidak mencoba mengakses data/fungsi di luar kewenangan perannya, atau
