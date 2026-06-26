@@ -28,8 +28,6 @@ export async function seedDemoUser(
   // 1. Satu akun per role.
   const accounts: DemoAccount[] = [
     { email: `sugeng.admin@${emailDomain}`, role: UserRole.ADMIN },
-    { email: `sugeng.operator@${emailDomain}`, role: UserRole.OPERATOR },
-    { email: `sugeng.verifier@${emailDomain}`, role: UserRole.VERIFIER },
     { email: `sugeng.viewer@${emailDomain}`, role: UserRole.VIEWER },
   ];
 

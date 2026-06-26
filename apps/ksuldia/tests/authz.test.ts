@@ -7,15 +7,11 @@ import {
 
 test('back-office roles exclude non-admin/non-staff if any', () => {
   assert.equal(isBackOfficeRole('ADMIN'), true);
-  assert.equal(isBackOfficeRole('OPERATOR'), true);
-  assert.equal(isBackOfficeRole('VERIFIER'), true);
   assert.equal(isBackOfficeRole('VIEWER'), true);
 });
 
-test('audit log is visible to ADMIN, OPERATOR, VERIFIER only', () => {
+test('audit log is visible to ADMIN only', () => {
   assert.equal(canViewAuditLog('ADMIN'), true);
-  assert.equal(canViewAuditLog('OPERATOR'), true);
-  assert.equal(canViewAuditLog('VERIFIER'), true);
   assert.equal(canViewAuditLog('VIEWER'), false);
 });
 

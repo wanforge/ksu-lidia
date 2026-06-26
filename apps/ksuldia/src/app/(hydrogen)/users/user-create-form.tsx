@@ -109,12 +109,10 @@ export default function UserCreateForm() {
         <label className={labelClass}>
           <LabelWithHint
             text="Role"
-            hint="Hak akses: Admin (kelola sistem), Operator (input), Verifikator (verifikasi), Viewer (lihat)."
+            hint="Hak akses: Admin (kelola sistem & transaksi), Viewer (lihat-saja)."
           />
-          <select name="role" className={inputClass} defaultValue="OPERATOR">
+          <select name="role" className={inputClass} defaultValue="VIEWER">
             <option value="ADMIN">Admin</option>
-            <option value="OPERATOR">Operator</option>
-            <option value="VERIFIER">Verifikator</option>
             <option value="VIEWER">Viewer</option>
           </select>
           <FieldError messages={state.errors?.role} />

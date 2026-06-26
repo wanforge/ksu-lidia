@@ -15,8 +15,6 @@ datasource db {
 
 enum UserRole {
   ADMIN
-  OPERATOR
-  VERIFIER
   VIEWER
 }
 
@@ -51,7 +49,7 @@ model User {
   name              String
   email             String    @unique
   password          String
-  role              UserRole  @default(OPERATOR)
+  role              UserRole  @default(VIEWER)
   isActive          Boolean   @default(true)
   createdById       String?
   passwordChangedAt DateTime?

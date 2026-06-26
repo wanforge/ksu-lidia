@@ -32,8 +32,6 @@ type UserManagePanelProps = {
 
 const ROLE_OPTIONS = [
   { value: "ADMIN", label: "Admin" },
-  { value: "OPERATOR", label: "Operator" },
-  { value: "VERIFIER", label: "Verifikator" },
   { value: "VIEWER", label: "Viewer" },
 ];
 

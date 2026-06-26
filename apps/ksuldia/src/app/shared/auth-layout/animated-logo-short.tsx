@@ -15,188 +15,174 @@ export default function AnimatedLogoShort({
     >
       <defs>
         <style>{`
-          @keyframes apls-scan {
-            0%   { transform: translate(  0px,  0px) rotate(  0deg); }
-            18%  { transform: translate( -7px, -5px) rotate( -3deg); }
-            42%  { transform: translate(  9px, -8px) rotate(  2deg); }
-            65%  { transform: translate( 10px,  6px) rotate(  3deg); }
-            88%  { transform: translate( -5px,  4px) rotate( -2deg); }
-            100% { transform: translate(  0px,  0px) rotate(  0deg); }
+          /* ── Entry Animations ─────────────────────────────────────── */
+          @keyframes apls-up {
+            from { opacity: 0; transform: translateY(7px); }
+            to   { opacity: 1; transform: translateY(0px); }
           }
-          @keyframes apls-dl {
-            0%, 55%, 100% { transform: scaleX(1);    }
-            28%           { transform: scaleX(0.68); }
-          }
-          @keyframes apls-hb {
-            0%, 100%  { transform: scale(1.00); }
-            8%        { transform: scale(1.40); }
-            16%       { transform: scale(1.12); }
-            24%       { transform: scale(1.34); }
-            38%       { transform: scale(1.00); }
-          }
-          @keyframes apls-ca  { 0%, 100% { opacity: 0.82; } 50% { opacity: 1;    } }
-          @keyframes apls-cb  { 0%, 100% { opacity: 1;    } 50% { opacity: 0.80; } }
 
-          .apls-scan {
-            transform-box: fill-box; transform-origin: center;
-            animation: apls-scan 7s ease-in-out infinite;
+          /* ── Bob/Breathe animation ────────────────────────────────── */
+          @keyframes apls-bob {
+            0%, 100% { transform: translateY(0px) rotate(0.0deg); }
+            50%      { transform: translateY(-8px) rotate(0.5deg); }
           }
-          .apls-dl1 { transform-box: fill-box; transform-origin: left center; animation: apls-dl 4.5s ease-in-out 0.00s infinite; }
-          .apls-dl2 { transform-box: fill-box; transform-origin: left center; animation: apls-dl 4.5s ease-in-out 0.45s infinite; }
-          .apls-dl3 { transform-box: fill-box; transform-origin: left center; animation: apls-dl 4.5s ease-in-out 0.90s infinite; }
-          .apls-dl4 { transform-box: fill-box; transform-origin: left center; animation: apls-dl 4.5s ease-in-out 1.35s infinite; }
-          .apls-dl5 { transform-box: fill-box; transform-origin: left center; animation: apls-dl 4.5s ease-in-out 1.80s infinite; }
 
-          .apls-hb1 { transform-box: fill-box; transform-origin: center; animation: apls-hb 3.2s ease-in-out 0.0s infinite; }
-          .apls-hb2 { transform-box: fill-box; transform-origin: center; animation: apls-hb 3.2s ease-in-out 1.6s infinite; }
-          .apls-ca  { animation: apls-ca 4s ease-in-out 0.0s infinite; }
-          .apls-cb  { animation: apls-cb 4s ease-in-out 0.0s infinite; }
+          /* ── Tree leaves breathing ─────────────────────────────────── */
+          @keyframes apls-leaf-breath {
+            0%, 100% { transform: scale(1.0); }
+            50%      { transform: scale(1.05); }
+          }
 
+          /* ── Coin rotating / pulse ────────────────────────────────── */
+          @keyframes apls-coin-pulse {
+            0%, 100% { transform: scale(1.0); filter: drop-shadow(0 0 0px rgba(212,175,55,0)); }
+            50%      { transform: scale(1.08); filter: drop-shadow(0 0 8px rgba(212,175,55,0.6)); }
+          }
+
+          /* ── Class bindings ──────────────────────────────────────────── */
+          .apls-group {
+            animation: apls-up 0.5s ease-out both, apls-bob 5s ease-in-out infinite 0.5s;
+          }
+
+          /* Leaves animations */
+          .apls-leaf-b1, .apls-leaf-b2,
+          .apls-leaf-m1, .apls-leaf-m2,
+          .apls-leaf-t1, .apls-leaf-t2 {
+            transform-box: fill-box;
+            transform-origin: center bottom;
+          }
+
+          .apls-leaf-b1 { animation: apls-leaf-breath 4s ease-in-out infinite 0.1s; }
+          .apls-leaf-b2 { animation: apls-leaf-breath 4s ease-in-out infinite 0.3s; }
+          .apls-leaf-m1 { animation: apls-leaf-breath 4s ease-in-out infinite 0.5s; }
+          .apls-leaf-m2 { animation: apls-leaf-breath 4s ease-in-out infinite 0.7s; }
+          .apls-leaf-t1 { animation: apls-leaf-breath 4s ease-in-out infinite 0.9s; }
+          .apls-leaf-t2 { animation: apls-leaf-breath 4s ease-in-out infinite 1.1s; }
+
+          .apls-coin-group {
+            transform-box: fill-box;
+            transform-origin: center;
+            animation: apls-coin-pulse 3s ease-in-out infinite;
+          }
+
+          /* Accessibility: respect reduced-motion preference */
           @media (prefers-reduced-motion: reduce) {
-            .apls-scan,.apls-dl1,.apls-dl2,.apls-dl3,.apls-dl4,.apls-dl5,
-            .apls-hb1,.apls-hb2,.apls-ca,.apls-cb { animation: none; }
+            .apls-group, .apls-leaf-b1, .apls-leaf-b2, .apls-leaf-m1,
+            .apls-leaf-m2, .apls-leaf-t1, .apls-leaf-t2, .apls-coin-group { animation: none; }
           }
         `}</style>
       </defs>
 
-      <g transform="matrix(1,0,0,1,9.514007,0.948)">
-        {/* Background stacked cards — depth breathe */}
-        <g className="apls-ca">
-          <rect
-            x="434.539"
-            y="188.93"
-            width="283.395"
-            height="358.967"
-            rx="7"
-            fill="#ea580c"
-            opacity="0.45"
-            transform="matrix(0.984808,-0.173648,0.173648,0.984808,-451.096008,-55.878983)"
-          />
-        </g>
-        <g className="apls-cb">
-          <rect
-            x="566.79"
-            y="181.373"
-            width="283.395"
-            height="358.967"
-            rx="7"
-            fill="#fb923c"
-            opacity="0.55"
-            transform="matrix(0.992546,0.121869,-0.121869,0.992546,-346.617767,-245.191437)"
-          />
-        </g>
-
-        {/* Main document */}
-        <rect
-          x="85.895"
-          y="-0.948"
-          width="321.181"
-          height="387.306"
-          rx="7"
+      <g className="apls-group">
+        {/* Shield Base */}
+        <path
+          d="M256,40 L440,110 L440,340 C440,430 256,480 256,480 C256,480 72,430 72,340 L72,110 Z"
           fill="#991b1b"
-        />
-        <polygon
-          points="325.815 -0.948 391.94 -0.948 325.815 65.177"
-          fill="#7f1d1d"
-        />
-        <line
-          x1="316.951"
-          y1="-0.948"
-          x2="316.951"
-          y2="65.177"
           stroke="#d4af37"
-          strokeWidth="1"
+          strokeWidth="16"
+          strokeLinejoin="round"
         />
+        
+        {/* Inner Shield Glow */}
+        <path
+          d="M256,60 L420,125 L420,330 C420,410 256,455 256,455 C256,455 92,410 92,330 L92,125 Z"
+          fill="none"
+          stroke="#ea580c"
+          strokeWidth="6"
+          opacity="0.80"
+        />
+
+        {/* Cooperative Tree Trunk / Stem */}
         <line
-          x1="316.951"
-          y1="65.177"
-          x2="383.076"
-          y2="-0.948"
+          x1="256"
+          y1="360"
+          x2="256"
+          y2="150"
           stroke="#d4af37"
-          strokeWidth="1"
+          strokeWidth="14"
+          strokeLinecap="round"
         />
 
-        {/* Document lines — data-read wave */}
-        <rect
-          className="apls-dl1"
-          x="129.349"
-          y="110.873"
-          width="234.272"
-          height="20.301"
-          rx="4"
-          fill="#ffefcf"
+        {/* Leaves (Growth / Savings) */}
+        {/* Bottom Leaves */}
+        <path
+          d="M256,310 C180,310 160,250 210,230 C240,215 256,250 256,250"
+          fill="#ea580c"
+          className="apls-leaf-b1"
         />
-        <rect
-          className="apls-dl2"
-          x="129.349"
-          y="152.923"
-          width="234.272"
-          height="20.301"
-          rx="4"
-          fill="#ffefcf"
-        />
-        <rect
-          className="apls-dl3"
-          x="129.349"
-          y="194.973"
-          width="234.272"
-          height="20.301"
-          rx="4"
-          fill="#ffefcf"
-        />
-        <rect
-          className="apls-dl4"
-          x="129.349"
-          y="237.023"
-          width="234.272"
-          height="20.301"
-          rx="4"
-          fill="#ffefcf"
-        />
-        <rect
-          className="apls-dl5"
-          x="129.349"
-          y="279.073"
-          width="153.257"
-          height="20.301"
-          rx="4"
-          fill="#ffefcf"
+        <path
+          d="M256,310 C332,310 352,250 302,230 C272,215 256,250 256,250"
+          fill="#ea580c"
+          className="apls-leaf-b2"
         />
 
-        {/* Magnifying glass — verification scan */}
-        <g className="apls-scan">
-          <path
-            d="M388.183 277.656C422.057 277.656 449.518 250.195 449.518 216.321C449.518 182.447 422.057 154.986 388.183 154.986C354.309 154.986 326.848 182.447 326.848 216.321C326.848 250.195 354.309 277.656 388.183 277.656Z"
-            fill="none"
-            stroke="#f0a500"
-            strokeWidth="14"
-          />
-          <circle cx="388.183" cy="216.321" r="47.335" fill="#f0a50015" />
-          <line
-            x1="438.416"
-            y1="266.554"
-            x2="479.98"
-            y2="310.008"
-            stroke="#f0a500"
-            strokeLinecap="round"
-            strokeWidth="14"
-          />
-        </g>
+        {/* Middle Leaves */}
+        <path
+          d="M256,250 C180,250 160,190 210,170 C240,155 256,190 256,190"
+          fill="#fb923c"
+          className="apls-leaf-m1"
+        />
+        <path
+          d="M256,250 C332,250 352,190 302,170 C272,155 256,190 256,190"
+          fill="#fb923c"
+          className="apls-leaf-m2"
+        />
 
-        {/* Heartbeat dot top-left */}
-        <g className="apls-hb1">
-          <circle cx="53.777" cy="50.063" r="25.559" fill="#f0a500" />
-          <circle cx="53.777" cy="50.063" r="12.598" fill="#fff8e8" />
-        </g>
+        {/* Top Leaves */}
+        <path
+          d="M256,190 C180,190 160,130 210,110 C240,95 256,130 256,130"
+          fill="#ffedd5"
+          className="apls-leaf-t1"
+        />
+        <path
+          d="M256,190 C332,190 352,130 302,110 C272,95 256,130 256,130"
+          fill="#ffedd5"
+          className="apls-leaf-t2"
+        />
 
-        {/* Heartbeat dot bottom-right */}
-        <g className="apls-hb2">
+        {/* Golden Financial Coin & Retail Shopfront base */}
+        <g className="apls-coin-group">
+          {/* Coin border */}
           <circle
-            cx="450.53"
-            cy="480.823"
-            r="20.152"
-            fill="#f0a500"
-            opacity="0.7"
+            cx="256"
+            cy="375"
+            r="55"
+            fill="#d4af37"
+            stroke="#7f1d1d"
+            strokeWidth="8"
+          />
+          {/* Inner dash ring */}
+          <circle
+            cx="256"
+            cy="375"
+            r="45"
+            fill="none"
+            stroke="#ffedd5"
+            strokeWidth="3"
+            strokeDasharray="6 4"
+          />
+          {/* Shopfront body */}
+          <path
+            d="M236,395 L236,370 L256,350 L276,370 L276,395 Z"
+            fill="#991b1b"
+          />
+          {/* Shopfront roof */}
+          <path
+            d="M230,370 L256,346 L282,370"
+            fill="none"
+            stroke="#ffedd5"
+            strokeWidth="5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          {/* Shopfront door */}
+          <rect
+            x="248"
+            y="374"
+            width="16"
+            height="21"
+            fill="#d4af37"
+            rx="2"
           />
         </g>
       </g>

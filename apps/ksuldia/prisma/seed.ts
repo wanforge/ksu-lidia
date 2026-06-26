@@ -28,19 +28,7 @@ async function main() {
       role: UserRole.ADMIN,
     },
     {
-      name: "Operator SDM",
-      email: `operator@${emailDomain}`,
-      password: "Operator@1234",
-      role: UserRole.OPERATOR,
-    },
-    {
-      name: "Verifikator Dokumen",
-      email: `verifikator@${emailDomain}`,
-      password: "Verifikator@1234",
-      role: UserRole.VERIFIER,
-    },
-    {
-      name: "Viewer SDM",
+      name: "Viewer KSU Lidia",
       email: `viewer@${emailDomain}`,
       password: "Viewer@1234",
       role: UserRole.VIEWER,

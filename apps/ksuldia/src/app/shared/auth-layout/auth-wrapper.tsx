@@ -5,14 +5,14 @@ import AnimatedLogo from "@/app/shared/auth-layout/animated-logo";
 import { Title, Text } from "rizzui";
 import WanForgeIcon from "@/components/wanforge-icon";
 import {
-  PiArchiveDuotone,
-  PiCertificateDuotone,
-  PiCheckCircleDuotone,
-  PiClipboardTextDuotone,
-  PiShieldCheckDuotone,
   PiUsersThreeDuotone,
+  PiMoneyDuotone,
+  PiCoinsDuotone,
+  PiHandshakeDuotone,
+  PiShoppingCartDuotone,
+  PiPackageDuotone,
 } from "react-icons/pi";
-import { appConfig, brandLine } from "@/config/app";
+import { appConfig } from "@/config/app";
 
 interface AuthWrapperProps {
   children: React.ReactNode;
@@ -21,12 +21,12 @@ interface AuthWrapperProps {
 }
 
 const FEATURES = [
-  { icon: PiArchiveDuotone, label: "Arsip Dokumen" },
-  { icon: PiCertificateDuotone, label: "Kredensial & Lisensi" },
-  { icon: PiClipboardTextDuotone, label: "SKP & Evaluasi" },
-  { icon: PiShieldCheckDuotone, label: "Verifikasi Digital" },
-  { icon: PiUsersThreeDuotone, label: "Manajemen Pegawai" },
-  { icon: PiCheckCircleDuotone, label: "Audit Telusur" },
+  { icon: PiUsersThreeDuotone, label: "Manajemen Anggota" },
+  { icon: PiMoneyDuotone, label: "Simpanan Pokok & Wajib" },
+  { icon: PiCoinsDuotone, label: "Simpanan Sukarela" },
+  { icon: PiHandshakeDuotone, label: "Pinjaman & Angsuran" },
+  { icon: PiShoppingCartDuotone, label: "Kasir Toko" },
+  { icon: PiPackageDuotone, label: "Stok Produk & Inventaris" },
 ];
 
 export default function AuthWrapper({
@@ -43,12 +43,12 @@ export default function AuthWrapper({
             {/* Logo */}
             <div className="mb-10">
               <div className="inline-flex flex-col items-start gap-3">
-                <div className="rounded-2xl border border-teal-100 bg-gradient-to-br from-teal-50 to-white p-4 shadow-sm ring-1 ring-teal-600/5 dark:border-teal-900/40 dark:from-teal-950/40 dark:to-gray-900/60 dark:ring-teal-400/10">
+                <div className="rounded-2xl border border-red-100 bg-gradient-to-br from-red-50/50 to-white p-4 shadow-sm ring-1 ring-red-600/5 dark:border-red-950/40 dark:from-red-950/40 dark:to-gray-900/60 dark:ring-red-400/10">
                   <AnimatedLogo className="h-auto w-[220px] sm:w-[260px]" />
                 </div>
                 {appConfig.orgName && (
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-teal-600/10 px-3 py-1 text-xs font-semibold text-teal-700 dark:bg-teal-400/10 dark:text-teal-300">
-                    <span className="h-1.5 w-1.5 rounded-full bg-teal-500" />
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-red-600/10 px-3 py-1 text-xs font-semibold text-red-800 dark:bg-red-400/10 dark:text-red-300">
+                    <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
                     {appConfig.orgName}
                   </span>
                 )}
@@ -114,14 +114,14 @@ export default function AuthWrapper({
         </div>
 
         {/* ── Right: Banner ───────────────────────────────────────── */}
-        <div className="relative hidden w-7/12 flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-teal-600 via-teal-700 to-teal-900 lg:flex">
+        <div className="relative hidden w-7/12 flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-red-800 via-red-950 to-amber-950 lg:flex">
           {/* Decorative blobs */}
           <div className="absolute -right-40 -top-40 h-[500px] w-[500px] rounded-full bg-white/5" />
           <div className="absolute -bottom-32 -left-32 h-80 w-80 rounded-full bg-white/5" />
           <div className="absolute right-32 top-1/2 h-52 w-52 -translate-y-1/2 rounded-full bg-white/5" />
           {/* Subtle grid overlay */}
           <div
-            className="absolute inset-0 opacity-[0.04]"
+            className="absolute inset-0 opacity-[0.03]"
             style={{
               backgroundImage:
                 "linear-gradient(rgba(255,255,255,.6) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.6) 1px,transparent 1px)",
@@ -131,8 +131,8 @@ export default function AuthWrapper({
 
           <div className="relative z-10 w-full max-w-md px-10 text-center text-white">
             {/* App name */}
-            <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-teal-100 backdrop-blur-sm">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-teal-300" />
+            <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-amber-200 backdrop-blur-sm">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-400" />
               {appConfig.name}
             </div>
 
@@ -151,9 +151,9 @@ export default function AuthWrapper({
               )}
             </Title>
 
-            <Text className="mb-8 text-sm leading-relaxed text-teal-100/80">
-              {appConfig.tagline} — kelola arsip kepegawaian, kredensial, dan
-              dokumen tenaga kerja dalam satu platform terintegrasi.
+            <Text className="mb-8 text-sm leading-relaxed text-amber-100/85">
+              {appConfig.tagline} — kelola simpan pinjam, anggota, dan retail toko
+              dalam satu platform terintegrasi.
             </Text>
 
             {/* Feature grid */}
@@ -163,7 +163,7 @@ export default function AuthWrapper({
                   key={label}
                   className="flex flex-col items-center gap-2 rounded-xl border border-white/10 bg-white/10 px-3 py-4 backdrop-blur-sm transition-colors hover:bg-white/15"
                 >
-                  <Icon className="h-6 w-6 text-teal-200" />
+                  <Icon className="h-6 w-6 text-amber-300" />
                   <span className="text-center text-xs font-medium leading-tight text-white/90">
                     {label}
                   </span>
@@ -173,7 +173,7 @@ export default function AuthWrapper({
 
             {/* Org tagline at bottom */}
             {appConfig.orgName && (
-              <p className="mt-8 text-xs font-medium uppercase tracking-wide text-teal-200/60">
+              <p className="mt-8 text-xs font-medium uppercase tracking-wide text-amber-300/60">
                 {appConfig.orgName}
               </p>
             )}

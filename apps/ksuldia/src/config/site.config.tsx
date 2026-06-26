@@ -10,13 +10,12 @@ enum MODE {
 }
 
 export const siteConfig = {
-  title: "Isomorphic - React Typescript Admin Dashboard Template",
-  description: `Isomorphic the ultimate React TypeScript Admin Template. Streamline your admin dashboard development with our feature-rich, responsive, and highly customizable solution. Boost productivity and create stunning admin interfaces effortlessly.`,
+  title: "KSU Lidia - Koperasi Simpan Pinjam & Toko GKJ Manahan",
+  description: "Sistem Informasi Manajemen Anggota, Simpan Pinjam, dan Retail Toko KSU Lidia GKJ Manahan.",
   logo: logoImg,
   icon: logoIconImg,
   mode: MODE.LIGHT,
   layout: LAYOUT_OPTIONS.HYDROGEN,
-  // TODO: favicon
 };
 
 export const metaObject = (
@@ -25,19 +24,19 @@ export const metaObject = (
   description: string = siteConfig.description
 ): Metadata => {
   return {
-    title: title ? `${title} - Isomorphic Furyroad` : siteConfig.title,
+    title: title ? `${title} - KSU Lidia` : siteConfig.title,
     description,
     openGraph: openGraph ?? {
-      title: title ? `${title} - Isomorphic Furyroad` : title,
+      title: title ? `${title} - KSU Lidia` : title,
       description,
-      url: "https://isomorphic-furyroad.vercel.app",
-      siteName: "Isomorphic Furyroad", // https://developers.google.com/search/docs/appearance/site-names
+      url: "https://ksulidiagkjmanahan.com",
+      siteName: "KSU Lidia",
       images: {
-        url: "https://s3.amazonaws.com/redqteam.com/isomorphic-furyroad/itemdep/isobanner.png",
+        url: "/logo.svg",
         width: 1200,
         height: 630,
       },
-      locale: "en_US",
+      locale: "id_ID",
       type: "website",
     },
   };

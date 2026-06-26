@@ -16,7 +16,7 @@ export const presetDark = {
   foreground: "#111111",
 };
 
-// Persona brand palette, taken from the logo (teal #037171 + sea variants).
+// KSU Lidia brand palette (dark red #991b1b, orange #c2410c, gold accents).
 // Mirrors the --primary-* variables in globals.css.
 export const DEFAULT_PRESET_COLORS = {
   lighter: "#ffedd5",

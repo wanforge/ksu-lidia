@@ -4,7 +4,7 @@ CREATE TABLE `users` (
     `name` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
     `password` VARCHAR(191) NOT NULL,
-    `role` ENUM('ADMIN', 'OPERATOR', 'VERIFIER', 'VIEWER') NOT NULL DEFAULT 'OPERATOR',
+    `role` ENUM('ADMIN', 'VIEWER') NOT NULL DEFAULT 'VIEWER',
     `isActive` BOOLEAN NOT NULL DEFAULT true,
     `createdById` VARCHAR(191) NULL,
     `passwordChangedAt` DATETIME(3) NULL,
@@ -41,7 +41,7 @@ CREATE TABLE `password_reset_tokens` (
 CREATE TABLE `audit_logs` (
     `id` VARCHAR(191) NOT NULL,
     `actorId` VARCHAR(191) NULL,
-    `actorRole` ENUM('ADMIN', 'OPERATOR', 'VERIFIER', 'VIEWER') NULL,
+    `actorRole` ENUM('ADMIN', 'VIEWER') NULL,
     `action` ENUM('CREATE', 'UPDATE', 'DELETE', 'RESTORE', 'UPLOAD', 'DOWNLOAD', 'EXPORT', 'VERIFY', 'REJECT', 'REQUEST_REVISION', 'LOGIN', 'LOGOUT', 'PASSWORD_RESET_ISSUED', 'PASSWORD_RESET_USED', 'PASSWORD_CHANGED') NOT NULL,
     `entityType` VARCHAR(191) NOT NULL,
     `entityId` VARCHAR(191) NOT NULL,

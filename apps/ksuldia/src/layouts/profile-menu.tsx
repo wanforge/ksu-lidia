@@ -11,9 +11,7 @@ import { hasPermission, PERMISSIONS } from "@/lib/rbac/permissions";
 
 const roleLabels: Record<string, string> = {
   ADMIN: "Administrator",
-  OPERATOR: "Operator Arsip",
-  VERIFIER: "Verifikator",
-  VIEWER: "Pimpinan / Viewer",
+  VIEWER: "Viewer",
 };
 
 export default function ProfileMenu({

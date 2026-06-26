@@ -48,15 +48,11 @@ type UsersWorkspaceProps = {
 
 const roleLabels: Record<string, string> = {
   ADMIN: "Admin",
-  OPERATOR: "Operator",
-  VERIFIER: "Verifikator",
   VIEWER: "Viewer",
 };
 
 const roleTone: Record<string, string> = {
   ADMIN: "border-rose-200 bg-rose-50 text-rose-800",
-  OPERATOR: "border-cyan-200 bg-cyan-50 text-cyan-800",
-  VERIFIER: "border-teal-200 bg-teal-50 text-teal-800",
   VIEWER: "border-gray-200 bg-gray-50 text-gray-700",
 };
 
