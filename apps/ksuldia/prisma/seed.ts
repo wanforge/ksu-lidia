@@ -11,7 +11,8 @@ async function main() {
   console.log("🌱  Seeding database...");
 
   const emailDomain =
-    process.env.NEXT_PUBLIC_ORG_EMAIL_DOMAIN?.trim() || "instansi.go.id";
+    process.env.NEXT_PUBLIC_ORG_EMAIL_DOMAIN?.trim() ||
+    "ksulidiagkjmanahan.com";
 
   type SeedUser = {
     name: string;
