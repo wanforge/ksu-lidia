@@ -28,7 +28,7 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
   useActionFeedback(state);
 
   return (
-    <form action={dispatchAction} className="max-w-4xl space-y-6">
+    <form action={dispatchAction} className="w-full space-y-6">
       {/* 1. General Info Card */}
       <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
         <h2 className="mb-4 flex items-center gap-2 text-base font-bold text-gray-900">
@@ -152,7 +152,7 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
 
           <div>
             <label className="mb-1 block text-sm font-medium text-gray-700">
-              Cad. Resiko Kredit (%)
+              Cadangan Resiko Kredit (%)
             </label>
             <input
               type="number"

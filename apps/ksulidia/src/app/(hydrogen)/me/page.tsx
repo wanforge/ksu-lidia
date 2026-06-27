@@ -100,7 +100,7 @@ export default async function MePage() {
         </div>
       </section>
 
-      <section className="mx-auto grid w-full max-w-4xl grid-cols-1 gap-6 md:grid-cols-[280px_1fr]">
+      <section className="grid w-full grid-cols-1 gap-6 md:grid-cols-[280px_1fr]">
         {/* Profile Card */}
         <div className="flex flex-col items-center rounded-xl border border-gray-200 bg-white p-6 text-center">
           <div className="inline-flex h-24 w-24 items-center justify-center rounded-full border-2 border-red-100 bg-red-50 text-red-600">

@@ -2,12 +2,11 @@
 
 import { useActionState, useEffect, useMemo, useState } from "react";
 import {
-  PiMagnifyingGlassBold,
   PiPlusBold,
   PiUsersThreeDuotone,
   PiBookOpenDuotone,
-  PiArrowDownRightBold,
-  PiArrowUpLeftBold,
+  PiArrowDownRightDuotone,
+  PiArrowUpLeftDuotone,
   PiUserCirclePlusDuotone,
   PiClockCounterClockwiseDuotone,
   PiXBold,
@@ -24,11 +23,14 @@ import {
 } from "./actions";
 import { SavingsType, SavingsTxType } from "@prisma/client";
 import { Button } from "@/components/ui/button";
-import { useCustomTable } from "@/lib/use-custom-table";
+import { useCustomTable, ColumnFilterConfig } from "@/lib/use-custom-table";
 import {
   TableControls,
   SortableHeader,
 } from "@/app/(hydrogen)/_components/table-controls";
+import { DataTableFilters } from "@/components/ui/table/DataTableFilters";
+import { TableActionButton } from "@/components/ui/table/TableActionButton";
+import { DateInput } from "@/components/ui/form/DateInput";
 
 type SavingsAccount = {
   id: string;
@@ -154,11 +156,22 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
     }));
   }, [members]);
 
+  const memberFilterConfig: ColumnFilterConfig[] = useMemo(() => [
+    { key: 'no', label: 'Nomor Rapat Anggota Tahunan', type: 'text', placeholder: 'Cari nomor...' },
+    { key: 'name', label: 'Nama Anggota', type: 'text', placeholder: 'Cari nama...' },
+    { key: 'phone', label: 'Nomor Telepon', type: 'text', placeholder: 'Cari telepon...' },
+    { key: 'address', label: 'Alamat', type: 'text', placeholder: 'Cari alamat...' },
+    { key: 'isDeceased', label: 'Status Wafat', type: 'boolean' },
+    { key: 'pokok', label: 'Simpanan Pokok', type: 'numberRange' },
+    { key: 'wajib', label: 'Simpanan Wajib', type: 'numberRange' },
+    { key: 'sukarela', label: 'Simpanan Sukarela', type: 'numberRange' },
+  ], []);
+
   const table = useCustomTable({
     items: mappedMembers,
     initialSort: { key: "no", direction: "asc" },
     initialPageSize: 10,
-    searchFields: ["name", "no", "phone", "address"],
+    advancedFilterConfig: memberFilterConfig,
   });
 
   const txItems = useMemo(() => {
@@ -175,11 +188,24 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
     }));
   }, [memberDetail]);
 
+  const transactionFilterConfig: ColumnFilterConfig[] = useMemo(() => [
+    { key: 'type', label: 'Jenis Mutasi', type: 'select', options: [
+      { label: 'Setoran', value: 'DEPOSIT' },
+      { label: 'Penarikan', value: 'WITHDRAWAL' },
+    ]},
+    { key: 'savingsType', label: 'Jenis Simpanan', type: 'select', options: [
+      { label: 'Simpanan Wajib', value: 'WAJIB' },
+      { label: 'Simpanan Sukarela', value: 'SUKARELA' },
+      { label: 'Simpanan Pokok', value: 'POKOK' },
+    ]},
+    { key: 'description', label: 'Keterangan', type: 'text', placeholder: 'Cari keterangan...' },
+  ], []);
+
   const txTable = useCustomTable({
     items: txItems,
     initialSort: { key: "date", direction: "desc" },
     initialPageSize: 10,
-    searchFields: ["savingsType", "type", "description", "formattedDate"],
+    advancedFilterConfig: transactionFilterConfig,
   });
 
   const selectedMemberObj = useMemo(() => {
@@ -450,15 +476,11 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                     <PiClockCounterClockwiseDuotone className="mr-2 h-4 w-4 text-gray-400" />
                     Mutasi Buku Tabungan
                   </h3>
-                  <label className="relative max-w-xs flex-1">
-                    <PiMagnifyingGlassBold className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" />
-                    <input
-                      value={txTable.searchQuery}
-                      onChange={(e) => txTable.setSearchQuery(e.target.value)}
-                      placeholder="Cari jenis, mutasi, ket..."
-                      className="w-full rounded border border-gray-300 bg-white py-1 pl-8 pr-2 text-xs text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-red-700"
-                    />
-                  </label>
+                  <DataTableFilters
+                    filterConfig={transactionFilterConfig}
+                    onFilterChange={txTable.setAdvancedFilters}
+                    currentFilters={txTable.advancedFilters}
+                  />
                 </div>
                 <div className="overflow-x-auto">
                   <table className="min-w-full divide-y divide-gray-200 text-sm">
@@ -590,22 +612,11 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
       ) : (
         <div>
           {/* Filters */}
-          <div className="flex flex-wrap items-end gap-3 border-b border-gray-200 p-4">
-            <div className="flex min-w-[220px] max-w-md flex-1 flex-col gap-1.5">
-              <span className="text-xs font-medium text-gray-500">
-                Cari Anggota
-              </span>
-              <label className="relative block">
-                <PiMagnifyingGlassBold className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-                <input
-                  value={table.searchQuery}
-                  onChange={(e) => table.setSearchQuery(e.target.value)}
-                  placeholder="Cari nomor RAT, nama anggota..."
-                  className="h-10 w-full rounded-md border border-gray-300 bg-white pl-9 pr-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-gray-700"
-                />
-              </label>
-            </div>
-          </div>
+          <DataTableFilters
+            filterConfig={memberFilterConfig}
+            onFilterChange={table.setAdvancedFilters}
+            currentFilters={table.advancedFilters}
+          />
 
           {/* Member List Table */}
           {table.paginatedItems.length === 0 ? (
@@ -723,10 +734,14 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                           </td>
                           <td className="px-4 py-3 text-center">
                             {hasActiveLoan ? (
-                              <span className="inline-flex rounded-md border border-rose-200 bg-rose-50 px-2 py-0.5 text-xs font-semibold text-rose-800">
-                                Ada (Rp{" "}
-                                {formatNumber(Number(m.loans[0].amount))})
-                              </span>
+                              <div className="flex flex-col items-center gap-0.5">
+                                <span className="inline-flex rounded-md border border-rose-200 bg-rose-50 px-2 py-0.5 text-xs font-semibold text-rose-800">
+                                  Ada
+                                </span>
+                                <span className="text-xs font-medium text-gray-700">
+                                  Rp {formatNumber(Number(m.loans[0].amount))}
+                                </span>
+                              </div>
                             ) : (
                               <span className="inline-flex rounded-md border border-gray-200 bg-gray-50 px-2 py-0.5 text-xs font-semibold text-gray-500">
                                 Tidak ada
@@ -734,18 +749,19 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                             )}
                           </td>
                           <td className="flex items-center justify-center gap-1.5 px-4 py-3 text-center">
-                            <Button
-                              size="sm"
+                            <TableActionButton
+                              icon={PiBookOpenDuotone}
+                              label="Mutasi"
                               variant="primary-soft"
                               onClick={() => {
                                 setSelectedMemberId(m.id);
                                 setTab("detail");
                               }}
-                            >
-                              Mutasi
-                            </Button>
-                            <Button
-                              size="sm"
+                            />
+                            <TableActionButton
+                              icon={PiArrowDownRightDuotone}
+                              label="Setor"
+                              variant="primary"
                               disabled={m.isDeceased}
                               onClick={() =>
                                 setTxModal({
@@ -754,13 +770,11 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                                   type: SavingsTxType.DEPOSIT,
                                 })
                               }
-                            >
-                              Setor
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="neutral"
-                              className="border-amber-600 text-amber-700 hover:bg-amber-50"
+                            />
+                            <TableActionButton
+                              icon={PiArrowUpLeftDuotone}
+                              label="Tarik"
+                              variant="warning"
                               disabled={m.isDeceased}
                               onClick={() =>
                                 setTxModal({
@@ -769,9 +783,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                                   type: SavingsTxType.WITHDRAWAL,
                                 })
                               }
-                            >
-                              Tarik
-                            </Button>
+                            />
                           </td>
                         </tr>
                       );
@@ -842,6 +854,16 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
             <form action={dispatchTx} className="space-y-4">
               <input type="hidden" name="memberId" value={txModal.member.id} />
               <input type="hidden" name="type" value={txModal.type} />
+
+              <DateInput
+                name="transactionDate"
+                label="Tanggal Transaksi"
+                helperText="Tanggal pencatatan transaksi simpanan ini."
+                tooltipContent="Secara default adalah tanggal hari ini, dapat diubah sesuai tanggal transaksi."
+                defaultValue={new Date()} // Always defaults to today
+                required
+              />
+
 
               <div>
                 <label className="mb-1 block text-sm font-medium text-gray-700">
