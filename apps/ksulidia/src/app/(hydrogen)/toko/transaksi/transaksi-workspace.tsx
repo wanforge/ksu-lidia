@@ -143,8 +143,11 @@ export default function TransaksiWorkspace({
           alert(`Stok tidak cukup! Sisa stok adalah ${currentProduct.stock}`);
           return prev;
         }
-        updated[existingIdx].quantity = newQty;
-        updated[existingIdx].unitPrice = inputPrice; // update with latest inputted price
+        updated[existingIdx] = {
+          ...updated[existingIdx],
+          quantity: newQty,
+          unitPrice: inputPrice,
+        };
         return updated;
       } else {
         return [
@@ -169,6 +172,26 @@ export default function TransaksiWorkspace({
   // Remove from cart
   const removeFromCart = (productId: string) => {
     setCart((prev) => prev.filter((item) => item.productId !== productId));
+  };
+
+  // Update quantity in cart
+  const updateCartQty = (productId: string, newQty: number) => {
+    if (isNaN(newQty) || newQty <= 0) return;
+    setCart((prev) =>
+      prev.map((item) => {
+        if (item.productId === productId) {
+          if (tab === "sale") {
+            const prod = products.find((p) => p.id === productId);
+            if (prod && prod.stock < newQty) {
+              alert(`Stok tidak cukup! Sisa stok adalah ${prod.stock}`);
+              return item;
+            }
+          }
+          return { ...item, quantity: newQty };
+        }
+        return item;
+      })
+    );
   };
 
   // Mapped transactions for useCustomTable
@@ -411,7 +434,18 @@ export default function TransaksiWorkspace({
                             Rp {formatNumber(item.unitPrice)}
                           </td>
                           <td className="px-4 py-3 text-center font-bold">
-                            {item.quantity}
+                            <input
+                              type="number"
+                              min={1}
+                              value={item.quantity}
+                              onChange={(e) =>
+                                updateCartQty(
+                                  item.productId,
+                                  parseInt(e.target.value) || 1
+                                )
+                              }
+                              className="w-20 rounded-md border border-gray-300 px-2 py-1 text-center text-sm font-semibold outline-none focus:border-red-700"
+                            />
                           </td>
                           <td className="px-4 py-3 text-right font-bold text-red-800">
                             Rp {formatNumber(item.quantity * item.unitPrice)}
