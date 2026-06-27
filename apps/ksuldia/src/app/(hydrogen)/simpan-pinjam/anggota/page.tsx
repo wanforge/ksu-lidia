@@ -1,6 +1,7 @@
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { PERMISSIONS, hasPermission } from "@/lib/rbac/permissions";
+import { serializePrisma } from "@/lib/serialize";
 import AnggotaWorkspace from "./anggota-workspace";
 
 export const dynamic = "force-dynamic";
@@ -54,7 +55,7 @@ export default async function AnggotaPage() {
         </div>
       </section>
 
-      <AnggotaWorkspace members={members} />
+      <AnggotaWorkspace members={serializePrisma(members)} />
     </div>
   );
 }

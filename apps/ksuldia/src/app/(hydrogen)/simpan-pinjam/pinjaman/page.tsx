@@ -1,6 +1,7 @@
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { PERMISSIONS, hasPermission } from "@/lib/rbac/permissions";
+import { serializePrisma } from "@/lib/serialize";
 import PinjamanWorkspace from "./pinjaman-workspace";
 
 export const dynamic = "force-dynamic";
@@ -62,7 +63,7 @@ export default async function PinjamanPage() {
         </div>
       </section>
 
-      <PinjamanWorkspace loans={loans} eligibleMembers={eligibleMembers} />
+      <PinjamanWorkspace loans={serializePrisma(loans)} eligibleMembers={serializePrisma(eligibleMembers)} />
     </div>
   );
 }

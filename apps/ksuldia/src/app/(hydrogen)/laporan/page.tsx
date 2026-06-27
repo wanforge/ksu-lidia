@@ -1,6 +1,7 @@
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { PERMISSIONS, hasPermission } from "@/lib/rbac/permissions";
+import { serializePrisma } from "@/lib/serialize";
 import LaporanWorkspace from "./laporan-workspace";
 
 export const dynamic = "force-dynamic";
@@ -57,10 +58,10 @@ export default async function LaporanPage() {
 
   return (
     <LaporanWorkspace
-      members={members}
-      loans={loans}
-      cashBookTxs={cashBookTxs}
-      storeTxs={storeTxs}
+      members={serializePrisma(members)}
+      loans={serializePrisma(loans)}
+      cashBookTxs={serializePrisma(cashBookTxs)}
+      storeTxs={serializePrisma(storeTxs)}
     />
   );
 }
