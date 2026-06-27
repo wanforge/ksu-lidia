@@ -63,7 +63,6 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
           name="password"
           label="Password Baru"
           helperText="Minimal 8 karakter."
-          placeholder="Minimal 8 karakter"
           size="lg"
           disabled={pending || state.success}
           className="[&>label>span]:font-medium"
@@ -78,7 +77,6 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
           name="confirmPassword"
           label="Konfirmasi Password"
           helperText="Ketik ulang password baru, harus sama persis."
-          placeholder="Ulangi password baru"
           size="lg"
           disabled={pending || state.success}
           className="[&>label>span]:font-medium"

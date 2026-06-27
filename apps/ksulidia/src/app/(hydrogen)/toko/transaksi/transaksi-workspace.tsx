@@ -495,11 +495,6 @@ export default function TransaksiWorkspace({
                   name="notes"
                   value={txNotes}
                   onChange={(e) => setTxNotes(e.target.value)}
-                  placeholder={
-                    tab === "sale"
-                      ? "Contoh: Bp. Joko, Umum"
-                      : "Contoh: Supplier Sembako Jaya"
-                  }
                   className="h-10 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-700"
                 />
                 <p className="mt-1 text-xs text-gray-500">

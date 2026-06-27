@@ -81,7 +81,6 @@ export default function SignInForm() {
               type="email"
               size="lg"
               label="Email"
-              placeholder={emailPlaceholder}
               className="[&>label>span]:font-medium"
               inputClassName="text-sm"
               {...register("email")}
@@ -90,7 +89,6 @@ export default function SignInForm() {
             <Password
               id="password"
               label="Password"
-              placeholder="Masukkan password Anda"
               size="lg"
               className="[&>label>span]:font-medium"
               inputClassName="text-sm"
