@@ -227,8 +227,7 @@ export default async function Home() {
             </div>
 
             <h1 className="text-2xl font-bold tracking-tight text-white md:text-3xl lg:text-4xl">
-              {greeting(now)},{" "}
-              {firstName ? firstName : "Rekan Kerja"}
+              {greeting(now)}, {firstName ? firstName : "Rekan Kerja"}
             </h1>
 
             <p className="max-w-xl text-sm leading-relaxed text-slate-300">
@@ -308,9 +307,7 @@ export default async function Home() {
               </h3>
               <p className="mt-1.5 flex items-center gap-1 text-xs font-medium text-rose-600">
                 <PiTrendDownDuotone className="h-3.5 w-3.5" />
-                <span>
-                  Total pinjaman berjalan ({activeLoanCount} kontrak)
-                </span>
+                <span>Total pinjaman berjalan ({activeLoanCount} kontrak)</span>
               </p>
             </div>
           </div>
@@ -384,9 +381,7 @@ export default async function Home() {
                   <h3 className="font-semibold text-gray-900">
                     Inventaris Toko
                   </h3>
-                  <p className="text-xs text-gray-500">
-                    Stok produk toko KSU
-                  </p>
+                  <p className="text-xs text-gray-500">Stok produk toko KSU</p>
                 </div>
               </div>
               <Link
@@ -591,9 +586,7 @@ export default async function Home() {
               {recentLoans.length === 0 ? (
                 <div className="flex flex-col items-center gap-2 py-10 text-center">
                   <PiHandshakeDuotone className="h-8 w-8 text-gray-300" />
-                  <p className="text-sm text-gray-400">
-                    Belum ada pinjaman
-                  </p>
+                  <p className="text-sm text-gray-400">Belum ada pinjaman</p>
                 </div>
               ) : (
                 recentLoans.map((l, i) => (

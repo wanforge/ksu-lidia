@@ -9,7 +9,12 @@ import {
   createLoanSchema,
   payInstallmentSchema,
 } from "@/validators/ksulidia.schema";
-import { LoanStatus, InstallmentStatus, AuditAction, AttachmentSource } from "@prisma/client";
+import {
+  LoanStatus,
+  InstallmentStatus,
+  AuditAction,
+  AttachmentSource,
+} from "@prisma/client";
 import { recordAuditLog } from "@/lib/audit";
 
 export type LoanActionState = {

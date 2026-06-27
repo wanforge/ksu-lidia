@@ -55,7 +55,10 @@ export default async function TransaksiPage() {
         </div>
       </section>
 
-      <TransaksiWorkspace transactions={serializePrisma(transactions)} products={serializePrisma(products)} />
+      <TransaksiWorkspace
+        transactions={serializePrisma(transactions)}
+        products={serializePrisma(products)}
+      />
     </div>
   );
 }

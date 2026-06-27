@@ -296,7 +296,7 @@ export default function TransaksiWorkspace({
                   <select
                     value={selectedProductId}
                     onChange={(e) => handleProductChange(e.target.value)}
-                    className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
+                    className="h-10 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-700"
                   >
                     <option value="">-- Pilih --</option>
                     {products.map((p) => (
@@ -321,7 +321,7 @@ export default function TransaksiWorkspace({
                     min={1}
                     value={inputQty}
                     onChange={(e) => setInputQty(Number(e.target.value))}
-                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
+                    className="h-10 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-700"
                   />
                   <p className="mt-1 text-xs text-gray-500">
                     Jumlah kuantitas barang.
@@ -336,7 +336,7 @@ export default function TransaksiWorkspace({
                     type="number"
                     value={inputPrice}
                     onChange={(e) => setInputPrice(Number(e.target.value))}
-                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
+                    className="h-10 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-700"
                   />
                   <p className="mt-1 text-xs text-gray-500">
                     Harga per unit barang.
@@ -361,16 +361,28 @@ export default function TransaksiWorkspace({
               <h3 className="text-sm font-bold text-gray-700">
                 Keranjang Item
               </h3>
-              <div className="overflow-x-auto rounded-lg border border-gray-200">
-                <table className="w-full text-left text-sm text-gray-700">
-                  <thead className="bg-gray-50 text-xs font-semibold uppercase text-gray-500">
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200 text-sm">
+                  <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-4 py-3">Kode</th>
-                      <th className="px-4 py-3">Nama Produk</th>
-                      <th className="px-4 py-3 text-right">Harga</th>
-                      <th className="px-4 py-3 text-center">Qty</th>
-                      <th className="px-4 py-3 text-right">Subtotal</th>
-                      <th className="px-4 py-3 text-center">Aksi</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        Kode
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        Nama Produk
+                      </th>
+                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        Harga
+                      </th>
+                      <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        Qty
+                      </th>
+                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        Subtotal
+                      </th>
+                      <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        Aksi
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
@@ -454,7 +466,7 @@ export default function TransaksiWorkspace({
                       ? "Contoh: Bp. Joko, Umum"
                       : "Contoh: Supplier Sembako Jaya"
                   }
-                  className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
+                  className="h-10 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-700"
                 />
                 <p className="mt-1 text-xs text-gray-500">
                   {tab === "sale"
@@ -497,16 +509,21 @@ export default function TransaksiWorkspace({
       ) : (
         <div>
           {/* Filters */}
-          <div className="flex border-b border-gray-200 p-4">
-            <label className="relative max-w-md flex-1">
-              <PiMagnifyingGlassBold className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-              <input
-                value={table.searchQuery}
-                onChange={(e) => table.setSearchQuery(e.target.value)}
-                placeholder="Cari keterangan, pembeli, nama produk..."
-                className="w-full rounded-md border border-gray-300 bg-white py-2 pl-9 pr-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-teal-700"
-              />
-            </label>
+          <div className="flex flex-wrap items-end gap-3 border-b border-gray-200 p-4">
+            <div className="flex min-w-[220px] max-w-md flex-1 flex-col gap-1.5">
+              <span className="text-xs font-medium text-gray-500">
+                Cari Transaksi
+              </span>
+              <label className="relative block">
+                <PiMagnifyingGlassBold className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                <input
+                  value={table.searchQuery}
+                  onChange={(e) => table.setSearchQuery(e.target.value)}
+                  placeholder="Cari keterangan, pembeli, nama produk..."
+                  className="h-10 w-full rounded-md border border-gray-300 bg-white pl-9 pr-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-gray-700"
+                />
+              </label>
+            </div>
           </div>
 
           {/* Transactions list */}
@@ -519,10 +536,10 @@ export default function TransaksiWorkspace({
           ) : (
             <>
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm text-gray-700">
-                  <thead className="bg-gray-50 text-xs font-semibold uppercase text-gray-500">
+                <table className="min-w-full divide-y divide-gray-200 text-sm">
+                  <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-4 py-3">
+                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                         <SortableHeader
                           label="Tanggal"
                           sortKey="dateVal"
@@ -531,7 +548,7 @@ export default function TransaksiWorkspace({
                           onSort={table.handleSort}
                         />
                       </th>
-                      <th className="px-4 py-3">
+                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                         <SortableHeader
                           label="Jenis"
                           sortKey="type"
@@ -540,7 +557,7 @@ export default function TransaksiWorkspace({
                           onSort={table.handleSort}
                         />
                       </th>
-                      <th className="px-4 py-3">
+                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                         <SortableHeader
                           label="Keterangan / Partner"
                           sortKey="notes"
@@ -549,7 +566,7 @@ export default function TransaksiWorkspace({
                           onSort={table.handleSort}
                         />
                       </th>
-                      <th className="px-4 py-3 text-right">
+                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
                         <SortableHeader
                           label="Total Transaksi"
                           sortKey="totalAmountVal"
@@ -559,7 +576,7 @@ export default function TransaksiWorkspace({
                           className="w-full justify-end"
                         />
                       </th>
-                      <th className="px-4 py-3 text-center">
+                      <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
                         <SortableHeader
                           label="Jumlah Barang"
                           sortKey="itemsCount"
@@ -569,7 +586,9 @@ export default function TransaksiWorkspace({
                           className="w-full justify-center"
                         />
                       </th>
-                      <th className="px-4 py-3 text-center">Detail</th>
+                      <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        Detail
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">

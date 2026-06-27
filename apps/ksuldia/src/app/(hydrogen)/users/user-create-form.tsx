@@ -38,10 +38,7 @@ export default function UserCreateForm() {
   }, [router, state.success]);
 
   return (
-    <form
-      action={formAction}
-      className="rounded-md border border-gray-200 bg-white"
-    >
+    <form action={formAction}>
       <div className="border-b border-gray-200 px-5 py-4">
         <h2 className="text-base font-semibold text-gray-950">Tambah User</h2>
         <p className="mt-1 text-sm text-gray-500">
@@ -119,7 +116,7 @@ export default function UserCreateForm() {
         </label>
       </div>
 
-      <div className="flex justify-end border-t border-gray-200 px-5 py-4">
+      <div className="flex justify-end rounded-b-md border-t border-gray-200 bg-gray-50/50 px-5 py-4">
         <Button type="submit" size="md" isLoading={pending}>
           {pending ? "Menyimpan..." : "Buat pengguna"}
         </Button>

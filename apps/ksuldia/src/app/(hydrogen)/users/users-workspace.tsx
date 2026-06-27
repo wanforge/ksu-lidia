@@ -150,9 +150,7 @@ export default function UsersWorkspace({
       </div>
 
       {tab === "create" ? (
-        <div className="p-5">
-          <UserCreateForm />
-        </div>
+        <UserCreateForm />
       ) : tab === "deleted" ? (
         <div>
           <div className="flex items-start gap-2 border-b border-gray-100 bg-rose-50/50 px-5 py-3 text-xs text-rose-800">
@@ -196,28 +194,34 @@ export default function UsersWorkspace({
       ) : (
         <div>
           {/* Filters */}
-          <div className="grid grid-cols-1 gap-3 border-b border-gray-200 p-4 md:grid-cols-[minmax(0,1fr)_220px]">
-            <label className="relative">
-              <PiMagnifyingGlassBold className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Cari nama atau email..."
-                className="w-full rounded-md border border-gray-300 bg-white py-2 pl-9 pr-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-gray-700"
-              />
-            </label>
-            <select
-              value={roleFilter}
-              onChange={(e) => setRoleFilter(e.target.value)}
-              className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition focus:border-gray-700"
-            >
-              <option value="">Semua Peran</option>
-              {Object.entries(roleLabels).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
+          <div className="flex flex-wrap items-end gap-3 border-b border-gray-200 p-4">
+            <div className="flex min-w-[220px] flex-1 flex-col gap-1.5">
+              <span className="text-xs font-medium text-gray-500">Cari</span>
+              <label className="relative block">
+                <PiMagnifyingGlassBold className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                <input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Cari nama atau email..."
+                  className="h-10 w-full rounded-md border border-gray-300 bg-white pl-9 pr-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-gray-700"
+                />
+              </label>
+            </div>
+            <div className="flex min-w-[160px] flex-col gap-1.5">
+              <span className="text-xs font-medium text-gray-500">Peran</span>
+              <select
+                value={roleFilter}
+                onChange={(e) => setRoleFilter(e.target.value)}
+                className="h-10 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-700"
+              >
+                <option value="">Semua Peran</option>
+                {Object.entries(roleLabels).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           {filtered.length === 0 ? (
@@ -228,7 +232,7 @@ export default function UsersWorkspace({
             />
           ) : (
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200 text-[13px]">
+              <table className="min-w-full divide-y divide-gray-200 text-sm">
                 <thead className="bg-gray-50">
                   <tr>
                     <ClientSortHeader
@@ -253,7 +257,7 @@ export default function UsersWorkspace({
                       onClick={() => requestSort("lastLoginAt")}
                       className="min-w-[200px]"
                     />
-                    <th className="px-3 py-2 text-right font-semibold text-gray-600">
+                    <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
                       Kelola
                     </th>
                   </tr>
@@ -264,7 +268,7 @@ export default function UsersWorkspace({
                     return (
                       <Fragment key={user.id}>
                         <tr className="align-top">
-                          <td className="px-3 py-2.5">
+                          <td className="px-4 py-2.5">
                             <p className="font-semibold text-gray-950">
                               {user.name}
                             </p>
@@ -275,7 +279,7 @@ export default function UsersWorkspace({
                               Dibuat {formatDate(user.createdAt)}
                             </p>
                           </td>
-                          <td className="px-3 py-2.5">
+                          <td className="px-4 py-2.5">
                             <div className="flex flex-wrap gap-2">
                               <StatusPill
                                 label={roleLabels[user.role] ?? user.role}
@@ -295,7 +299,7 @@ export default function UsersWorkspace({
                             </div>
                           </td>
 
-                          <td className="px-3 py-2.5">
+                          <td className="px-4 py-2.5">
                             <p className="text-gray-700">
                               Terakhir: {formatDate(user.lastLoginAt)}
                             </p>
@@ -309,7 +313,7 @@ export default function UsersWorkspace({
                               </p>
                             ) : null}
                           </td>
-                          <td className="px-3 py-2.5 text-right">
+                          <td className="px-4 py-2.5 text-right">
                             <Button
                               variant="neutral"
                               size="md"
@@ -324,7 +328,7 @@ export default function UsersWorkspace({
                         </tr>
                         {isOpen ? (
                           <tr className="bg-gray-50/40">
-                            <td colSpan={5} className="px-3 py-2.5">
+                            <td colSpan={5} className="px-4 py-2.5">
                               <UserManagePanel
                                 user={{
                                   id: user.id,

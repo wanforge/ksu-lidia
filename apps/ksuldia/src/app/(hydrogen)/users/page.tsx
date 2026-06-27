@@ -157,8 +157,8 @@ export default async function UsersPage() {
 
       {!data.databaseReady ? (
         <div className="rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-          Data belum dapat dimuat saat ini. Manajemen pengguna akan aktif setelah
-          migrasi berjalan.
+          Data belum dapat dimuat saat ini. Manajemen pengguna akan aktif
+          setelah migrasi berjalan.
         </div>
       ) : null}
 

@@ -10,7 +10,12 @@ import {
   updateMemberSchema,
   savingsTransactionSchema,
 } from "@/validators/ksulidia.schema";
-import { SavingsType, SavingsTxType, AuditAction, AttachmentSource } from "@prisma/client";
+import {
+  SavingsType,
+  SavingsTxType,
+  AuditAction,
+  AttachmentSource,
+} from "@prisma/client";
 import { recordAuditLog } from "@/lib/audit";
 
 export type MemberActionState = {

@@ -32,7 +32,7 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
       {/* 1. General Info Card */}
       <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
         <h2 className="mb-4 flex items-center gap-2 text-base font-bold text-gray-900">
-          <PiHouseDuotone className="h-5 w-5 text-red-800" />
+          <PiHouseDuotone className="h-5 w-5 text-teal-700" />
           Informasi & Identitas Koperasi
         </h2>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -45,7 +45,7 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
               name="cooperativeName"
               defaultValue={config.cooperativeName}
               required
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700 focus:ring-1 focus:ring-red-700"
+              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition focus:border-gray-700"
             />
             <p className="mt-1 text-xs text-gray-500">
               Nama resmi Koperasi Simpan Usaha (KSU).
@@ -60,7 +60,7 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
               name="cooperativeAddress"
               defaultValue={config.cooperativeAddress}
               required
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700 focus:ring-1 focus:ring-red-700"
+              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition focus:border-gray-700"
             />
             <p className="mt-1 text-xs text-gray-500">
               Alamat lengkap kantor pusat/operasional Koperasi.
@@ -85,7 +85,7 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
               name="minPokok"
               defaultValue={config.minPokok}
               required
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700 focus:ring-1 focus:ring-red-700"
+              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition focus:border-gray-700"
             />
             <p className="mt-1 text-xs text-gray-500">
               Setoran wajib pertama saat mendaftar menjadi anggota.
@@ -100,7 +100,7 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
               name="wajibMonthly"
               defaultValue={config.wajibMonthly}
               required
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700 focus:ring-1 focus:ring-red-700"
+              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition focus:border-gray-700"
             />
             <p className="mt-1 text-xs text-gray-500">
               Setoran bulanan rutin anggota.
@@ -112,7 +112,7 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
       {/* 3. Pinjaman Settings Card */}
       <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
         <h2 className="mb-4 flex items-center gap-2 text-base font-bold text-gray-900">
-          <PiCoinsDuotone className="h-5 w-5 text-red-800" />
+          <PiCoinsDuotone className="h-5 w-5 text-teal-700" />
           Konfigurasi Pinjaman & Perkreditan
         </h2>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -126,7 +126,7 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
               name="interestRate"
               defaultValue={config.interestRate}
               required
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700 focus:ring-1 focus:ring-red-700"
+              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition focus:border-gray-700"
             />
             <p className="mt-1 text-xs text-gray-500">
               Bunga per bulan berjalan.
@@ -143,7 +143,7 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
               name="provisionRate"
               defaultValue={config.provisionRate}
               required
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700 focus:ring-1 focus:ring-red-700"
+              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition focus:border-gray-700"
             />
             <p className="mt-1 text-xs text-gray-500">
               Dipotong saat pencairan.
@@ -160,7 +160,7 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
               name="crkRate"
               defaultValue={config.crkRate}
               required
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700 focus:ring-1 focus:ring-red-700"
+              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition focus:border-gray-700"
             />
             <p className="mt-1 text-xs text-gray-500">
               Cadangan resiko kredit (CRK).
@@ -177,7 +177,7 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
               name="penaltyRate"
               defaultValue={config.penaltyRate}
               required
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700 focus:ring-1 focus:ring-red-700"
+              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition focus:border-gray-700"
             />
             <p className="mt-1 text-xs text-gray-500">
               Denda keterlambatan angsuran.
@@ -199,10 +199,7 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
 
       {/* Submit Button */}
       <div className="flex justify-end gap-3">
-        <Button
-          type="submit"
-          className="bg-red-800 px-6 py-2.5 font-semibold text-white shadow-md hover:bg-red-900"
-        >
+        <Button type="submit" size="md">
           Simpan Konfigurasi Master
         </Button>
       </div>

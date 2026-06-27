@@ -603,11 +603,11 @@ export default function PinjamanWorkspace({
                     />
                   </label>
                 </div>
-                <div className="border-gray-150 overflow-x-auto rounded-lg border">
-                  <table className="w-full text-left text-sm text-gray-700">
-                    <thead className="bg-gray-50 text-xs font-semibold uppercase text-gray-500">
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200 text-sm">
+                    <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-4 py-3">
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                           <SortableHeader
                             label="Bulan ke-"
                             sortKey="monthNumber"
@@ -616,7 +616,7 @@ export default function PinjamanWorkspace({
                             onSort={instTable.handleSort}
                           />
                         </th>
-                        <th className="px-4 py-3">
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                           <SortableHeader
                             label="Jatuh Tempo"
                             sortKey="dueDate"
@@ -625,7 +625,7 @@ export default function PinjamanWorkspace({
                             onSort={instTable.handleSort}
                           />
                         </th>
-                        <th className="px-4 py-3 text-right">
+                        <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
                           <SortableHeader
                             label="Pokok"
                             sortKey="principalVal"
@@ -635,7 +635,7 @@ export default function PinjamanWorkspace({
                             className="w-full justify-end"
                           />
                         </th>
-                        <th className="px-4 py-3 text-right">
+                        <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
                           <SortableHeader
                             label="Bunga"
                             sortKey="interestVal"
@@ -645,7 +645,7 @@ export default function PinjamanWorkspace({
                             className="w-full justify-end"
                           />
                         </th>
-                        <th className="px-4 py-3 text-right">
+                        <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
                           <SortableHeader
                             label="Denda"
                             sortKey="penaltyVal"
@@ -655,7 +655,7 @@ export default function PinjamanWorkspace({
                             className="w-full justify-end"
                           />
                         </th>
-                        <th className="px-4 py-3 text-right font-bold">
+                        <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
                           <SortableHeader
                             label="Total Tagihan"
                             sortKey="totalVal"
@@ -665,9 +665,15 @@ export default function PinjamanWorkspace({
                             className="w-full justify-end text-teal-800"
                           />
                         </th>
-                        <th className="px-4 py-3 text-center">Status</th>
-                        <th className="px-4 py-3 text-center">Tanggal Bayar</th>
-                        <th className="px-4 py-3 text-center">Aksi</th>
+                        <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
+                          Status
+                        </th>
+                        <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
+                          Tanggal Bayar
+                        </th>
+                        <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
+                          Aksi
+                        </th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
@@ -769,16 +775,21 @@ export default function PinjamanWorkspace({
       ) : (
         <div>
           {/* Filters */}
-          <div className="flex border-b border-gray-200 p-4">
-            <label className="relative max-w-md flex-1">
-              <PiMagnifyingGlassBold className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-              <input
-                value={table.searchQuery}
-                onChange={(e) => table.setSearchQuery(e.target.value)}
-                placeholder="Cari nama anggota, nomor RAT, status..."
-                className="w-full rounded-md border border-gray-300 bg-white py-2 pl-9 pr-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-teal-700"
-              />
-            </label>
+          <div className="flex flex-wrap items-end gap-3 border-b border-gray-200 p-4">
+            <div className="flex min-w-[220px] max-w-md flex-1 flex-col gap-1.5">
+              <span className="text-xs font-medium text-gray-500">
+                Cari Pinjaman
+              </span>
+              <label className="relative block">
+                <PiMagnifyingGlassBold className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                <input
+                  value={table.searchQuery}
+                  onChange={(e) => table.setSearchQuery(e.target.value)}
+                  placeholder="Cari nama anggota, nomor RAT, status..."
+                  className="h-10 w-full rounded-md border border-gray-300 bg-white pl-9 pr-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-gray-700"
+                />
+              </label>
+            </div>
           </div>
 
           {/* Loans List Table */}
@@ -791,10 +802,10 @@ export default function PinjamanWorkspace({
           ) : (
             <>
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm text-gray-700">
-                  <thead className="bg-gray-50 text-xs font-semibold uppercase text-gray-500">
+                <table className="min-w-full divide-y divide-gray-200 text-sm">
+                  <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-4 py-3">
+                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                         <SortableHeader
                           label="Nama Anggota"
                           sortKey="memberName"
@@ -803,7 +814,7 @@ export default function PinjamanWorkspace({
                           onSort={table.handleSort}
                         />
                       </th>
-                      <th className="px-4 py-3">
+                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                         <SortableHeader
                           label="Tanggal Cair"
                           sortKey="dateDisbursed"
@@ -812,7 +823,7 @@ export default function PinjamanWorkspace({
                           onSort={table.handleSort}
                         />
                       </th>
-                      <th className="px-4 py-3 text-right">
+                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
                         <SortableHeader
                           label="Nilai Hutang"
                           sortKey="amountVal"
@@ -822,7 +833,7 @@ export default function PinjamanWorkspace({
                           className="w-full justify-end"
                         />
                       </th>
-                      <th className="px-4 py-3 text-center">
+                      <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
                         <SortableHeader
                           label="Tenor"
                           sortKey="tenor"
@@ -832,7 +843,7 @@ export default function PinjamanWorkspace({
                           className="w-full justify-center"
                         />
                       </th>
-                      <th className="px-4 py-3 text-right font-bold text-teal-800">
+                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
                         <SortableHeader
                           label="Angsuran / Bulan"
                           sortKey="installmentAmountVal"
@@ -842,7 +853,7 @@ export default function PinjamanWorkspace({
                           className="w-full justify-end"
                         />
                       </th>
-                      <th className="px-4 py-3 text-center">
+                      <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
                         <SortableHeader
                           label="Status"
                           sortKey="status"
@@ -852,7 +863,7 @@ export default function PinjamanWorkspace({
                           className="w-full justify-center"
                         />
                       </th>
-                      <th className="px-4 py-3 text-center">
+                      <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
                         <SortableHeader
                           label="Progres"
                           sortKey="paidCount"
@@ -862,7 +873,9 @@ export default function PinjamanWorkspace({
                           className="w-full justify-center"
                         />
                       </th>
-                      <th className="px-4 py-3 text-center">Aksi</th>
+                      <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        Aksi
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">

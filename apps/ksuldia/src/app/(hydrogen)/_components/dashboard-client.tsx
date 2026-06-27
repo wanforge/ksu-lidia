@@ -98,11 +98,7 @@ export function AnimatedCounter({
 }
 
 /* ─── Pulse ring for live status dots ──────────────────── */
-export function PulseRing({
-  color = "bg-emerald-500",
-}: {
-  color?: string;
-}) {
+export function PulseRing({ color = "bg-emerald-500" }: { color?: string }) {
   return (
     <span className="relative flex h-2.5 w-2.5">
       <span
@@ -114,7 +110,6 @@ export function PulseRing({
     </span>
   );
 }
-
 
 /* ─── Shimmer highlight bar on hero ────────────────────── */
 export function ShimmerBar() {

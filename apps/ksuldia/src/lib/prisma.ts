@@ -43,7 +43,10 @@ function isDecimal(value: unknown): boolean {
   return (
     Prisma.Decimal.isDecimal(value) ||
     value.constructor?.name === "Decimal" ||
-    ("d" in value && "e" in value && "s" in value && Array.isArray((value as any).d))
+    ("d" in value &&
+      "e" in value &&
+      "s" in value &&
+      Array.isArray((value as any).d))
   );
 }
 
@@ -266,5 +269,6 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 export const prisma: PrismaClient =
-  globalForPrisma.prisma_v3 ?? (createExtendedClient() as unknown as PrismaClient);
+  globalForPrisma.prisma_v3 ??
+  (createExtendedClient() as unknown as PrismaClient);
 if (env.NODE_ENV !== "production") globalForPrisma.prisma_v3 = prisma;

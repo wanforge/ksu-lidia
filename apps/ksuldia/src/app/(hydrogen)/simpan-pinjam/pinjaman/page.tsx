@@ -63,7 +63,10 @@ export default async function PinjamanPage() {
         </div>
       </section>
 
-      <PinjamanWorkspace loans={serializePrisma(loans)} eligibleMembers={serializePrisma(eligibleMembers)} />
+      <PinjamanWorkspace
+        loans={serializePrisma(loans)}
+        eligibleMembers={serializePrisma(eligibleMembers)}
+      />
     </div>
   );
 }

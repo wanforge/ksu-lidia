@@ -7,6 +7,7 @@ import {
   PiCaretDownBold,
   PiCaretUpDownBold,
 } from "react-icons/pi";
+import { formatNumber } from "@/lib/format";
 
 interface TableControlsProps {
   currentPage: number;
@@ -34,15 +35,15 @@ export function TableControls({
   exportLabel = "Export CSV",
 }: TableControlsProps) {
   return (
-    <div className="flex flex-col gap-4 border-t border-gray-100 p-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col gap-4 border-t border-gray-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
       {/* Entries Info & Page Size */}
-      <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500">
+      <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600">
         <div className="flex items-center gap-2">
           <span>Tampilkan</span>
           <select
             value={pageSize}
             onChange={(e) => onPageSizeChange(Number(e.target.value))}
-            className="rounded border border-gray-300 bg-white px-2 py-1 text-sm outline-none focus:border-teal-700"
+            className="h-8 rounded-md border border-gray-300 bg-white px-2 text-xs font-semibold text-gray-700 outline-none transition focus:border-teal-700"
           >
             <option value={10}>10</option>
             <option value={25}>25</option>
@@ -50,9 +51,21 @@ export function TableControls({
           </select>
           <span>baris</span>
         </div>
-        <span className="hidden sm:inline">•</span>
+        <span className="hidden text-gray-300 sm:inline">•</span>
         <span>
-          Menampilkan {startIndex} - {endIndex} dari {totalItems} data
+          Menampilkan{" "}
+          <span className="font-semibold text-gray-900">
+            {formatNumber(startIndex)}
+          </span>
+          –
+          <span className="font-semibold text-gray-900">
+            {formatNumber(endIndex)}
+          </span>{" "}
+          dari{" "}
+          <span className="font-semibold text-gray-900">
+            {formatNumber(totalItems)}
+          </span>{" "}
+          data
         </span>
       </div>
 

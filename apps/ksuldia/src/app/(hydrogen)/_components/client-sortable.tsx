@@ -84,7 +84,7 @@ export function ClientSortHeader({
   return (
     <th
       className={cn(
-        "px-5 py-3 font-semibold text-gray-600",
+        "px-4 py-3 text-xs font-semibold uppercase tracking-wide text-gray-500",
         align === "right"
           ? "text-right"
           : align === "center"

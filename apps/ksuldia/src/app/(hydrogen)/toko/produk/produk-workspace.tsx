@@ -284,29 +284,39 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
       ) : (
         <div>
           {/* Filters */}
-          <div className="grid grid-cols-1 gap-4 border-b border-gray-200 p-4 md:grid-cols-[1fr_200px]">
-            <label className="relative">
-              <PiMagnifyingGlassBold className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-              <input
-                value={table.searchQuery}
-                onChange={(e) => table.setSearchQuery(e.target.value)}
-                placeholder="Cari kode atau nama produk..."
-                className="w-full rounded-md border border-gray-300 bg-white py-2 pl-9 pr-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-teal-700"
-              />
-            </label>
+          <div className="flex flex-wrap items-end gap-3 border-b border-gray-200 p-4">
+            <div className="flex min-w-[220px] max-w-md flex-1 flex-col gap-1.5">
+              <span className="text-xs font-medium text-gray-500">
+                Cari Produk
+              </span>
+              <label className="relative block">
+                <PiMagnifyingGlassBold className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                <input
+                  value={table.searchQuery}
+                  onChange={(e) => table.setSearchQuery(e.target.value)}
+                  placeholder="Cari kode atau nama produk..."
+                  className="h-10 w-full rounded-md border border-gray-300 bg-white pl-9 pr-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-gray-700"
+                />
+              </label>
+            </div>
 
-            <select
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-              className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition focus:border-teal-700"
-            >
-              <option value="">Semua Kategori</option>
-              {categories.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
+            <div className="flex min-w-[160px] flex-col gap-1.5">
+              <span className="text-xs font-medium text-gray-500">
+                Kategori
+              </span>
+              <select
+                value={categoryFilter}
+                onChange={(e) => setCategoryFilter(e.target.value)}
+                className="h-10 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-700"
+              >
+                <option value="">Semua Kategori</option>
+                {categories.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           {/* Product list table */}
@@ -319,10 +329,10 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
           ) : (
             <>
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm text-gray-700">
-                  <thead className="bg-gray-50 text-xs font-semibold uppercase text-gray-500">
+                <table className="min-w-full divide-y divide-gray-200 text-sm">
+                  <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-4 py-3">
+                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                         <SortableHeader
                           label="Kode"
                           sortKey="code"
@@ -331,7 +341,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                           onSort={table.handleSort}
                         />
                       </th>
-                      <th className="px-4 py-3">
+                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                         <SortableHeader
                           label="Nama Produk"
                           sortKey="name"
@@ -340,7 +350,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                           onSort={table.handleSort}
                         />
                       </th>
-                      <th className="px-4 py-3">
+                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                         <SortableHeader
                           label="Kategori"
                           sortKey="category"
@@ -349,7 +359,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                           onSort={table.handleSort}
                         />
                       </th>
-                      <th className="px-4 py-3 text-center">
+                      <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
                         <SortableHeader
                           label="Stok Fisik"
                           sortKey="stock"
@@ -359,7 +369,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                           className="w-full justify-center"
                         />
                       </th>
-                      <th className="px-4 py-3 text-right">
+                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
                         <SortableHeader
                           label="Harga Beli"
                           sortKey="purchasePriceVal"
@@ -369,27 +379,29 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                           className="w-full justify-end"
                         />
                       </th>
-                      <th className="px-4 py-3 text-right">
+                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
                         <SortableHeader
                           label="Harga Jual"
                           sortKey="sellingPriceVal"
                           activeSortKey={table.sortConfig.key as string}
                           activeDirection={table.sortConfig.direction}
                           onSort={table.handleSort}
-                          className="w-full justify-end font-bold"
+                          className="w-full justify-end"
                         />
                       </th>
-                      <th className="px-4 py-3 text-right">
+                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
                         <SortableHeader
                           label="Margin / Markup"
                           sortKey="marginVal"
                           activeSortKey={table.sortConfig.key as string}
                           activeDirection={table.sortConfig.direction}
                           onSort={table.handleSort}
-                          className="w-full justify-end font-semibold text-green-700"
+                          className="w-full justify-end text-teal-800"
                         />
                       </th>
-                      <th className="px-4 py-3 text-center">Aksi</th>
+                      <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        Aksi
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">

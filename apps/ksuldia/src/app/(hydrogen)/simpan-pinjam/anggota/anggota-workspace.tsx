@@ -235,88 +235,105 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
 
       {/* Tab Contents */}
       {tab === "create" ? (
-        <div className="max-w-xl p-6">
-          <h2 className="mb-4 text-lg font-bold text-gray-900">
-            Registrasi Anggota Baru
-          </h2>
-          <form action={dispatchCreate} className="space-y-4">
-            <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                Nomor Anggota (No. RAT)
-              </label>
-              <input
-                type="number"
-                name="no"
-                required
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
-                placeholder="Contoh: 301"
-              />
-              <p className="mt-1 text-xs text-gray-500">
-                Nomor urut anggota dalam buku Rapat Anggota Tahunan (RAT).
-              </p>
-              {createState.errors?.no && (
-                <p className="mt-1 text-xs text-red-600">
-                  {createState.errors.no[0]}
+        <div>
+          <div className="border-b border-gray-200 px-5 py-4">
+            <h2 className="text-base font-semibold text-gray-950">
+              Daftarkan Anggota Baru
+            </h2>
+            <p className="mt-1 text-sm text-gray-500">
+              Masukkan data diri lengkap anggota baru koperasi.
+            </p>
+          </div>
+
+          <form action={dispatchCreate}>
+            <div className="grid grid-cols-1 gap-4 p-5 md:grid-cols-2">
+              {createState.message ? (
+                <div
+                  className={
+                    createState.success
+                      ? "rounded-md border border-teal-200 bg-teal-50 px-4 py-3 text-sm font-medium text-teal-800 md:col-span-2"
+                      : "rounded-md border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-800 md:col-span-2"
+                  }
+                >
+                  {createState.message}
+                </div>
+              ) : null}
+
+              <div>
+                <label className="mb-1 block text-sm font-semibold text-gray-800">
+                  Nomor Anggota (RAT)
+                </label>
+                <input
+                  type="number"
+                  name="no"
+                  required
+                  className="h-10 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-700"
+                  placeholder="Contoh: 301"
+                />
+                <p className="mt-1 text-xs text-gray-500">
+                  Nomor urut anggota dalam buku Rapat Anggota Tahunan (RAT).
                 </p>
-              )}
-            </div>
+                {createState.errors?.no && (
+                  <p className="mt-1 text-xs text-rose-700">
+                    {createState.errors.no[0]}
+                  </p>
+                )}
+              </div>
 
-            <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                Nama Lengkap
-              </label>
-              <input
-                type="text"
-                name="name"
-                required
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
-                placeholder="Nama lengkap anggota"
-              />
-              <p className="mt-1 text-xs text-gray-500">
-                Nama lengkap sesuai dengan KTP anggota.
-              </p>
-              {createState.errors?.name && (
-                <p className="mt-1 text-xs text-red-600">
-                  {createState.errors.name[0]}
+              <div>
+                <label className="mb-1 block text-sm font-semibold text-gray-800">
+                  Nama Lengkap
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  required
+                  className="h-10 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-700"
+                  placeholder="Nama lengkap anggota"
+                />
+                <p className="mt-1 text-xs text-gray-500">
+                  Nama lengkap sesuai dengan KTP anggota.
                 </p>
-              )}
+                {createState.errors?.name && (
+                  <p className="mt-1 text-xs text-rose-700">
+                    {createState.errors.name[0]}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-semibold text-gray-800">
+                  Nomor Telepon (Optional)
+                </label>
+                <input
+                  type="text"
+                  name="phone"
+                  className="h-10 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-700"
+                  placeholder="081xxxxxxxx"
+                />
+                <p className="mt-1 text-xs text-gray-500">
+                  Nomor telepon aktif (WhatsApp) untuk mempermudah komunikasi.
+                </p>
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-semibold text-gray-800">
+                  Alamat (Optional)
+                </label>
+                <textarea
+                  name="address"
+                  className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition focus:border-gray-700"
+                  placeholder="Alamat domisili"
+                  rows={3}
+                />
+                <p className="mt-1 text-xs text-gray-500">
+                  Alamat tempat tinggal saat ini sesuai domisili.
+                </p>
+              </div>
             </div>
 
-            <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                Nomor Telepon (Optional)
-              </label>
-              <input
-                type="text"
-                name="phone"
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
-                placeholder="081xxxxxxxx"
-              />
-              <p className="mt-1 text-xs text-gray-500">
-                Nomor telepon aktif (WhatsApp) untuk mempermudah komunikasi.
-              </p>
-            </div>
-
-            <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                Alamat (Optional)
-              </label>
-              <textarea
-                name="address"
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
-                placeholder="Alamat domisili"
-                rows={3}
-              />
-              <p className="mt-1 text-xs text-gray-500">
-                Alamat tempat tinggal saat ini sesuai domisili.
-              </p>
-            </div>
-
-            <div className="pt-2">
-              <Button
-                type="submit"
-                className="bg-teal-700 text-white hover:bg-teal-800"
-              >
+            <div className="flex justify-end rounded-b-md border-t border-gray-200 bg-gray-50/50 px-5 py-4">
+              <Button type="submit" size="md">
                 <PiUserCirclePlusDuotone className="mr-2 h-4 w-4" />
                 Daftarkan Anggota
               </Button>
@@ -430,11 +447,11 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                     />
                   </label>
                 </div>
-                <div className="overflow-x-auto rounded-lg border border-gray-100">
-                  <table className="w-full text-left text-sm text-gray-700">
-                    <thead className="bg-gray-50 text-xs font-semibold uppercase text-gray-500">
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200 text-sm">
+                    <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-4 py-3">
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                           <SortableHeader
                             label="Tanggal"
                             sortKey="date"
@@ -443,7 +460,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                             onSort={txTable.handleSort}
                           />
                         </th>
-                        <th className="px-4 py-3">
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                           <SortableHeader
                             label="Mutasi"
                             sortKey="type"
@@ -452,7 +469,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                             onSort={txTable.handleSort}
                           />
                         </th>
-                        <th className="px-4 py-3">
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                           <SortableHeader
                             label="Simpanan"
                             sortKey="savingsType"
@@ -461,7 +478,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                             onSort={txTable.handleSort}
                           />
                         </th>
-                        <th className="px-4 py-3 text-right">
+                        <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
                           <SortableHeader
                             label="Jumlah"
                             sortKey="amount"
@@ -471,7 +488,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                             className="w-full justify-end"
                           />
                         </th>
-                        <th className="px-4 py-3">
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                           <SortableHeader
                             label="Keterangan"
                             sortKey="description"
@@ -560,16 +577,21 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
       ) : (
         <div>
           {/* Filters */}
-          <div className="flex border-b border-gray-200 p-4">
-            <label className="relative max-w-md flex-1">
-              <PiMagnifyingGlassBold className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-              <input
-                value={table.searchQuery}
-                onChange={(e) => table.setSearchQuery(e.target.value)}
-                placeholder="Cari nomor RAT, nama anggota..."
-                className="w-full rounded-md border border-gray-300 bg-white py-2 pl-9 pr-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-teal-700"
-              />
-            </label>
+          <div className="flex flex-wrap items-end gap-3 border-b border-gray-200 p-4">
+            <div className="flex min-w-[220px] max-w-md flex-1 flex-col gap-1.5">
+              <span className="text-xs font-medium text-gray-500">
+                Cari Anggota
+              </span>
+              <label className="relative block">
+                <PiMagnifyingGlassBold className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                <input
+                  value={table.searchQuery}
+                  onChange={(e) => table.setSearchQuery(e.target.value)}
+                  placeholder="Cari nomor RAT, nama anggota..."
+                  className="h-10 w-full rounded-md border border-gray-300 bg-white pl-9 pr-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-gray-700"
+                />
+              </label>
+            </div>
           </div>
 
           {/* Member List Table */}
@@ -582,10 +604,10 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
           ) : (
             <>
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm text-gray-700">
-                  <thead className="bg-gray-50 text-xs font-semibold uppercase text-gray-500">
+                <table className="min-w-full divide-y divide-gray-200 text-sm">
+                  <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-4 py-3">
+                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                         <SortableHeader
                           label="No. RAT"
                           sortKey="no"
@@ -594,7 +616,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                           onSort={table.handleSort}
                         />
                       </th>
-                      <th className="px-4 py-3">
+                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                         <SortableHeader
                           label="Nama Anggota"
                           sortKey="name"
@@ -603,7 +625,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                           onSort={table.handleSort}
                         />
                       </th>
-                      <th className="px-4 py-3 text-right">
+                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
                         <SortableHeader
                           label="Pokok"
                           sortKey="pokok"
@@ -613,7 +635,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                           className="w-full justify-end"
                         />
                       </th>
-                      <th className="px-4 py-3 text-right">
+                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
                         <SortableHeader
                           label="Wajib"
                           sortKey="wajib"
@@ -623,7 +645,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                           className="w-full justify-end"
                         />
                       </th>
-                      <th className="px-4 py-3 text-right">
+                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
                         <SortableHeader
                           label="Sukarela"
                           sortKey="sukarela"
@@ -633,7 +655,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                           className="w-full justify-end"
                         />
                       </th>
-                      <th className="px-4 py-3 text-right">
+                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
                         <SortableHeader
                           label="Total Simpanan"
                           sortKey="totalSavings"
@@ -643,8 +665,12 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                           className="w-full justify-end text-teal-800"
                         />
                       </th>
-                      <th className="px-4 py-3 text-center">Pinjaman Aktif</th>
-                      <th className="px-4 py-3 text-center">Aksi</th>
+                      <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        Pinjaman Aktif
+                      </th>
+                      <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        Aksi
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
