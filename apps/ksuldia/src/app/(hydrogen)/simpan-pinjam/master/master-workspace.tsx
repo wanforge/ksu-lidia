@@ -47,6 +47,9 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
               required
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700 focus:ring-1 focus:ring-red-700"
             />
+            <p className="mt-1 text-xs text-gray-500">
+              Nama resmi Koperasi Simpan Usaha (KSU).
+            </p>
           </div>
           <div>
             <label className="mb-1 block text-sm font-medium text-gray-700">
@@ -59,6 +62,9 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
               required
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700 focus:ring-1 focus:ring-red-700"
             />
+            <p className="mt-1 text-xs text-gray-500">
+              Alamat lengkap kantor pusat/operasional Koperasi.
+            </p>
           </div>
         </div>
       </div>

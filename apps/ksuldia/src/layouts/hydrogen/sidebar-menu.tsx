@@ -17,11 +17,25 @@ import { usePermissions } from "@/components/rbac/can";
 function useVisibleMenu(): MenuItem[] {
   const { can } = usePermissions();
 
-  // 1) keep links the role can access (or links without a permission gate)
-  const allowed = menuItems.filter((item) => {
-    if (!item.href) return true; // section header — decided in pass 2
-    return item.permission ? can(item.permission) : true;
-  });
+  // 1) keep links the role can access and filter child dropdowns
+  const allowed = menuItems
+    .map((item) => {
+      if (item.dropdownItems) {
+        const visibleChildren = item.dropdownItems.filter((child) =>
+          child.permission ? can(child.permission) : true
+        );
+        return {
+          ...item,
+          dropdownItems:
+            visibleChildren.length > 0 ? visibleChildren : undefined,
+        };
+      }
+      return item;
+    })
+    .filter((item) => {
+      if (!item.href) return true; // section header — decided in pass 2
+      return item.permission ? can(item.permission) : true;
+    });
 
   // 2) drop headers that have no visible link before the next header
   return allowed.filter((item, index) => {

@@ -70,19 +70,24 @@ export const menuItems: MenuItem[] = [
     permission: PERMISSIONS.SIMPAN_PINJAM_VIEW,
   },
   {
-    name: "Master Konfigurasi",
-    href: routes.simpanPinjam.master,
+    name: "Data Master",
+    href: "#",
     icon: <PiGearDuotone />,
-    permission: PERMISSIONS.USER_MANAGE,
+    dropdownItems: [
+      {
+        name: "Parameter Koperasi",
+        href: routes.simpanPinjam.master,
+        permission: PERMISSIONS.USER_MANAGE,
+      },
+      {
+        name: "Katalog Produk",
+        href: routes.toko.produk,
+        permission: PERMISSIONS.TOKO_VIEW,
+      },
+    ],
   },
   {
     name: "Toko Lidia",
-  },
-  {
-    name: "Katalog Produk",
-    href: routes.toko.produk,
-    icon: <PiStorefrontDuotone />,
-    permission: PERMISSIONS.TOKO_VIEW,
   },
   {
     name: "Transaksi & Stok",

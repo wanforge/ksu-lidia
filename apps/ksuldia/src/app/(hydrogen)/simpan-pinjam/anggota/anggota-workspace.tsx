@@ -23,6 +23,11 @@ import {
 } from "./actions";
 import { SavingsType, SavingsTxType } from "@prisma/client";
 import { Button } from "@/components/ui/button";
+import { useCustomTable } from "@/lib/use-custom-table";
+import {
+  TableControls,
+  SortableHeader,
+} from "@/app/(hydrogen)/_components/table-controls";
 
 type SavingsAccount = {
   id: string;
@@ -69,9 +74,7 @@ function getTotalSavings(member: MemberWithAccounts): number {
 
 export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
   const [tab, setTab] = useState<"list" | "create" | "detail">("list");
-  const [query, setQuery] = useState("");
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
-
   // Member details loaded dynamically
   const [memberDetail, setMemberDetail] = useState<any>(null);
   const [isLoadingDetail, setIsLoadingDetail] = useState(false);
@@ -134,18 +137,48 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
     }
   }, [selectedMemberId]);
 
-  // Filters
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return members.filter((m) => {
-      if (!q) return true;
-      return (
-        m.name.toLowerCase().includes(q) ||
-        m.no.toString().includes(q) ||
-        (m.phone && m.phone.includes(q))
-      );
-    });
-  }, [members, query]);
+  // Precompute metrics for table
+  const mappedMembers = useMemo(() => {
+    return members.map((m) => ({
+      ...m,
+      pokok: getSavingsBalance(m, SavingsType.POKOK),
+      wajib: getSavingsBalance(m, SavingsType.WAJIB),
+      sukarela: getSavingsBalance(m, SavingsType.SUKARELA),
+      totalSavings: getTotalSavings(m),
+      activeLoanText:
+        m.loans.length > 0
+          ? `Ada (Rp ${formatNumber(Number(m.loans[0].amount))})`
+          : "Tidak ada",
+    }));
+  }, [members]);
+
+  const table = useCustomTable({
+    items: mappedMembers,
+    initialSort: { key: "no", direction: "asc" },
+    initialPageSize: 10,
+    searchFields: ["name", "no", "phone", "address"],
+  });
+
+  const txItems = useMemo(() => {
+    if (!memberDetail?.savingsTransactions) return [];
+    return memberDetail.savingsTransactions.map((tx: any) => ({
+      ...tx,
+      formattedDate: new Intl.DateTimeFormat("id-ID", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      }).format(new Date(tx.date)),
+    }));
+  }, [memberDetail]);
+
+  const txTable = useCustomTable({
+    items: txItems,
+    initialSort: { key: "date", direction: "desc" },
+    initialPageSize: 10,
+    searchFields: ["savingsType", "type", "description", "formattedDate"],
+  });
 
   const selectedMemberObj = useMemo(() => {
     return members.find((m) => m.id === selectedMemberId) || null;
@@ -218,6 +251,9 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
                 placeholder="Contoh: 301"
               />
+              <p className="mt-1 text-xs text-gray-500">
+                Nomor urut anggota dalam buku Rapat Anggota Tahunan (RAT).
+              </p>
               {createState.errors?.no && (
                 <p className="mt-1 text-xs text-red-600">
                   {createState.errors.no[0]}
@@ -236,6 +272,9 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
                 placeholder="Nama lengkap anggota"
               />
+              <p className="mt-1 text-xs text-gray-500">
+                Nama lengkap sesuai dengan KTP anggota.
+              </p>
               {createState.errors?.name && (
                 <p className="mt-1 text-xs text-red-600">
                   {createState.errors.name[0]}
@@ -253,6 +292,9 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
                 placeholder="081xxxxxxxx"
               />
+              <p className="mt-1 text-xs text-gray-500">
+                Nomor telepon aktif (WhatsApp) untuk mempermudah komunikasi.
+              </p>
             </div>
 
             <div>
@@ -265,6 +307,9 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                 placeholder="Alamat domisili"
                 rows={3}
               />
+              <p className="mt-1 text-xs text-gray-500">
+                Alamat tempat tinggal saat ini sesuai domisili.
+              </p>
             </div>
 
             <div className="pt-2">
@@ -370,23 +415,75 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
 
               {/* Savings Mutasi Table */}
               <div className="space-y-3">
-                <h3 className="flex items-center text-sm font-bold uppercase tracking-wider text-gray-500">
-                  <PiClockCounterClockwiseDuotone className="mr-2 h-4 w-4 text-gray-400" />
-                  Mutasi Buku Tabungan
-                </h3>
+                <div className="flex flex-col gap-2 border-b border-gray-100 pb-3 sm:flex-row sm:items-center sm:justify-between">
+                  <h3 className="flex items-center text-sm font-bold uppercase tracking-wider text-gray-500">
+                    <PiClockCounterClockwiseDuotone className="mr-2 h-4 w-4 text-gray-400" />
+                    Mutasi Buku Tabungan
+                  </h3>
+                  <label className="relative max-w-xs flex-1">
+                    <PiMagnifyingGlassBold className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" />
+                    <input
+                      value={txTable.searchQuery}
+                      onChange={(e) => txTable.setSearchQuery(e.target.value)}
+                      placeholder="Cari jenis, mutasi, ket..."
+                      className="w-full rounded border border-gray-300 bg-white py-1 pl-8 pr-2 text-xs text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-teal-700"
+                    />
+                  </label>
+                </div>
                 <div className="overflow-x-auto rounded-lg border border-gray-100">
                   <table className="w-full text-left text-sm text-gray-700">
                     <thead className="bg-gray-50 text-xs font-semibold uppercase text-gray-500">
                       <tr>
-                        <th className="px-4 py-3">Tanggal</th>
-                        <th className="px-4 py-3">Mutasi</th>
-                        <th className="px-4 py-3">Simpanan</th>
-                        <th className="px-4 py-3 text-right">Jumlah</th>
-                        <th className="px-4 py-3">Keterangan</th>
+                        <th className="px-4 py-3">
+                          <SortableHeader
+                            label="Tanggal"
+                            sortKey="date"
+                            activeSortKey={txTable.sortConfig.key as string}
+                            activeDirection={txTable.sortConfig.direction}
+                            onSort={txTable.handleSort}
+                          />
+                        </th>
+                        <th className="px-4 py-3">
+                          <SortableHeader
+                            label="Mutasi"
+                            sortKey="type"
+                            activeSortKey={txTable.sortConfig.key as string}
+                            activeDirection={txTable.sortConfig.direction}
+                            onSort={txTable.handleSort}
+                          />
+                        </th>
+                        <th className="px-4 py-3">
+                          <SortableHeader
+                            label="Simpanan"
+                            sortKey="savingsType"
+                            activeSortKey={txTable.sortConfig.key as string}
+                            activeDirection={txTable.sortConfig.direction}
+                            onSort={txTable.handleSort}
+                          />
+                        </th>
+                        <th className="px-4 py-3 text-right">
+                          <SortableHeader
+                            label="Jumlah"
+                            sortKey="amount"
+                            activeSortKey={txTable.sortConfig.key as string}
+                            activeDirection={txTable.sortConfig.direction}
+                            onSort={txTable.handleSort}
+                            className="w-full justify-end"
+                          />
+                        </th>
+                        <th className="px-4 py-3">
+                          <SortableHeader
+                            label="Keterangan"
+                            sortKey="description"
+                            activeSortKey={txTable.sortConfig.key as string}
+                            activeDirection={txTable.sortConfig.direction}
+                            onSort={txTable.handleSort}
+                          />
+                        </th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
-                      {memberDetail.savingsTransactions.length === 0 ? (
+                      {txTable.paginatedItems.length === 0 ? (
                         <tr>
                           <td
                             colSpan={5}
@@ -396,17 +493,9 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                           </td>
                         </tr>
                       ) : (
-                        memberDetail.savingsTransactions.map((tx: any) => (
+                        txTable.paginatedItems.map((tx: any) => (
                           <tr key={tx.id} className="hover:bg-gray-50/50">
-                            <td className="px-4 py-3">
-                              {new Intl.DateTimeFormat("id-ID", {
-                                day: "2-digit",
-                                month: "short",
-                                year: "numeric",
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              }).format(new Date(tx.date))}
-                            </td>
+                            <td className="px-4 py-3">{tx.formattedDate}</td>
                             <td className="px-4 py-3">
                               <span
                                 className={`inline-flex rounded-md border px-2 py-0.5 text-xs font-semibold ${
@@ -442,6 +531,28 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                     </tbody>
                   </table>
                 </div>
+                {txTable.totalItems > 0 && (
+                  <TableControls
+                    currentPage={txTable.currentPage}
+                    totalPages={txTable.totalPages}
+                    pageSize={txTable.pageSize}
+                    totalItems={txTable.totalItems}
+                    startIndex={txTable.startIndex}
+                    endIndex={txTable.endIndex}
+                    onPageChange={txTable.setCurrentPage}
+                    onPageSizeChange={txTable.setPageSize}
+                    onExport={() => {
+                      txTable.exportToCsv(`Mutasi_${memberDetail.name}`, [
+                        { label: "Tanggal", key: "formattedDate" },
+                        { label: "Mutasi", key: "type" },
+                        { label: "Jenis Simpanan", key: "savingsType" },
+                        { label: "Jumlah", key: "amount" },
+                        { label: "Keterangan", key: "description" },
+                      ]);
+                    }}
+                    exportLabel="Unduh Mutasi Buku"
+                  />
+                )}
               </div>
             </div>
           )}
@@ -453,8 +564,8 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
             <label className="relative max-w-md flex-1">
               <PiMagnifyingGlassBold className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
               <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                value={table.searchQuery}
+                onChange={(e) => table.setSearchQuery(e.target.value)}
                 placeholder="Cari nomor RAT, nama anggota..."
                 className="w-full rounded-md border border-gray-300 bg-white py-2 pl-9 pr-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-teal-700"
               />
@@ -462,120 +573,191 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
           </div>
 
           {/* Member List Table */}
-          {filtered.length === 0 ? (
+          {table.paginatedItems.length === 0 ? (
             <EmptyState
               icon={PiUsersThreeDuotone}
               title="Tidak ada anggota ditemukan"
               description="Pastikan kata kunci pencarian Anda benar atau tambahkan anggota baru."
             />
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm text-gray-700">
-                <thead className="bg-gray-50 text-xs font-semibold uppercase text-gray-500">
-                  <tr>
-                    <th className="px-4 py-3">No. RAT</th>
-                    <th className="px-4 py-3">Nama Anggota</th>
-                    <th className="px-4 py-3 text-right">Pokok</th>
-                    <th className="px-4 py-3 text-right">Wajib</th>
-                    <th className="px-4 py-3 text-right">Sukarela</th>
-                    <th className="px-4 py-3 text-right">Total Simpanan</th>
-                    <th className="px-4 py-3 text-center">Pinjaman Aktif</th>
-                    <th className="px-4 py-3 text-center">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {filtered.map((m) => {
-                    const total = getTotalSavings(m);
-                    const hasActiveLoan = m.loans.length > 0;
-                    return (
-                      <tr key={m.id} className="hover:bg-gray-50/50">
-                        <td className="px-4 py-3 font-semibold text-gray-900">
-                          {m.no}
-                        </td>
-                        <td className="px-4 py-3">
-                          <p className="font-medium text-gray-900">{m.name}</p>
-                          {m.phone && (
-                            <p className="text-xs text-gray-400">{m.phone}</p>
-                          )}
-                        </td>
-                        <td className="px-4 py-3 text-right font-medium">
-                          Rp{" "}
-                          {formatNumber(
-                            getSavingsBalance(m, SavingsType.POKOK)
-                          )}
-                        </td>
-                        <td className="px-4 py-3 text-right font-medium">
-                          Rp{" "}
-                          {formatNumber(
-                            getSavingsBalance(m, SavingsType.WAJIB)
-                          )}
-                        </td>
-                        <td className="px-4 py-3 text-right font-medium">
-                          Rp{" "}
-                          {formatNumber(
-                            getSavingsBalance(m, SavingsType.SUKARELA)
-                          )}
-                        </td>
-                        <td className="bg-teal-50/10 px-4 py-3 text-right font-bold text-teal-800">
-                          Rp {formatNumber(total)}
-                        </td>
-                        <td className="px-4 py-3 text-center">
-                          {hasActiveLoan ? (
-                            <span className="inline-flex rounded-md border border-rose-200 bg-rose-50 px-2 py-0.5 text-xs font-semibold text-rose-800">
-                              Ada (Rp {formatNumber(Number(m.loans[0].amount))})
-                            </span>
-                          ) : (
-                            <span className="inline-flex rounded-md border border-gray-200 bg-gray-50 px-2 py-0.5 text-xs font-semibold text-gray-500">
-                              Tidak ada
-                            </span>
-                          )}
-                        </td>
-                        <td className="flex items-center justify-center gap-1.5 px-4 py-3 text-center">
-                          <Button
-                            size="sm"
-                            variant="primary-soft"
-                            className="border-teal-600 text-teal-700 hover:bg-teal-50"
-                            onClick={() => {
-                              setSelectedMemberId(m.id);
-                              setTab("detail");
-                            }}
-                          >
-                            Mutasi
-                          </Button>
-                          <Button
-                            size="sm"
-                            className="bg-teal-700 text-white hover:bg-teal-800"
-                            onClick={() =>
-                              setTxModal({
-                                isOpen: true,
-                                member: m,
-                                type: SavingsTxType.DEPOSIT,
-                              })
-                            }
-                          >
-                            Setor
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="neutral"
-                            className="border-amber-600 text-amber-700 hover:bg-amber-50"
-                            onClick={() =>
-                              setTxModal({
-                                isOpen: true,
-                                member: m,
-                                type: SavingsTxType.WITHDRAWAL,
-                              })
-                            }
-                          >
-                            Tarik
-                          </Button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+            <>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm text-gray-700">
+                  <thead className="bg-gray-50 text-xs font-semibold uppercase text-gray-500">
+                    <tr>
+                      <th className="px-4 py-3">
+                        <SortableHeader
+                          label="No. RAT"
+                          sortKey="no"
+                          activeSortKey={table.sortConfig.key as string}
+                          activeDirection={table.sortConfig.direction}
+                          onSort={table.handleSort}
+                        />
+                      </th>
+                      <th className="px-4 py-3">
+                        <SortableHeader
+                          label="Nama Anggota"
+                          sortKey="name"
+                          activeSortKey={table.sortConfig.key as string}
+                          activeDirection={table.sortConfig.direction}
+                          onSort={table.handleSort}
+                        />
+                      </th>
+                      <th className="px-4 py-3 text-right">
+                        <SortableHeader
+                          label="Pokok"
+                          sortKey="pokok"
+                          activeSortKey={table.sortConfig.key as string}
+                          activeDirection={table.sortConfig.direction}
+                          onSort={table.handleSort}
+                          className="w-full justify-end"
+                        />
+                      </th>
+                      <th className="px-4 py-3 text-right">
+                        <SortableHeader
+                          label="Wajib"
+                          sortKey="wajib"
+                          activeSortKey={table.sortConfig.key as string}
+                          activeDirection={table.sortConfig.direction}
+                          onSort={table.handleSort}
+                          className="w-full justify-end"
+                        />
+                      </th>
+                      <th className="px-4 py-3 text-right">
+                        <SortableHeader
+                          label="Sukarela"
+                          sortKey="sukarela"
+                          activeSortKey={table.sortConfig.key as string}
+                          activeDirection={table.sortConfig.direction}
+                          onSort={table.handleSort}
+                          className="w-full justify-end"
+                        />
+                      </th>
+                      <th className="px-4 py-3 text-right">
+                        <SortableHeader
+                          label="Total Simpanan"
+                          sortKey="totalSavings"
+                          activeSortKey={table.sortConfig.key as string}
+                          activeDirection={table.sortConfig.direction}
+                          onSort={table.handleSort}
+                          className="w-full justify-end text-teal-800"
+                        />
+                      </th>
+                      <th className="px-4 py-3 text-center">Pinjaman Aktif</th>
+                      <th className="px-4 py-3 text-center">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {table.paginatedItems.map((m) => {
+                      const hasActiveLoan = m.loans.length > 0;
+                      return (
+                        <tr key={m.id} className="hover:bg-gray-50/50">
+                          <td className="px-4 py-3 font-semibold text-gray-900">
+                            {m.no}
+                          </td>
+                          <td className="px-4 py-3">
+                            <p className="font-medium text-gray-900">
+                              {m.name}
+                            </p>
+                            {m.phone && (
+                              <p className="text-xs text-gray-400">{m.phone}</p>
+                            )}
+                          </td>
+                          <td className="px-4 py-3 text-right font-medium">
+                            Rp {formatNumber(m.pokok)}
+                          </td>
+                          <td className="px-4 py-3 text-right font-medium">
+                            Rp {formatNumber(m.wajib)}
+                          </td>
+                          <td className="px-4 py-3 text-right font-medium">
+                            Rp {formatNumber(m.sukarela)}
+                          </td>
+                          <td className="bg-teal-50/10 px-4 py-3 text-right font-bold text-teal-800">
+                            Rp {formatNumber(m.totalSavings)}
+                          </td>
+                          <td className="px-4 py-3 text-center">
+                            {hasActiveLoan ? (
+                              <span className="inline-flex rounded-md border border-rose-200 bg-rose-50 px-2 py-0.5 text-xs font-semibold text-rose-800">
+                                Ada (Rp{" "}
+                                {formatNumber(Number(m.loans[0].amount))})
+                              </span>
+                            ) : (
+                              <span className="inline-flex rounded-md border border-gray-200 bg-gray-50 px-2 py-0.5 text-xs font-semibold text-gray-500">
+                                Tidak ada
+                              </span>
+                            )}
+                          </td>
+                          <td className="flex items-center justify-center gap-1.5 px-4 py-3 text-center">
+                            <Button
+                              size="sm"
+                              variant="primary-soft"
+                              className="border-teal-600 text-teal-700 hover:bg-teal-50"
+                              onClick={() => {
+                                setSelectedMemberId(m.id);
+                                setTab("detail");
+                              }}
+                            >
+                              Mutasi
+                            </Button>
+                            <Button
+                              size="sm"
+                              className="bg-teal-700 text-white hover:bg-teal-800"
+                              onClick={() =>
+                                setTxModal({
+                                  isOpen: true,
+                                  member: m,
+                                  type: SavingsTxType.DEPOSIT,
+                                })
+                              }
+                            >
+                              Setor
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="neutral"
+                              className="border-amber-600 text-amber-700 hover:bg-amber-50"
+                              onClick={() =>
+                                setTxModal({
+                                  isOpen: true,
+                                  member: m,
+                                  type: SavingsTxType.WITHDRAWAL,
+                                })
+                              }
+                            >
+                              Tarik
+                            </Button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              <TableControls
+                currentPage={table.currentPage}
+                totalPages={table.totalPages}
+                pageSize={table.pageSize}
+                totalItems={table.totalItems}
+                startIndex={table.startIndex}
+                endIndex={table.endIndex}
+                onPageChange={table.setCurrentPage}
+                onPageSizeChange={table.setPageSize}
+                onExport={() => {
+                  table.exportToCsv("Daftar_Anggota_Koperasi", [
+                    { label: "No. RAT", key: "no" },
+                    { label: "Nama Anggota", key: "name" },
+                    { label: "Nomor Telepon", key: "phone" },
+                    { label: "Alamat", key: "address" },
+                    { label: "Simpanan Pokok", key: "pokok" },
+                    { label: "Simpanan Wajib", key: "wajib" },
+                    { label: "Simpanan Sukarela", key: "sukarela" },
+                    { label: "Total Simpanan", key: "totalSavings" },
+                    { label: "Status Pinjaman", key: "activeLoanText" },
+                  ]);
+                }}
+                exportLabel="Unduh Data Anggota"
+              />
+            </>
           )}
         </div>
       )}
@@ -630,6 +812,10 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                   </option>
                   <option value={SavingsType.POKOK}>Simpanan Pokok</option>
                 </select>
+                <p className="mt-1 text-xs text-gray-500">
+                  Pilih pos simpanan yang dituju (Wajib bulanan, Sukarela
+                  tabungan biasa, atau Pokok pendirian).
+                </p>
               </div>
 
               <div>
@@ -644,6 +830,9 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
                   placeholder="Contoh: 50000"
                 />
+                <p className="mt-1 text-xs text-gray-500">
+                  Jumlah nominal uang tunai dalam Rupiah (minimal Rp 100).
+                </p>
                 {txState.errors?.amount && (
                   <p className="mt-1 text-xs text-red-600">
                     {txState.errors.amount[0]}
@@ -661,6 +850,9 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
                   placeholder="Contoh: Setoran Wajib Bulanan Mei"
                 />
+                <p className="mt-1 text-xs text-gray-500">
+                  Keterangan opsional sebagai catatan bukti transaksi.
+                </p>
               </div>
 
               <div className="flex justify-end gap-2 pt-2">

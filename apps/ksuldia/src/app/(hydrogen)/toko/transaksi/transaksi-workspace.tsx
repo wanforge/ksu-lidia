@@ -17,6 +17,11 @@ import { useActionFeedback } from "@/app/shared/use-action-feedback";
 import { recordTransactionAction, TxActionState } from "./actions";
 import { ProductTxType } from "@prisma/client";
 import { Button } from "@/components/ui/button";
+import { useCustomTable } from "@/lib/use-custom-table";
+import {
+  TableControls,
+  SortableHeader,
+} from "@/app/(hydrogen)/_components/table-controls";
 
 type TxItem = {
   id: string;
@@ -166,18 +171,49 @@ export default function TransaksiWorkspace({
     setCart((prev) => prev.filter((item) => item.productId !== productId));
   };
 
-  // Filters for Transactions history
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return transactions.filter((tx) => {
-      if (!q) return true;
-      return (
-        tx.notes?.toLowerCase().includes(q) ||
-        tx.type.toLowerCase().includes(q) ||
-        tx.items.some((item) => item.product.name.toLowerCase().includes(q))
-      );
+  // Mapped transactions for useCustomTable
+  const mappedTransactions = useMemo(() => {
+    return transactions.map((tx) => {
+      const itemsCount = tx.items.reduce((sum, item) => sum + item.quantity, 0);
+      const dateObj = new Date(tx.date);
+      const dateFormatted = new Intl.DateTimeFormat("id-ID", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      }).format(dateObj);
+
+      const typeLabel =
+        tx.type === ProductTxType.SALE
+          ? "PENJUALAN"
+          : tx.type === ProductTxType.PURCHASE
+            ? "PEMBELIAN"
+            : "PENYESUAIAN";
+
+      // Flatten items to a string for search query matching
+      const itemsSearchStr = tx.items
+        .map((item) => `${item.product.name} ${item.product.code}`)
+        .join(" ");
+
+      return {
+        ...tx,
+        dateVal: dateObj.getTime(),
+        dateFormatted,
+        typeLabel,
+        totalAmountVal: Number(tx.totalAmount),
+        itemsCount,
+        itemsSearchStr,
+      };
     });
-  }, [transactions, query]);
+  }, [transactions]);
+
+  const table = useCustomTable({
+    items: mappedTransactions,
+    initialSort: { key: "dateVal", direction: "desc" },
+    initialPageSize: 10,
+    searchFields: ["notes", "typeLabel", "itemsSearchStr"],
+  });
 
   return (
     <div className="rounded-md border border-gray-200 bg-white shadow-sm">
@@ -270,6 +306,10 @@ export default function TransaksiWorkspace({
                       </option>
                     ))}
                   </select>
+                  <p className="mt-1 text-xs text-gray-500">
+                    Pilih barang retail yang akan dimasukkan ke keranjang
+                    belanja.
+                  </p>
                 </div>
 
                 <div>
@@ -283,6 +323,9 @@ export default function TransaksiWorkspace({
                     onChange={(e) => setInputQty(Number(e.target.value))}
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
                   />
+                  <p className="mt-1 text-xs text-gray-500">
+                    Jumlah kuantitas barang.
+                  </p>
                 </div>
 
                 <div>
@@ -295,6 +338,9 @@ export default function TransaksiWorkspace({
                     onChange={(e) => setInputPrice(Number(e.target.value))}
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
                   />
+                  <p className="mt-1 text-xs text-gray-500">
+                    Harga per unit barang.
+                  </p>
                 </div>
               </div>
 
@@ -410,6 +456,11 @@ export default function TransaksiWorkspace({
                   }
                   className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
                 />
+                <p className="mt-1 text-xs text-gray-500">
+                  {tab === "sale"
+                    ? "Nama pembeli, customer, atau catatan penjualan."
+                    : "Nama pihak supplier penyedia barang grosir."}
+                </p>
               </div>
 
               <div className="space-y-3 border-t border-gray-200 pt-4">
@@ -450,8 +501,8 @@ export default function TransaksiWorkspace({
             <label className="relative max-w-md flex-1">
               <PiMagnifyingGlassBold className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
               <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                value={table.searchQuery}
+                onChange={(e) => table.setSearchQuery(e.target.value)}
                 placeholder="Cari keterangan, pembeli, nama produk..."
                 className="w-full rounded-md border border-gray-300 bg-white py-2 pl-9 pr-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-teal-700"
               />
@@ -459,44 +510,74 @@ export default function TransaksiWorkspace({
           </div>
 
           {/* Transactions list */}
-          {filtered.length === 0 ? (
+          {table.paginatedItems.length === 0 ? (
             <EmptyState
               icon={PiCalendarBlankDuotone}
               title="Tidak ada riwayat transaksi"
               description="Mutasi transaksi toko Anda kosong."
             />
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm text-gray-700">
-                <thead className="bg-gray-50 text-xs font-semibold uppercase text-gray-500">
-                  <tr>
-                    <th className="px-4 py-3">Tanggal</th>
-                    <th className="px-4 py-3">Jenis</th>
-                    <th className="px-4 py-3">Keterangan / Partner</th>
-                    <th className="px-4 py-3 text-right">Total Transaksi</th>
-                    <th className="px-4 py-3 text-center">Jumlah Barang</th>
-                    <th className="px-4 py-3 text-center">Detail</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {filtered.map((tx) => {
-                    const isExpanded = expandedTxId === tx.id;
-                    const itemsCount = tx.items.reduce(
-                      (sum, item) => sum + item.quantity,
-                      0
-                    );
-                    return (
-                      <>
+            <>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm text-gray-700">
+                  <thead className="bg-gray-50 text-xs font-semibold uppercase text-gray-500">
+                    <tr>
+                      <th className="px-4 py-3">
+                        <SortableHeader
+                          label="Tanggal"
+                          sortKey="dateVal"
+                          activeSortKey={table.sortConfig.key as string}
+                          activeDirection={table.sortConfig.direction}
+                          onSort={table.handleSort}
+                        />
+                      </th>
+                      <th className="px-4 py-3">
+                        <SortableHeader
+                          label="Jenis"
+                          sortKey="type"
+                          activeSortKey={table.sortConfig.key as string}
+                          activeDirection={table.sortConfig.direction}
+                          onSort={table.handleSort}
+                        />
+                      </th>
+                      <th className="px-4 py-3">
+                        <SortableHeader
+                          label="Keterangan / Partner"
+                          sortKey="notes"
+                          activeSortKey={table.sortConfig.key as string}
+                          activeDirection={table.sortConfig.direction}
+                          onSort={table.handleSort}
+                        />
+                      </th>
+                      <th className="px-4 py-3 text-right">
+                        <SortableHeader
+                          label="Total Transaksi"
+                          sortKey="totalAmountVal"
+                          activeSortKey={table.sortConfig.key as string}
+                          activeDirection={table.sortConfig.direction}
+                          onSort={table.handleSort}
+                          className="w-full justify-end"
+                        />
+                      </th>
+                      <th className="px-4 py-3 text-center">
+                        <SortableHeader
+                          label="Jumlah Barang"
+                          sortKey="itemsCount"
+                          activeSortKey={table.sortConfig.key as string}
+                          activeDirection={table.sortConfig.direction}
+                          onSort={table.handleSort}
+                          className="w-full justify-center"
+                        />
+                      </th>
+                      <th className="px-4 py-3 text-center">Detail</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {table.paginatedItems.map((tx) => {
+                      const isExpanded = expandedTxId === tx.id;
+                      return (
                         <tr key={tx.id} className="hover:bg-gray-50/50">
-                          <td className="px-4 py-3">
-                            {new Intl.DateTimeFormat("id-ID", {
-                              day: "2-digit",
-                              month: "short",
-                              year: "numeric",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            }).format(new Date(tx.date))}
-                          </td>
+                          <td className="px-4 py-3">{tx.dateFormatted}</td>
                           <td className="px-4 py-3">
                             <span
                               className={`inline-flex rounded-md border px-2 py-0.5 text-xs font-semibold ${
@@ -507,11 +588,7 @@ export default function TransaksiWorkspace({
                                     : "border-amber-200 bg-amber-50 text-amber-800"
                               }`}
                             >
-                              {tx.type === ProductTxType.SALE
-                                ? "PENJUALAN"
-                                : tx.type === ProductTxType.PURCHASE
-                                  ? "PEMBELIAN"
-                                  : "PENYESUAIAN"}
+                              {tx.typeLabel}
                             </span>
                           </td>
                           <td className="px-4 py-3 font-medium text-gray-900">
@@ -520,10 +597,10 @@ export default function TransaksiWorkspace({
                           <td className="text-teal-850 px-4 py-3 text-right font-bold">
                             {tx.type === ProductTxType.ADJUSTMENT
                               ? "-"
-                              : `Rp ${formatNumber(Number(tx.totalAmount))}`}
+                              : `Rp ${formatNumber(tx.totalAmountVal)}`}
                           </td>
                           <td className="px-4 py-3 text-center font-medium text-gray-600">
-                            {itemsCount} unit
+                            {tx.itemsCount} unit
                           </td>
                           <td className="px-4 py-3 text-center">
                             <button
@@ -545,56 +622,78 @@ export default function TransaksiWorkspace({
                             </button>
                           </td>
                         </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
 
-                        {isExpanded && (
-                          <tr className="bg-gray-50/50">
-                            <td colSpan={6} className="px-6 py-4">
-                              <div className="rounded-md border border-gray-200 bg-white p-4">
-                                <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-gray-400">
-                                  Rincian Item Transaksi
-                                </h4>
-                                <div className="space-y-2">
-                                  {tx.items.map((item) => (
-                                    <div
-                                      key={item.id}
-                                      className="flex items-center justify-between border-b border-gray-100 py-1.5 text-sm last:border-0"
-                                    >
-                                      <div>
-                                        <p className="font-semibold text-gray-900">
-                                          {item.product.name}
-                                        </p>
-                                        <p className="text-xs text-gray-400">
-                                          Kode: {item.product.code}
-                                        </p>
-                                      </div>
-                                      <div className="text-right">
-                                        <p className="font-medium text-gray-900">
-                                          {item.quantity} x Rp{" "}
-                                          {formatNumber(Number(item.unitPrice))}
-                                        </p>
-                                        {tx.type !==
-                                          ProductTxType.ADJUSTMENT && (
-                                          <p className="text-xs font-bold text-teal-700">
-                                            Subtotal: Rp{" "}
-                                            {formatNumber(
-                                              Number(item.totalPrice)
-                                            )}
-                                          </p>
-                                        )}
-                                      </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-                        )}
-                      </>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+              {expandedTxId &&
+                (() => {
+                  const tx = table.paginatedItems.find(
+                    (t) => t.id === expandedTxId
+                  );
+                  if (!tx) return null;
+                  return (
+                    <div className="animate-in fade-in slide-in-from-top-1 m-4 rounded-md border border-gray-200 bg-gray-50 p-4 duration-200">
+                      <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-gray-400">
+                        Rincian Item Transaksi - {tx.notes || "Umum"} (
+                        {tx.dateFormatted})
+                      </h4>
+                      <div className="space-y-2">
+                        {tx.items.map((item) => (
+                          <div
+                            key={item.id}
+                            className="border-gray-150 flex items-center justify-between border-b py-2 text-sm last:border-0"
+                          >
+                            <div>
+                              <p className="font-semibold text-gray-900">
+                                {item.product.name}
+                              </p>
+                              <p className="text-xs text-gray-400">
+                                Kode: {item.product.code}
+                              </p>
+                            </div>
+                            <div className="text-right">
+                              <p className="font-medium text-gray-900">
+                                {item.quantity} x Rp{" "}
+                                {formatNumber(Number(item.unitPrice))}
+                              </p>
+                              {tx.type !== ProductTxType.ADJUSTMENT && (
+                                <p className="text-xs font-bold text-teal-700">
+                                  Subtotal: Rp{" "}
+                                  {formatNumber(Number(item.totalPrice))}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })()}
+
+              <TableControls
+                currentPage={table.currentPage}
+                totalPages={table.totalPages}
+                pageSize={table.pageSize}
+                totalItems={table.totalItems}
+                startIndex={table.startIndex}
+                endIndex={table.endIndex}
+                onPageChange={table.setCurrentPage}
+                onPageSizeChange={table.setPageSize}
+                onExport={() => {
+                  table.exportToCsv("Riwayat_Transaksi_Toko", [
+                    { label: "Tanggal Transaksi", key: "dateFormatted" },
+                    { label: "Jenis Transaksi", key: "typeLabel" },
+                    { label: "Keterangan", key: "notes" },
+                    { label: "Total Transaksi", key: "totalAmountVal" },
+                    { label: "Total Kuantitas", key: "itemsCount" },
+                  ]);
+                }}
+                exportLabel="Unduh Transaksi"
+              />
+            </>
           )}
         </div>
       )}

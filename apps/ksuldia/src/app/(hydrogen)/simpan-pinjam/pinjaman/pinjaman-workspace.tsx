@@ -20,6 +20,11 @@ import {
   LoanActionState,
 } from "./actions";
 import { Button } from "@/components/ui/button";
+import { useCustomTable } from "@/lib/use-custom-table";
+import {
+  TableControls,
+  SortableHeader,
+} from "@/app/(hydrogen)/_components/table-controls";
 
 type Installment = {
   id: string;
@@ -153,22 +158,74 @@ export default function PinjamanWorkspace({
     };
   }, [formDataVal]);
 
-  // Filters
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return loans.filter((l) => {
-      if (!q) return true;
-      return (
-        l.member.name.toLowerCase().includes(q) ||
-        l.member.no.toString().includes(q) ||
-        l.status.toLowerCase().includes(q)
-      );
+  // Precompute loan metrics for sorting & exporting
+  const mappedLoans = useMemo(() => {
+    return loans.map((l) => {
+      const paidCount = l.installments.filter(
+        (i) => i.status === "PAID"
+      ).length;
+      return {
+        ...l,
+        memberName: l.member.name,
+        memberNo: l.member.no.toString(),
+        paidCount,
+        progressText: `${paidCount}/${l.tenor}`,
+        amountVal: Number(l.amount),
+        installmentAmountVal: Number(l.installmentAmount),
+        formattedDate: new Intl.DateTimeFormat("id-ID", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }).format(new Date(l.dateDisbursed)),
+      };
     });
-  }, [loans, query]);
+  }, [loans]);
+
+  const table = useCustomTable({
+    items: mappedLoans,
+    initialSort: { key: "dateDisbursed", direction: "desc" },
+    initialPageSize: 10,
+    searchFields: ["memberName", "memberNo", "status"],
+  });
 
   const selectedLoan = useMemo(() => {
     return loans.find((l) => l.id === selectedLoanId) || null;
   }, [loans, selectedLoanId]);
+
+  const mappedInstallments = useMemo(() => {
+    if (!selectedLoan) return [];
+    return selectedLoan.installments.map((inst) => {
+      const base = Number(selectedLoan.amount) / selectedLoan.tenor;
+      const interest =
+        Number(selectedLoan.amount) * (Number(selectedLoan.interestRate) / 100);
+      return {
+        ...inst,
+        dueDateFormatted: new Intl.DateTimeFormat("id-ID", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }).format(new Date(inst.dueDate)),
+        paidAtFormatted: inst.paidAt
+          ? new Intl.DateTimeFormat("id-ID", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            }).format(new Date(inst.paidAt))
+          : "-",
+        principalVal: Number(inst.principalPaid) || base,
+        interestVal: Number(inst.interestPaid) || interest,
+        penaltyVal: Number(inst.penaltyPaid) || 0,
+        totalVal: Number(inst.totalPaid) || base + interest,
+      };
+    });
+  }, [selectedLoan]);
+
+  const instTable = useCustomTable({
+    items: mappedInstallments,
+    initialSort: { key: "monthNumber", direction: "asc" },
+    initialPageSize: 12,
+    searchFields: ["status", "dueDateFormatted", "paidAtFormatted"],
+  });
 
   // Setup default values for installment payment when modal opens
   const openPayModal = (loan: LoanWithMember, inst: Installment) => {
@@ -282,6 +339,10 @@ export default function PinjamanWorkspace({
                     </option>
                   ))}
                 </select>
+                <p className="mt-1 text-xs text-gray-500">
+                  Pilih anggota terdaftar yang tidak memiliki pinjaman aktif
+                  berjalan.
+                </p>
                 {createState.errors?.memberId && (
                   <p className="mt-1 text-xs text-red-600">
                     {createState.errors.memberId[0]}
@@ -306,6 +367,9 @@ export default function PinjamanWorkspace({
                   }
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
                 />
+                <p className="mt-1 text-xs text-gray-500">
+                  Jumlah dana pinjaman yang diajukan oleh anggota.
+                </p>
                 {createState.errors?.amount && (
                   <p className="mt-1 text-xs text-red-600">
                     {createState.errors.amount[0]}
@@ -332,6 +396,9 @@ export default function PinjamanWorkspace({
                     }
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
                   />
+                  <p className="mt-1 text-xs text-gray-500">
+                    Persentase bunga tetap bulanan flat.
+                  </p>
                   {createState.errors?.interestRate && (
                     <p className="mt-1 text-xs text-red-600">
                       {createState.errors.interestRate[0]}
@@ -356,6 +423,9 @@ export default function PinjamanWorkspace({
                     }
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
                   />
+                  <p className="mt-1 text-xs text-gray-500">
+                    Jangka waktu pelunasan cicilan bulanan.
+                  </p>
                   {createState.errors?.tenor && (
                     <p className="mt-1 text-xs text-red-600">
                       {createState.errors.tenor[0]}
@@ -519,20 +589,81 @@ export default function PinjamanWorkspace({
 
               {/* Installments Ledger */}
               <div className="space-y-3">
-                <h3 className="text-sm font-bold uppercase tracking-wider text-gray-700">
-                  Jadwal Angsuran Bulanan
-                </h3>
+                <div className="flex flex-col gap-2 border-b border-gray-100 pb-3 sm:flex-row sm:items-center sm:justify-between">
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-gray-700">
+                    Jadwal Angsuran Bulanan
+                  </h3>
+                  <label className="relative max-w-xs flex-1">
+                    <PiMagnifyingGlassBold className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" />
+                    <input
+                      value={instTable.searchQuery}
+                      onChange={(e) => instTable.setSearchQuery(e.target.value)}
+                      placeholder="Cari status, jatuh tempo..."
+                      className="w-full rounded border border-gray-300 bg-white py-1 pl-8 pr-2 text-xs text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-teal-700"
+                    />
+                  </label>
+                </div>
                 <div className="border-gray-150 overflow-x-auto rounded-lg border">
                   <table className="w-full text-left text-sm text-gray-700">
                     <thead className="bg-gray-50 text-xs font-semibold uppercase text-gray-500">
                       <tr>
-                        <th className="px-4 py-3">Bulan ke-</th>
-                        <th className="px-4 py-3">Jatuh Tempo</th>
-                        <th className="px-4 py-3 text-right">Pokok</th>
-                        <th className="px-4 py-3 text-right">Bunga</th>
-                        <th className="px-4 py-3 text-right">Denda</th>
+                        <th className="px-4 py-3">
+                          <SortableHeader
+                            label="Bulan ke-"
+                            sortKey="monthNumber"
+                            activeSortKey={instTable.sortConfig.key as string}
+                            activeDirection={instTable.sortConfig.direction}
+                            onSort={instTable.handleSort}
+                          />
+                        </th>
+                        <th className="px-4 py-3">
+                          <SortableHeader
+                            label="Jatuh Tempo"
+                            sortKey="dueDate"
+                            activeSortKey={instTable.sortConfig.key as string}
+                            activeDirection={instTable.sortConfig.direction}
+                            onSort={instTable.handleSort}
+                          />
+                        </th>
+                        <th className="px-4 py-3 text-right">
+                          <SortableHeader
+                            label="Pokok"
+                            sortKey="principalVal"
+                            activeSortKey={instTable.sortConfig.key as string}
+                            activeDirection={instTable.sortConfig.direction}
+                            onSort={instTable.handleSort}
+                            className="w-full justify-end"
+                          />
+                        </th>
+                        <th className="px-4 py-3 text-right">
+                          <SortableHeader
+                            label="Bunga"
+                            sortKey="interestVal"
+                            activeSortKey={instTable.sortConfig.key as string}
+                            activeDirection={instTable.sortConfig.direction}
+                            onSort={instTable.handleSort}
+                            className="w-full justify-end"
+                          />
+                        </th>
+                        <th className="px-4 py-3 text-right">
+                          <SortableHeader
+                            label="Denda"
+                            sortKey="penaltyVal"
+                            activeSortKey={instTable.sortConfig.key as string}
+                            activeDirection={instTable.sortConfig.direction}
+                            onSort={instTable.handleSort}
+                            className="w-full justify-end"
+                          />
+                        </th>
                         <th className="px-4 py-3 text-right font-bold">
-                          Total Tagihan
+                          <SortableHeader
+                            label="Total Tagihan"
+                            sortKey="totalVal"
+                            activeSortKey={instTable.sortConfig.key as string}
+                            activeDirection={instTable.sortConfig.direction}
+                            onSort={instTable.handleSort}
+                            className="w-full justify-end text-teal-800"
+                          />
                         </th>
                         <th className="px-4 py-3 text-center">Status</th>
                         <th className="px-4 py-3 text-center">Tanggal Bayar</th>
@@ -540,52 +671,27 @@ export default function PinjamanWorkspace({
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
-                      {selectedLoan.installments.map((inst) => {
-                        const monthlyPrincipal =
-                          Number(selectedLoan.amount) / selectedLoan.tenor;
-                        const monthlyInterest =
-                          Number(selectedLoan.amount) *
-                          (Number(selectedLoan.interestRate) / 100);
+                      {instTable.paginatedItems.map((inst) => {
                         const isPaid = inst.status === "PAID";
-
                         return (
                           <tr key={inst.id} className="hover:bg-gray-50/50">
                             <td className="px-4 py-3 font-semibold text-gray-900">
                               {inst.monthNumber}
                             </td>
                             <td className="px-4 py-3">
-                              {new Intl.DateTimeFormat("id-ID", {
-                                day: "2-digit",
-                                month: "short",
-                                year: "numeric",
-                              }).format(new Date(inst.dueDate))}
+                              {inst.dueDateFormatted}
                             </td>
                             <td className="px-4 py-3 text-right font-medium">
-                              Rp{" "}
-                              {formatNumber(
-                                isPaid
-                                  ? Number(inst.principalPaid)
-                                  : monthlyPrincipal
-                              )}
+                              Rp {formatNumber(inst.principalVal)}
                             </td>
                             <td className="px-4 py-3 text-right font-medium">
-                              Rp{" "}
-                              {formatNumber(
-                                isPaid
-                                  ? Number(inst.interestPaid)
-                                  : monthlyInterest
-                              )}
+                              Rp {formatNumber(inst.interestVal)}
                             </td>
                             <td className="px-4 py-3 text-right font-medium text-rose-700">
-                              Rp {formatNumber(Number(inst.penaltyPaid))}
+                              Rp {formatNumber(inst.penaltyVal)}
                             </td>
                             <td className="bg-teal-50/5 px-4 py-3 text-right font-bold text-teal-800">
-                              Rp{" "}
-                              {formatNumber(
-                                isPaid
-                                  ? Number(inst.totalPaid)
-                                  : monthlyPrincipal + monthlyInterest
-                              )}
+                              Rp {formatNumber(inst.totalVal)}
                             </td>
                             <td className="px-4 py-3 text-center">
                               {isPaid ? (
@@ -599,13 +705,7 @@ export default function PinjamanWorkspace({
                               )}
                             </td>
                             <td className="px-4 py-3 text-center text-gray-500">
-                              {inst.paidAt
-                                ? new Intl.DateTimeFormat("id-ID", {
-                                    day: "2-digit",
-                                    month: "short",
-                                    year: "numeric",
-                                  }).format(new Date(inst.paidAt))
-                                : "-"}
+                              {inst.paidAtFormatted}
                             </td>
                             <td className="px-4 py-3 text-center">
                               {!isPaid && selectedLoan.status === "ACTIVE" ? (
@@ -613,7 +713,7 @@ export default function PinjamanWorkspace({
                                   size="sm"
                                   className="bg-teal-700 text-white hover:bg-teal-800"
                                   onClick={() =>
-                                    openPayModal(selectedLoan, inst)
+                                    openPayModal(selectedLoan, inst as any)
                                   }
                                 >
                                   Bayar
@@ -628,6 +728,40 @@ export default function PinjamanWorkspace({
                     </tbody>
                   </table>
                 </div>
+                {instTable.totalItems > 0 && (
+                  <TableControls
+                    currentPage={instTable.currentPage}
+                    totalPages={instTable.totalPages}
+                    pageSize={instTable.pageSize}
+                    totalItems={instTable.totalItems}
+                    startIndex={instTable.startIndex}
+                    endIndex={instTable.endIndex}
+                    onPageChange={instTable.setCurrentPage}
+                    onPageSizeChange={instTable.setPageSize}
+                    onExport={() => {
+                      instTable.exportToCsv(
+                        `Jadwal_Kredit_${selectedLoan.member.name}`,
+                        [
+                          { label: "Bulan ke-", key: "monthNumber" },
+                          {
+                            label: "Tanggal Jatuh Tempo",
+                            key: "dueDateFormatted",
+                          },
+                          { label: "Pokok Angsuran", key: "principalVal" },
+                          { label: "Bunga", key: "interestVal" },
+                          { label: "Denda", key: "penaltyVal" },
+                          { label: "Total Tagihan", key: "totalVal" },
+                          { label: "Status", key: "status" },
+                          {
+                            label: "Tanggal Pembayaran",
+                            key: "paidAtFormatted",
+                          },
+                        ]
+                      );
+                    }}
+                    exportLabel="Unduh Jadwal Kredit"
+                  />
+                )}
               </div>
             </div>
           )}
@@ -639,8 +773,8 @@ export default function PinjamanWorkspace({
             <label className="relative max-w-md flex-1">
               <PiMagnifyingGlassBold className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
               <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                value={table.searchQuery}
+                onChange={(e) => table.setSearchQuery(e.target.value)}
                 placeholder="Cari nama anggota, nomor RAT, status..."
                 className="w-full rounded-md border border-gray-300 bg-white py-2 pl-9 pr-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-teal-700"
               />
@@ -648,102 +782,180 @@ export default function PinjamanWorkspace({
           </div>
 
           {/* Loans List Table */}
-          {filtered.length === 0 ? (
+          {table.paginatedItems.length === 0 ? (
             <EmptyState
               icon={PiCoinsDuotone}
               title="Tidak ada data pinjaman"
               description="Pencarian Anda kosong atau belum ada pengajuan pinjaman."
             />
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm text-gray-700">
-                <thead className="bg-gray-50 text-xs font-semibold uppercase text-gray-500">
-                  <tr>
-                    <th className="px-4 py-3">Nama Anggota</th>
-                    <th className="px-4 py-3">Tanggal Cair</th>
-                    <th className="px-4 py-3 text-right">Nilai Hutang</th>
-                    <th className="px-4 py-3 text-center">Tenor</th>
-                    <th className="px-4 py-3 text-right">Angsuran / Bln</th>
-                    <th className="px-4 py-3 text-center">Status</th>
-                    <th className="px-4 py-3 text-center">Progres</th>
-                    <th className="px-4 py-3 text-center">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {filtered.map((l) => {
-                    const paidCount = l.installments.filter(
-                      (i) => i.status === "PAID"
-                    ).length;
-                    return (
-                      <tr key={l.id} className="hover:bg-gray-50/50">
-                        <td className="px-4 py-3">
-                          <p className="font-semibold text-gray-900">
-                            {l.member.name}
-                          </p>
-                          <p className="text-xs text-gray-400">
-                            No. RAT {l.member.no}
-                          </p>
-                        </td>
-                        <td className="px-4 py-3">
-                          {new Intl.DateTimeFormat("id-ID", {
-                            day: "2-digit",
-                            month: "short",
-                            year: "numeric",
-                          }).format(new Date(l.dateDisbursed))}
-                        </td>
-                        <td className="px-4 py-3 text-right font-semibold text-gray-950">
-                          Rp {formatNumber(Number(l.amount))}
-                        </td>
-                        <td className="px-4 py-3 text-center font-medium">
-                          {l.tenor} Bln
-                        </td>
-                        <td className="px-4 py-3 text-right font-bold text-teal-800">
-                          Rp {formatNumber(Number(l.installmentAmount))}
-                        </td>
-                        <td className="px-4 py-3 text-center">
-                          <span
-                            className={`inline-flex rounded-md border px-2 py-0.5 text-xs font-semibold ${
-                              l.status === "ACTIVE"
-                                ? "border-rose-200 bg-rose-50 text-rose-800"
-                                : "border-green-200 bg-green-50 text-green-800"
-                            }`}
-                          >
-                            {l.status === "ACTIVE" ? "AKTIF" : "LUNAS"}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3 text-center font-medium">
-                          <div className="flex items-center justify-center gap-1.5">
-                            <span className="text-xs text-gray-500">
-                              {paidCount} / {l.tenor}
+            <>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm text-gray-700">
+                  <thead className="bg-gray-50 text-xs font-semibold uppercase text-gray-500">
+                    <tr>
+                      <th className="px-4 py-3">
+                        <SortableHeader
+                          label="Nama Anggota"
+                          sortKey="memberName"
+                          activeSortKey={table.sortConfig.key as string}
+                          activeDirection={table.sortConfig.direction}
+                          onSort={table.handleSort}
+                        />
+                      </th>
+                      <th className="px-4 py-3">
+                        <SortableHeader
+                          label="Tanggal Cair"
+                          sortKey="dateDisbursed"
+                          activeSortKey={table.sortConfig.key as string}
+                          activeDirection={table.sortConfig.direction}
+                          onSort={table.handleSort}
+                        />
+                      </th>
+                      <th className="px-4 py-3 text-right">
+                        <SortableHeader
+                          label="Nilai Hutang"
+                          sortKey="amountVal"
+                          activeSortKey={table.sortConfig.key as string}
+                          activeDirection={table.sortConfig.direction}
+                          onSort={table.handleSort}
+                          className="w-full justify-end"
+                        />
+                      </th>
+                      <th className="px-4 py-3 text-center">
+                        <SortableHeader
+                          label="Tenor"
+                          sortKey="tenor"
+                          activeSortKey={table.sortConfig.key as string}
+                          activeDirection={table.sortConfig.direction}
+                          onSort={table.handleSort}
+                          className="w-full justify-center"
+                        />
+                      </th>
+                      <th className="px-4 py-3 text-right font-bold text-teal-800">
+                        <SortableHeader
+                          label="Angsuran / Bln"
+                          sortKey="installmentAmountVal"
+                          activeSortKey={table.sortConfig.key as string}
+                          activeDirection={table.sortConfig.direction}
+                          onSort={table.handleSort}
+                          className="w-full justify-end"
+                        />
+                      </th>
+                      <th className="px-4 py-3 text-center">
+                        <SortableHeader
+                          label="Status"
+                          sortKey="status"
+                          activeSortKey={table.sortConfig.key as string}
+                          activeDirection={table.sortConfig.direction}
+                          onSort={table.handleSort}
+                          className="w-full justify-center"
+                        />
+                      </th>
+                      <th className="px-4 py-3 text-center">
+                        <SortableHeader
+                          label="Progres"
+                          sortKey="paidCount"
+                          activeSortKey={table.sortConfig.key as string}
+                          activeDirection={table.sortConfig.direction}
+                          onSort={table.handleSort}
+                          className="w-full justify-center"
+                        />
+                      </th>
+                      <th className="px-4 py-3 text-center">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {table.paginatedItems.map((l) => {
+                      return (
+                        <tr key={l.id} className="hover:bg-gray-50/50">
+                          <td className="px-4 py-3">
+                            <p className="font-semibold text-gray-900">
+                              {l.memberName}
+                            </p>
+                            <p className="text-xs text-gray-400">
+                              No. RAT {l.memberNo}
+                            </p>
+                          </td>
+                          <td className="px-4 py-3">{l.formattedDate}</td>
+                          <td className="px-4 py-3 text-right font-semibold text-gray-950">
+                            Rp {formatNumber(l.amountVal)}
+                          </td>
+                          <td className="px-4 py-3 text-center font-medium">
+                            {l.tenor} Bln
+                          </td>
+                          <td className="px-4 py-3 text-right font-bold text-teal-800">
+                            Rp {formatNumber(l.installmentAmountVal)}
+                          </td>
+                          <td className="px-4 py-3 text-center">
+                            <span
+                              className={`inline-flex rounded-md border px-2 py-0.5 text-xs font-semibold ${
+                                l.status === "ACTIVE"
+                                  ? "border-rose-200 bg-rose-50 text-rose-800"
+                                  : "border-green-200 bg-green-50 text-green-800"
+                              }`}
+                            >
+                              {l.status === "ACTIVE" ? "AKTIF" : "LUNAS"}
                             </span>
-                            <div className="h-1.5 w-16 rounded-full bg-gray-200">
-                              <div
-                                className="h-1.5 rounded-full bg-teal-600"
-                                style={{
-                                  width: `${(paidCount / l.tenor) * 100}%`,
-                                }}
-                              />
+                          </td>
+                          <td className="px-4 py-3 text-center font-medium">
+                            <div className="flex items-center justify-center gap-1.5">
+                              <span className="text-xs text-gray-500">
+                                {l.progressText}
+                              </span>
+                              <div className="h-1.5 w-16 rounded-full bg-gray-200">
+                                <div
+                                  className="h-1.5 rounded-full bg-teal-600"
+                                  style={{
+                                    width: `${(l.paidCount / l.tenor) * 100}%`,
+                                  }}
+                                />
+                              </div>
                             </div>
-                          </div>
-                        </td>
-                        <td className="px-4 py-3 text-center">
-                          <Button
-                            size="sm"
-                            className="bg-teal-700 text-white hover:bg-teal-800"
-                            onClick={() => {
-                              setSelectedLoanId(l.id);
-                              setTab("detail");
-                            }}
-                          >
-                            Buka Kartu
-                          </Button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+                          </td>
+                          <td className="px-4 py-3 text-center">
+                            <Button
+                              size="sm"
+                              className="bg-teal-700 text-white hover:bg-teal-800"
+                              onClick={() => {
+                                setSelectedLoanId(l.id);
+                                setTab("detail");
+                              }}
+                            >
+                              Buka Kartu
+                            </Button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              <TableControls
+                currentPage={table.currentPage}
+                totalPages={table.totalPages}
+                pageSize={table.pageSize}
+                totalItems={table.totalItems}
+                startIndex={table.startIndex}
+                endIndex={table.endIndex}
+                onPageChange={table.setCurrentPage}
+                onPageSizeChange={table.setPageSize}
+                onExport={() => {
+                  table.exportToCsv("Daftar_Kredit_Anggota", [
+                    { label: "Nama Anggota", key: "memberName" },
+                    { label: "No. RAT", key: "memberNo" },
+                    { label: "Tanggal Pencairan", key: "formattedDate" },
+                    { label: "Jumlah Pinjaman", key: "amountVal" },
+                    { label: "Bunga flat", key: "interestRate" },
+                    { label: "Tenor (Bulan)", key: "tenor" },
+                    { label: "Angsuran Bulanan", key: "installmentAmountVal" },
+                    { label: "Status Pinjaman", key: "status" },
+                    { label: "Progress Bayar", key: "progressText" },
+                  ]);
+                }}
+                exportLabel="Unduh Data Pinjaman"
+              />
+            </>
           )}
         </div>
       )}
@@ -838,6 +1050,10 @@ export default function PinjamanWorkspace({
                       Kenakan Denda Keterlambatan (5%)
                     </span>
                   </label>
+                  <p className="mt-1 pl-5 text-xs text-gray-500">
+                    Centang opsi ini jika pembayaran terlambat melewati tanggal
+                    jatuh tempo.
+                  </p>
                   {payModal.addPenalty && (
                     <div className="mt-2 flex justify-between text-sm font-medium text-rose-700">
                       <span>Denda (5% dari nominal angsuran):</span>

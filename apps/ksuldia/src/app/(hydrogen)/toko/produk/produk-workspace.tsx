@@ -20,6 +20,11 @@ import {
   ProductActionState,
 } from "./actions";
 import { Button } from "@/components/ui/button";
+import { useCustomTable } from "@/lib/use-custom-table";
+import {
+  TableControls,
+  SortableHeader,
+} from "@/app/(hydrogen)/_components/table-controls";
 
 type Product = {
   id: string;
@@ -96,19 +101,37 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
     return Array.from(set).sort();
   }, [products]);
 
-  // Filters
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
+  const filteredByCategory = useMemo(() => {
     return products.filter((p) => {
       if (categoryFilter && p.category !== categoryFilter) return false;
-      if (!q) return true;
-      return (
-        p.name.toLowerCase().includes(q) ||
-        p.code.toLowerCase().includes(q) ||
-        (p.category && p.category.toLowerCase().includes(q))
-      );
+      return true;
     });
-  }, [products, query, categoryFilter]);
+  }, [products, categoryFilter]);
+
+  const mappedProducts = useMemo(() => {
+    return filteredByCategory.map((p) => {
+      const marginVal = Number(p.sellingPrice) - Number(p.purchasePrice);
+      const markupPct =
+        Number(p.purchasePrice) > 0
+          ? (marginVal / Number(p.purchasePrice)) * 100
+          : 0;
+      return {
+        ...p,
+        categoryText: p.category || "-",
+        purchasePriceVal: Number(p.purchasePrice),
+        sellingPriceVal: Number(p.sellingPrice),
+        marginVal,
+        markupPct,
+      };
+    });
+  }, [filteredByCategory]);
+
+  const table = useCustomTable({
+    items: mappedProducts,
+    initialSort: { key: "name", direction: "asc" },
+    initialPageSize: 10,
+    searchFields: ["name", "code", "categoryText"],
+  });
 
   return (
     <div className="rounded-md border border-gray-200 bg-white shadow-sm">
@@ -161,6 +184,9 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
                 placeholder="Contoh: IND-001"
               />
+              <p className="mt-1 text-xs text-gray-500">
+                Kode unik atau barcode pembeda untuk setiap barang.
+              </p>
               {createState.errors?.code && (
                 <p className="mt-1 text-xs text-red-600">
                   {createState.errors.code[0]}
@@ -179,6 +205,9 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
                 placeholder="Contoh: Beras Ramos 5kg"
               />
+              <p className="mt-1 text-xs text-gray-500">
+                Nama lengkap produk retail beserta ukurannya.
+              </p>
               {createState.errors?.name && (
                 <p className="mt-1 text-xs text-red-600">
                   {createState.errors.name[0]}
@@ -196,6 +225,9 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
                 placeholder="Contoh: Sembako, Minuman, Sabun"
               />
+              <p className="mt-1 text-xs text-gray-500">
+                Grup penggolongan tipe produk untuk filter katalog.
+              </p>
             </div>
 
             <div className="grid grid-cols-3 gap-4">
@@ -209,6 +241,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                   defaultValue={0}
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
                 />
+                <p className="mt-1 text-xs text-gray-500">Stok awal fisik.</p>
               </div>
 
               <div>
@@ -221,6 +254,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                   defaultValue={0}
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
                 />
+                <p className="mt-1 text-xs text-gray-500">Harga modal beli.</p>
               </div>
 
               <div>
@@ -233,6 +267,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                   defaultValue={0}
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
                 />
+                <p className="mt-1 text-xs text-gray-500">Harga jual retail.</p>
               </div>
             </div>
 
@@ -253,8 +288,8 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
             <label className="relative">
               <PiMagnifyingGlassBold className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
               <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                value={table.searchQuery}
+                onChange={(e) => table.setSearchQuery(e.target.value)}
                 placeholder="Cari kode atau nama produk..."
                 className="w-full rounded-md border border-gray-300 bg-white py-2 pl-9 pr-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-teal-700"
               />
@@ -275,98 +310,179 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
           </div>
 
           {/* Product list table */}
-          {filtered.length === 0 ? (
+          {table.paginatedItems.length === 0 ? (
             <EmptyState
               icon={PiBarcodeDuotone}
               title="Produk tidak ditemukan"
               description="Katalog produk kosong atau pencarian Anda tidak memiliki kecocokan."
             />
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm text-gray-700">
-                <thead className="bg-gray-50 text-xs font-semibold uppercase text-gray-500">
-                  <tr>
-                    <th className="px-4 py-3">Kode</th>
-                    <th className="px-4 py-3">Nama Produk</th>
-                    <th className="px-4 py-3">Kategori</th>
-                    <th className="px-4 py-3 text-center">Stok Fisik</th>
-                    <th className="px-4 py-3 text-right">Harga Beli</th>
-                    <th className="px-4 py-3 text-right">Harga Jual</th>
-                    <th className="px-4 py-3 text-right">Margin / Markup</th>
-                    <th className="px-4 py-3 text-center">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {filtered.map((p) => {
-                    const margin =
-                      Number(p.sellingPrice) - Number(p.purchasePrice);
-                    const markupPct =
-                      Number(p.purchasePrice) > 0
-                        ? (margin / Number(p.purchasePrice)) * 100
-                        : 0;
-                    return (
-                      <tr key={p.id} className="hover:bg-gray-50/50">
-                        <td className="px-4 py-3 font-semibold text-gray-950">
-                          {p.code}
-                        </td>
-                        <td className="px-4 py-3 font-medium text-gray-900">
-                          {p.name}
-                        </td>
-                        <td className="px-4 py-3">
-                          {p.category ? (
-                            <span className="inline-flex rounded-full border border-teal-100 bg-teal-50 px-2 py-0.5 text-xs text-teal-800">
-                              {p.category}
-                            </span>
-                          ) : (
-                            <span className="text-xs text-gray-400">-</span>
-                          )}
-                        </td>
-                        <td
-                          className={`px-4 py-3 text-center font-bold ${p.stock <= 5 ? "text-rose-600" : "text-gray-900"}`}
-                        >
-                          {p.stock}
-                        </td>
-                        <td className="px-4 py-3 text-right">
-                          Rp {formatNumber(Number(p.purchasePrice))}
-                        </td>
-                        <td className="px-4 py-3 text-right font-semibold">
-                          Rp {formatNumber(Number(p.sellingPrice))}
-                        </td>
-                        <td className="px-4 py-3 text-right text-xs text-gray-500">
-                          <span className="font-semibold text-green-700">
-                            Rp {formatNumber(margin)}
-                          </span>{" "}
-                          ({markupPct.toFixed(0)}%)
-                        </td>
-                        <td className="flex items-center justify-center gap-1.5 px-4 py-3 text-center">
-                          <Button
-                            size="sm"
-                            variant="primary-soft"
-                            className="border-teal-600 text-teal-700 hover:bg-teal-50"
-                            onClick={() =>
-                              setEditModal({ isOpen: true, product: p })
-                            }
+            <>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm text-gray-700">
+                  <thead className="bg-gray-50 text-xs font-semibold uppercase text-gray-500">
+                    <tr>
+                      <th className="px-4 py-3">
+                        <SortableHeader
+                          label="Kode"
+                          sortKey="code"
+                          activeSortKey={table.sortConfig.key as string}
+                          activeDirection={table.sortConfig.direction}
+                          onSort={table.handleSort}
+                        />
+                      </th>
+                      <th className="px-4 py-3">
+                        <SortableHeader
+                          label="Nama Produk"
+                          sortKey="name"
+                          activeSortKey={table.sortConfig.key as string}
+                          activeDirection={table.sortConfig.direction}
+                          onSort={table.handleSort}
+                        />
+                      </th>
+                      <th className="px-4 py-3">
+                        <SortableHeader
+                          label="Kategori"
+                          sortKey="category"
+                          activeSortKey={table.sortConfig.key as string}
+                          activeDirection={table.sortConfig.direction}
+                          onSort={table.handleSort}
+                        />
+                      </th>
+                      <th className="px-4 py-3 text-center">
+                        <SortableHeader
+                          label="Stok Fisik"
+                          sortKey="stock"
+                          activeSortKey={table.sortConfig.key as string}
+                          activeDirection={table.sortConfig.direction}
+                          onSort={table.handleSort}
+                          className="w-full justify-center"
+                        />
+                      </th>
+                      <th className="px-4 py-3 text-right">
+                        <SortableHeader
+                          label="Harga Beli"
+                          sortKey="purchasePriceVal"
+                          activeSortKey={table.sortConfig.key as string}
+                          activeDirection={table.sortConfig.direction}
+                          onSort={table.handleSort}
+                          className="w-full justify-end"
+                        />
+                      </th>
+                      <th className="px-4 py-3 text-right">
+                        <SortableHeader
+                          label="Harga Jual"
+                          sortKey="sellingPriceVal"
+                          activeSortKey={table.sortConfig.key as string}
+                          activeDirection={table.sortConfig.direction}
+                          onSort={table.handleSort}
+                          className="w-full justify-end font-bold"
+                        />
+                      </th>
+                      <th className="px-4 py-3 text-right">
+                        <SortableHeader
+                          label="Margin / Markup"
+                          sortKey="marginVal"
+                          activeSortKey={table.sortConfig.key as string}
+                          activeDirection={table.sortConfig.direction}
+                          onSort={table.handleSort}
+                          className="w-full justify-end font-semibold text-green-700"
+                        />
+                      </th>
+                      <th className="px-4 py-3 text-center">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {table.paginatedItems.map((p) => {
+                      return (
+                        <tr key={p.id} className="hover:bg-gray-50/50">
+                          <td className="px-4 py-3 font-semibold text-gray-950">
+                            {p.code}
+                          </td>
+                          <td className="px-4 py-3 font-medium text-gray-900">
+                            {p.name}
+                          </td>
+                          <td className="px-4 py-3">
+                            {p.category ? (
+                              <span className="inline-flex rounded-full border border-teal-100 bg-teal-50 px-2 py-0.5 text-xs text-teal-800">
+                                {p.category}
+                              </span>
+                            ) : (
+                              <span className="text-xs text-gray-400">-</span>
+                            )}
+                          </td>
+                          <td
+                            className={`px-4 py-3 text-center font-bold ${p.stock <= 5 ? "text-rose-600" : "text-gray-900"}`}
                           >
-                            <PiPencilSimpleBold className="mr-1 h-3.5 w-3.5" />
-                            Ubah
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="neutral"
-                            className="border-amber-600 text-amber-700 hover:bg-amber-50"
-                            onClick={() =>
-                              setAdjModal({ isOpen: true, product: p })
-                            }
-                          >
-                            Opname
-                          </Button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+                            {p.stock}
+                          </td>
+                          <td className="px-4 py-3 text-right">
+                            Rp {formatNumber(p.purchasePriceVal)}
+                          </td>
+                          <td className="px-4 py-3 text-right font-semibold">
+                            Rp {formatNumber(p.sellingPriceVal)}
+                          </td>
+                          <td className="px-4 py-3 text-right text-xs text-gray-500">
+                            <span className="font-semibold text-green-700">
+                              Rp {formatNumber(p.marginVal)}
+                            </span>{" "}
+                            ({p.markupPct.toFixed(0)}%)
+                          </td>
+                          <td className="flex items-center justify-center gap-1.5 px-4 py-3 text-center">
+                            <Button
+                              size="sm"
+                              variant="primary-soft"
+                              className="border-teal-600 text-teal-700 hover:bg-teal-50"
+                              onClick={() =>
+                                setEditModal({
+                                  isOpen: true,
+                                  product: p as any,
+                                })
+                              }
+                            >
+                              <PiPencilSimpleBold className="mr-1 h-3.5 w-3.5" />
+                              Ubah
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="neutral"
+                              className="border-amber-600 text-amber-700 hover:bg-amber-50"
+                              onClick={() =>
+                                setAdjModal({ isOpen: true, product: p as any })
+                              }
+                            >
+                              Opname
+                            </Button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              <TableControls
+                currentPage={table.currentPage}
+                totalPages={table.totalPages}
+                pageSize={table.pageSize}
+                totalItems={table.totalItems}
+                startIndex={table.startIndex}
+                endIndex={table.endIndex}
+                onPageChange={table.setCurrentPage}
+                onPageSizeChange={table.setPageSize}
+                onExport={() => {
+                  table.exportToCsv("Katalog_Produk_Toko", [
+                    { label: "Kode", key: "code" },
+                    { label: "Nama Produk", key: "name" },
+                    { label: "Kategori", key: "categoryText" },
+                    { label: "Stok Fisik", key: "stock" },
+                    { label: "Harga Beli", key: "purchasePriceVal" },
+                    { label: "Harga Jual", key: "sellingPriceVal" },
+                    { label: "Margin", key: "marginVal" },
+                  ]);
+                }}
+                exportLabel="Unduh Katalog"
+              />
+            </>
           )}
         </div>
       )}
@@ -403,6 +519,9 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                   defaultValue={editModal.product.code}
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
                 />
+                <p className="mt-1 text-xs text-gray-500">
+                  Kode unik atau barcode pembeda barang.
+                </p>
               </div>
 
               <div>
@@ -416,6 +535,9 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                   defaultValue={editModal.product.name}
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
                 />
+                <p className="mt-1 text-xs text-gray-500">
+                  Nama lengkap produk retail.
+                </p>
               </div>
 
               <div>
@@ -428,6 +550,9 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                   defaultValue={editModal.product.category || ""}
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
                 />
+                <p className="mt-1 text-xs text-gray-500">
+                  Grup penggolongan tipe produk.
+                </p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -442,6 +567,9 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                     defaultValue={Number(editModal.product.purchasePrice)}
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
                   />
+                  <p className="mt-1 text-xs text-gray-500">
+                    Harga modal beli.
+                  </p>
                 </div>
 
                 <div>
@@ -455,6 +583,9 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                     defaultValue={Number(editModal.product.sellingPrice)}
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
                   />
+                  <p className="mt-1 text-xs text-gray-500">
+                    Harga jual retail.
+                  </p>
                 </div>
               </div>
 
@@ -522,6 +653,10 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                   placeholder="Contoh: -3 untuk susut, 5 untuk bertambah"
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
                 />
+                <p className="mt-1 text-xs text-gray-500">
+                  Masukkan nilai negatif (misal -5) untuk stok susut, atau
+                  positif (misal 5) jika stok bertambah.
+                </p>
               </div>
 
               <div>
@@ -535,6 +670,10 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                   placeholder="Contoh: Selisih hitung fisik, kemasan pecah"
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
                 />
+                <p className="mt-1 text-xs text-gray-500">
+                  Catatan/keterangan penyebab terjadinya perbedaan jumlah stok
+                  fisik.
+                </p>
               </div>
 
               <div className="flex justify-end gap-2 pt-2">
