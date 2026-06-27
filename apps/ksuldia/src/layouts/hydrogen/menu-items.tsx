@@ -15,6 +15,7 @@ import {
   PiPresentationChartDuotone,
   PiFileTextDuotone,
   PiGearDuotone,
+  PiCubeDuotone,
 } from "react-icons/pi";
 
 type MenuItem = {
@@ -70,24 +71,19 @@ export const menuItems: MenuItem[] = [
     permission: PERMISSIONS.SIMPAN_PINJAM_VIEW,
   },
   {
-    name: "Data Master",
-    href: "#",
+    name: "Parameter Koperasi",
+    href: routes.simpanPinjam.master,
     icon: <PiGearDuotone />,
-    dropdownItems: [
-      {
-        name: "Parameter Koperasi",
-        href: routes.simpanPinjam.master,
-        permission: PERMISSIONS.USER_MANAGE,
-      },
-      {
-        name: "Katalog Produk",
-        href: routes.toko.produk,
-        permission: PERMISSIONS.TOKO_VIEW,
-      },
-    ],
+    permission: PERMISSIONS.USER_MANAGE,
   },
   {
     name: "Toko Lidia",
+  },
+  {
+    name: "Katalog Produk",
+    href: routes.toko.produk,
+    icon: <PiCubeDuotone />,
+    permission: PERMISSIONS.TOKO_VIEW,
   },
   {
     name: "Transaksi & Stok",
