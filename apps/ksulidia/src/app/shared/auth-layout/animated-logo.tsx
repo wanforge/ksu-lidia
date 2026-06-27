@@ -204,7 +204,7 @@ export default function AnimatedLogo({
       <g transform="matrix(1,0,0,1,0,5.343361)" className="apl-txt">
         <text
           x="390"
-          y="175"
+          y="225"
           fontFamily="Lexend, Inter, sans-serif"
           fontWeight="800"
           fontSize="115"
@@ -213,18 +213,6 @@ export default function AnimatedLogo({
           className="dark:fill-gray-100"
         >
           KSU <tspan fill="rgb(212, 175, 55)">LIDIA</tspan>
-        </text>
-        <text
-          x="392"
-          y="250"
-          fontFamily="Lexend, Inter, sans-serif"
-          fontWeight="600"
-          fontSize="34"
-          fill="rgb(194, 65, 12)"
-          letterSpacing="0.5"
-          className="dark:fill-orange-400"
-        >
-          Koperasi Simpan Pinjam &amp; Toko GKJ Manahan
         </text>
       </g>
 
