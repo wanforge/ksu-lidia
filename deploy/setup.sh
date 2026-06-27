@@ -5,7 +5,7 @@
 set -euo pipefail
 
 APP_DIR="${1:-/var/www/ksu-lidia}"
-APP_NAME="ksuldia"
+APP_NAME="ksulidia"
 SERVICE_NAME="ksu-lidia"
 NODE_PORT=3005
 
@@ -35,7 +35,7 @@ fi
 
 echo ""
 echo "=== [4/7] Install dependensi ==="
-cd apps/ksuldia
+cd apps/ksulidia
 pnpm install --frozen-lockfile
 
 echo ""
@@ -70,12 +70,12 @@ After=network.target mariadb.service
 [Service]
 Type=simple
 User=www-data
-WorkingDirectory=${APP_DIR}/apps/ksuldia
+WorkingDirectory=${APP_DIR}/apps/ksulidia
 ExecStart=$(command -v node) $(pnpm store path 2>/dev/null | head -1)/../../../node_modules/.bin/next start -p ${NODE_PORT}
 Restart=on-failure
 RestartSec=5
 Environment=NODE_ENV=production
-EnvironmentFile=${APP_DIR}/apps/ksuldia/.env
+EnvironmentFile=${APP_DIR}/apps/ksulidia/.env
 StandardOutput=journal
 StandardError=journal
 
@@ -95,9 +95,9 @@ fi
 echo ""
 echo "============================================================"
 echo "  Setup selesai! Langkah selanjutnya:"
-echo "  1. Edit $APP_DIR/apps/ksuldia/.env"
+echo "  1. Edit $APP_DIR/apps/ksulidia/.env"
 echo "  2. Buat database: CREATE DATABASE ksu_lidia CHARACTER SET utf8mb4;"
-echo "  3. Jalankan migrasi: cd $APP_DIR/apps/ksuldia && pnpm run db:migrate:deploy"
+echo "  3. Jalankan migrasi: cd $APP_DIR/apps/ksulidia && pnpm run db:migrate:deploy"
 echo "  4. Seed data: pnpm run db:seed"
 echo "  5. Build: pnpm run build"
 echo "  6. Start: systemctl start $SERVICE_NAME"

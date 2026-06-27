@@ -7,7 +7,7 @@ set -euo pipefail
 APP_DIR="${1:-/var/www/ksu-lidia}"
 BRANCH="${2:-main}"
 SERVICE_NAME="ksu-lidia"
-APP_SUBDIR="apps/ksuldia"
+APP_SUBDIR="apps/ksulidia"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 LOG_FILE="/tmp/deploy_${TIMESTAMP}.log"
 

@@ -6,7 +6,7 @@ set -euo pipefail
 APP_DIR="${1:-/var/www/ksu-lidia}"
 TARGET_COMMIT="${2:-HEAD~1}"
 SERVICE_NAME="ksu-lidia"
-APP_SUBDIR="apps/ksuldia"
+APP_SUBDIR="apps/ksulidia"
 
 echo "=== Rollback KSU Lidia ==="
 echo "  Dir    : $APP_DIR"

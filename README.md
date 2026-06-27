@@ -6,7 +6,7 @@ Monorepo ini menggunakan [Turborepo](https://turbo.build/) untuk mengelola banya
 
 ## Struktur Monorepo
 
-- `apps/ksuldia`: aplikasi utama (production) yang harus diprioritaskan untuk pengembangan.
+- `apps/ksulidia`: aplikasi utama (production) yang harus diprioritaskan untuk pengembangan.
 - `apps/isomorphic` dan `apps/isomorphic-*`: aplikasi demo dan referensi ide (UI/UX, pola komponen, eksplorasi implementasi).
 
 ## Getting Started

@@ -38,7 +38,7 @@ export default function ProductClassicCard({
         {discount ? (
           <Text
             as="span"
-            className="absolute start-5 top-5 rounded-lg bg-white px-2.5 py-1.5 text-xs font-semibold dark:bg-gray-200 dark:text-gray-700"
+            className="absolute start-5 top-5 rounded-lg bg-white px-2.5 py-1.5 text-sm font-semibold dark:bg-gray-200 dark:text-gray-800 shadow-sm"
           >
             {discount}% Discount
           </Text>
@@ -50,13 +50,13 @@ export default function ProductClassicCard({
           {name}
         </Title>
 
-        <Text as="p" className="truncate">
+        <Text as="p" className="line-clamp-2 text-sm text-gray-700 dark:text-gray-300">
           {description}
         </Text>
         <div className="mt-2 flex items-center font-semibold text-gray-900">
           {toCurrency(Number(salePrice))}
           {price && (
-            <del className="ps-1.5 text-[13px] font-normal text-gray-500">
+            <del className="ps-1.5 text-sm font-normal text-gray-500">
               {toCurrency(Number(price))}
             </del>
           )}

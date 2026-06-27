@@ -46,7 +46,7 @@ Script ini akan secara otomatis:
 
 ### Langkah 3: Konfigurasi Environment (`.env`)
 
-Buka file `/var/www/ksu-lidia/apps/ksuldia/.env` dan sesuaikan parameter berikut:
+Buka file `/var/www/ksu-lidia/apps/ksulidia/.env` dan sesuaikan parameter berikut:
 
 ```env
 # Koneksi Database
@@ -66,7 +66,7 @@ RECAPTCHA_SECRET_KEY=""
 Setelah environment database diatur dengan benar, lakukan migrasi skema database dan jalankan seeder untuk mempopulasikan data anggota awal:
 
 ```bash
-cd /var/www/ksu-lidia/apps/ksuldia
+cd /var/www/ksu-lidia/apps/ksulidia
 
 # Deploy skema database (Non-destruktif)
 pnpm run db:migrate:deploy
@@ -123,7 +123,7 @@ sudo journalctl -u ksu-lidia -f
 
 ### Opsi B: PM2 Process Manager
 
-Jika Anda lebih menyukai PM2, jalankan perintah berikut dari direktori `/var/www/ksu-lidia/apps/ksuldia`:
+Jika Anda lebih menyukai PM2, jalankan perintah berikut dari direktori `/var/www/ksu-lidia/apps/ksulidia`:
 
 ```bash
 # Start aplikasi

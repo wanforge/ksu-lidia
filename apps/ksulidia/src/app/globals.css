@@ -38,24 +38,24 @@
 
     /* body style */
     --background: 255 255 255; /* #ffffff */
-    --foreground: 72 72 72; /* #484848 */
+    --foreground: 34 34 34; /* #222222 (Higher contrast for elderly) */
     --muted: 227 227 227; /* #e3e3e3 */
-    --muted-foreground: 146 146 146; /* #929292 */
+    --muted-foreground: 102 102 102; /* #666666 (Darker muted text) */
 
     /* ----------------------------------- */
-    /* primary/brand colors — red-orange-gold palette */
+    /* primary/brand colors — Teal palette */
     /* ----------------------------------- */
-    --primary-lighter: 254 226 226; /* #fee2e2 */
-    --primary-default: 153 27 27; /* #991b1b (merah gelap) */
-    --primary-dark: 127 29 29; /* #7f1d1d (merah lebih gelap) */
+    --primary-lighter: 204 251 241; /* #ccfbf1 (teal-100) */
+    --primary-default: 15 118 110; /* #0f766e (teal-700) */
+    --primary-dark: 17 94 89; /* #115e59 (teal-800) */
     --primary-foreground: 255 255 255; /* #ffffff */
 
     /* ----------------------------------- */
-    /* secondary colors */
+    /* secondary colors - Amber palette */
     /* ----------------------------------- */
-    --secondary-lighter: 255 237 213; /* #ffedd5 */
-    --secondary-default: 194 65 12; /* #c2410c (orange gelap) */
-    --secondary-dark: 154 52 18; /* #9a3412 (orange lebih gelap) */
+    --secondary-lighter: 254 243 199; /* #fef3c7 (amber-100) */
+    --secondary-default: 217 119 6; /* #d97706 (amber-600) */
+    --secondary-dark: 180 83 9; /* #b45309 (amber-700) */
     --secondary-foreground: 255 255 255; /* #ffffff */
 
     /* ----------------------------------- */
@@ -87,14 +87,14 @@
     --green-dark: 17 132 60; /* #11843c */
 
     /* ----------------------------------- */
-    /* gold-red-orange palette references */
+    /* teal-amber palette references */
     /* ----------------------------------- */
-    --light-sea-green: 234 88 12; /* #ea580c */
-    --stormy-teal: 153 27 27; /* #991b1b */
-    --evergreen: 127 29 29; /* #7f1d1d */
-    --strong-cyan: 249 115 22; /* #f97316 */
-    --verdigris: 194 65 12; /* #c2410c */
-    --gold-accent: 212 175 55; /* #d4af37 (gold) */
+    --light-sea-green: 15 118 110; /* #0f766e (teal-700) */
+    --stormy-teal: 17 94 89; /* #115e59 (teal-800) */
+    --evergreen: 19 78 74; /* #134e4a (teal-900) */
+    --strong-cyan: 20 184 166; /* #14b8a6 (teal-500) */
+    --verdigris: 13 148 136; /* #0d9488 (teal-600) */
+    --gold-accent: 217 119 6; /* #d97706 (amber-600) */
   }
 
   /* dark theme */
@@ -129,24 +129,24 @@
     --gray-1000: 255 255 255;
 
     --background: 8 9 14; /* #08090e */
-    --foreground: 223 223 223; /* #dfdfdf */
+    --foreground: 241 241 241; /* #f1f1f1 (Higher contrast) */
     --muted: 51 51 51; /* #333333 */
-    --muted-foreground: 102 102 102; /* #666666 */
+    --muted-foreground: 162 162 162; /* #a2a2a2 (Lighter muted text) */
 
     /* ----------------------------------- */
-    /* primary/brand colors — red-orange-gold palette */
+    /* primary/brand colors — Teal palette */
     /* ----------------------------------- */
-    --primary-lighter: 127 29 29; /* #7f1d1d */
-    --primary-default: 239 68 68; /* #ef4444 (merah terang di dark mode) */
-    --primary-dark: 248 113 113; /* #f87171 */
+    --primary-lighter: 17 94 89; /* #115e59 */
+    --primary-default: 20 184 166; /* #14b8a6 (teal-500) */
+    --primary-dark: 45 212 191; /* #2dd4bf (teal-400) */
     --primary-foreground: 255 255 255; /* #ffffff */
 
     /* ----------------------------------- */
-    /* secondary colors */
+    /* secondary colors - Amber palette */
     /* ----------------------------------- */
-    --secondary-lighter: 154 52 18; /* #9a3412 */
-    --secondary-default: 249 115 22; /* #f97316 (orange terang di dark mode) */
-    --secondary-dark: 251 146 60; /* #fb923c */
+    --secondary-lighter: 146 64 14; /* #92400e (amber-800) */
+    --secondary-default: 245 158 11; /* #f59e0b (amber-500) */
+    --secondary-dark: 251 191 36; /* #fbbf24 (amber-400) */
 
     /* ----------------------------------- */
     /* red/error colors */
@@ -173,14 +173,14 @@
     --green-dark: 185 249 207; /* #b9f9cf */
 
     /* ----------------------------------- */
-    /* gold-red-orange palette references */
+    /* teal-amber palette references */
     /* ----------------------------------- */
-    --light-sea-green: 249 115 22; /* #f97316 */
-    --stormy-teal: 239 68 68; /* #ef4444 */
-    --evergreen: 127 29 29; /* #7f1d1d */
-    --strong-cyan: 251 146 60; /* #fb923c */
-    --verdigris: 249 115 22; /* #f97316 */
-    --gold-accent: 212 175 55; /* #d4af37 (gold) */
+    --light-sea-green: 20 184 166; /* #14b8a6 */
+    --stormy-teal: 45 212 191; /* #2dd4bf */
+    --evergreen: 13 148 136; /* #0d9488 */
+    --strong-cyan: 245 158 11; /* #f59e0b */
+    --verdigris: 20 184 166; /* #14b8a6 */
+    --gold-accent: 251 191 36; /* #fbbf24 */
 
     /* here you can customize other colors for dark theme if design required */
   }
@@ -199,7 +199,7 @@
   }
 
   body {
-    @apply flex min-h-full flex-col overflow-x-hidden text-sm text-gray-600 dark:bg-gray-50;
+    @apply flex min-h-full flex-col overflow-x-hidden text-base text-gray-800 dark:bg-gray-50 dark:text-gray-200;
   }
 
   input::-ms-clear,
