@@ -1,0 +1,1 @@
+- [bash-unavailable-repeatedly](bash-unavailable-repeatedly.md) — Bash tool frequently becomes unavailable, blocking progress on tasks requiring file system operations.
