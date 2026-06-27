@@ -601,9 +601,9 @@ export default function TransaksiWorkspace({
                             <span
                               className={`inline-flex rounded-md border px-2 py-0.5 text-xs font-semibold ${
                                 tx.type === ProductTxType.SALE
-                                  ? "border-green-200 bg-green-50 text-green-800"
+                                  ? "border-red-200 bg-red-50 text-red-800"
                                   : tx.type === ProductTxType.PURCHASE
-                                    ? "border-cyan-200 bg-cyan-50 text-cyan-800"
+                                    ? "border-orange-200 bg-orange-50 text-orange-800"
                                     : "border-amber-200 bg-amber-50 text-amber-800"
                               }`}
                             >
