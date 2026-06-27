@@ -182,7 +182,6 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                 name="code"
                 required
                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
-                placeholder="Contoh: IND-001"
               />
               <p className="mt-1 text-xs text-gray-500">
                 Kode unik atau barcode pembeda untuk setiap barang.
@@ -203,7 +202,6 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                 name="name"
                 required
                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
-                placeholder="Contoh: Beras Ramos 5kg"
               />
               <p className="mt-1 text-xs text-gray-500">
                 Nama lengkap produk retail beserta ukurannya.
@@ -223,7 +221,6 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                 type="text"
                 name="category"
                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
-                placeholder="Contoh: Sembako, Minuman, Sabun"
               />
               <p className="mt-1 text-xs text-gray-500">
                 Grup penggolongan tipe produk untuk filter katalog.
@@ -502,7 +499,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
       {/* Edit Product Modal */}
       {editModal.isOpen && editModal.product && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="relative w-full max-w-md rounded-lg border border-gray-200 bg-white p-6 shadow-xl">
+          <div className="relative w-full max-w-xl rounded-lg border border-gray-200 bg-white p-6 shadow-xl">
             <button
               onClick={() => setEditModal({ isOpen: false, product: null })}
               className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
@@ -624,7 +621,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
       {/* Stock Opname/Adjustment Modal */}
       {adjModal.isOpen && adjModal.product && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="relative w-full max-w-md rounded-lg border border-gray-200 bg-white p-6 shadow-xl">
+          <div className="relative w-full max-w-xl rounded-lg border border-gray-200 bg-white p-6 shadow-xl">
             <button
               onClick={() => setAdjModal({ isOpen: false, product: null })}
               className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
@@ -662,7 +659,6 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                   type="number"
                   name="quantity"
                   required
-                  placeholder="Contoh: -3 untuk susut, 5 untuk bertambah"
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
                 />
                 <p className="mt-1 text-xs text-gray-500">
@@ -679,7 +675,6 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                   type="text"
                   name="reason"
                   required
-                  placeholder="Contoh: Selisih hitung fisik, kemasan pecah"
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
                 />
                 <p className="mt-1 text-xs text-gray-500">

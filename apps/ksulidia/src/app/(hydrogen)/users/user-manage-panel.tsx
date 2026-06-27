@@ -203,7 +203,6 @@ export default function UserManagePanel({
               name="password"
               type="password"
               className={inputClass}
-              placeholder="Minimal 8 karakter"
               disabled={resetPending}
             />
             <FieldError messages={resetState.errors?.password} />

@@ -67,7 +67,6 @@ export default function UserCreateForm() {
           <input
             name="name"
             className={inputClass}
-            placeholder="Nama pengguna"
             required
           />
           <FieldError messages={state.errors?.name} />
@@ -82,7 +81,6 @@ export default function UserCreateForm() {
             name="email"
             type="email"
             className={inputClass}
-            placeholder={emailPlaceholder}
             required
           />
           <FieldError messages={state.errors?.email} />
@@ -97,7 +95,6 @@ export default function UserCreateForm() {
             name="password"
             type="password"
             className={inputClass}
-            placeholder="Minimal 8 karakter"
             required
           />
           <FieldError messages={state.errors?.password} />

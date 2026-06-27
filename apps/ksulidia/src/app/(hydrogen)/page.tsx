@@ -59,6 +59,19 @@ function getMotivation(now: Date) {
   return "Terima kasih atas kerja kerasnya hari ini. Jangan lupa istirahat yang cukup.";
 }
 
+function getSavingsTypeTone(type: string) {
+  switch (type) {
+    case "POKOK":
+      return "bg-indigo-50 text-indigo-700 border-indigo-200/60";
+    case "WAJIB":
+      return "bg-amber-50 text-amber-700 border-amber-200/60";
+    case "SUKARELA":
+      return "bg-emerald-50 text-emerald-700 border-emerald-200/60";
+    default:
+      return "bg-gray-50 text-gray-700 border-gray-200/60";
+  }
+}
+
 export default async function Home() {
   const session = await getSession();
   const now = new Date();
@@ -292,12 +305,12 @@ export default async function Home() {
         {/* Metric Card 2: Saldo Pinjaman Aktif */}
         <FadeUp>
           <div className="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
-            <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-rose-400 to-pink-400 opacity-0 transition-opacity group-hover:opacity-100" />
+            <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-rose-500 to-red-500 opacity-0 transition-opacity group-hover:opacity-100" />
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-gray-500">
                 Saldo Pinjaman Aktif
               </span>
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-rose-50 to-pink-50 text-rose-600 ring-1 ring-rose-100 transition-all duration-300 group-hover:scale-110 group-hover:shadow-md group-hover:shadow-rose-100">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-rose-50 to-red-50 text-rose-600 ring-1 ring-rose-100 transition-all duration-300 group-hover:scale-110 group-hover:shadow-md group-hover:shadow-rose-100">
                 <PiReceiptDuotone className="h-5 w-5" />
               </div>
             </div>
@@ -340,7 +353,7 @@ export default async function Home() {
         {/* Metric Card 4: Total Anggota */}
         <FadeUp>
           <div className="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
-            <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-amber-400 to-orange-400 opacity-0 transition-opacity group-hover:opacity-100" />
+            <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-amber-500 to-orange-500 opacity-0 transition-opacity group-hover:opacity-100" />
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-gray-500">
                 Anggota Terdaftar
@@ -550,11 +563,9 @@ export default async function Home() {
                       </p>
                     </div>
                     <span
-                      className={`whitespace-nowrap rounded-lg px-2 py-0.5 text-xs font-bold ${
-                        tx.type === "DEPOSIT"
-                          ? "bg-red-50 text-red-700"
-                          : "bg-rose-50 text-rose-700"
-                      }`}
+                      className={`whitespace-nowrap rounded-lg px-2 py-0.5 text-xs font-bold ${getSavingsTypeTone(
+                        tx.savingsType
+                      )}`}
                     >
                       {tx.type === "DEPOSIT" ? "+" : "−"} Rp{" "}
                       {formatNumber(Number(tx.amount))}

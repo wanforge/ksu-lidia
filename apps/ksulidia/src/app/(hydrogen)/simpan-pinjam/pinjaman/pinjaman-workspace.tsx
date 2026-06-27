@@ -976,7 +976,7 @@ export default function PinjamanWorkspace({
       {/* Pay Installment Modal */}
       {payModal.isOpen && payModal.installment && payModal.loan && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="animate-in fade-in zoom-in relative w-full max-w-md rounded-lg border border-gray-200 bg-white p-6 shadow-xl duration-200">
+          <div className="animate-in fade-in zoom-in relative w-full max-w-xl rounded-lg border border-gray-200 bg-white p-6 shadow-xl duration-200">
             <button
               onClick={() =>
                 setPayModal({

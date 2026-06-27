@@ -296,7 +296,6 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                   name="no"
                   required
                   className="h-10 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-700"
-                  placeholder="Contoh: 301"
                 />
                 <p className="mt-1 text-xs text-gray-500">
                   Nomor urut anggota dalam buku Rapat Anggota Tahunan (RAT).
@@ -317,7 +316,6 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                   name="name"
                   required
                   className="h-10 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-700"
-                  placeholder="Nama lengkap anggota"
                 />
                 <p className="mt-1 text-xs text-gray-500">
                   Nama lengkap sesuai dengan KTP anggota.
@@ -337,7 +335,6 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                   type="text"
                   name="phone"
                   className="h-10 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-700"
-                  placeholder="081xxxxxxxx"
                 />
                 <p className="mt-1 text-xs text-gray-500">
                   Nomor telepon aktif (WhatsApp) untuk mempermudah komunikasi.
@@ -351,7 +348,6 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                 <textarea
                   name="address"
                   className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition focus:border-gray-700"
-                  placeholder="Alamat domisili"
                   rows={3}
                 />
                 <p className="mt-1 text-xs text-gray-500">
@@ -823,7 +819,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
       {/* Custom Transaction Dialog Modal */}
       {txModal.isOpen && txModal.member && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="relative w-full max-w-md rounded-lg border border-gray-200 bg-white p-6 shadow-xl">
+          <div className="relative w-full max-w-xl rounded-lg border border-gray-200 bg-white p-6 shadow-xl">
             <button
               onClick={() =>
                 setTxModal({
@@ -896,7 +892,6 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                   required
                   min={100}
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
-                  placeholder="Contoh: 50000"
                 />
                 <p className="mt-1 text-xs text-gray-500">
                   Jumlah nominal uang tunai dalam Rupiah (minimal Rp 100).
@@ -916,7 +911,6 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                   type="text"
                   name="description"
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
-                  placeholder="Contoh: Setoran Wajib Bulanan Mei"
                 />
                 <p className="mt-1 text-xs text-gray-500">
                   Keterangan opsional sebagai catatan bukti transaksi.
