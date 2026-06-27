@@ -23,7 +23,7 @@ export default async function SystemDiagnosticsPage() {
   return (
     <div className="flex w-full flex-col gap-6">
       <section className="border-b border-gray-200 pb-5">
-        <p className="text-sm font-semibold uppercase tracking-[0.14em] text-teal-700">
+        <p className="text-sm font-semibold uppercase tracking-[0.14em] text-red-700">
           Administrasi
         </p>
         <h1 className="mt-2 text-2xl font-bold text-gray-950 md:text-3xl">

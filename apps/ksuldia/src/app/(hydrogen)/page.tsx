@@ -215,13 +215,13 @@ export default async function Home() {
         />
 
         {/* Subtle teal glow accent */}
-        <div className="pointer-events-none absolute -right-20 top-0 h-40 w-80 rounded-full bg-teal-500/10 blur-3xl" />
+        <div className="pointer-events-none absolute -right-20 top-0 h-40 w-80 rounded-full bg-red-500/10 blur-3xl" />
 
         <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-teal-400/30 bg-teal-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-teal-300 backdrop-blur-sm">
-                <PulseRing color="bg-teal-400" />
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-red-400/30 bg-red-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-red-300 backdrop-blur-sm">
+                <PulseRing color="bg-red-400" />
                 Sistem Aktif
               </span>
             </div>
@@ -246,15 +246,15 @@ export default async function Home() {
         {/* Quick summary chips */}
         <div className="relative z-10 mt-1 flex flex-wrap gap-2">
           <span className="inline-flex items-center gap-1.5 rounded-lg border border-slate-600/40 bg-slate-700/50 px-3 py-1.5 text-xs font-medium text-slate-200 backdrop-blur-sm">
-            <PiUsersDuotone className="h-3.5 w-3.5 text-teal-400" />
+            <PiUsersDuotone className="h-3.5 w-3.5 text-red-400" />
             {memberCount} Anggota
           </span>
           <span className="inline-flex items-center gap-1.5 rounded-lg border border-slate-600/40 bg-slate-700/50 px-3 py-1.5 text-xs font-medium text-slate-200 backdrop-blur-sm">
-            <PiHandshakeDuotone className="h-3.5 w-3.5 text-teal-400" />
+            <PiHandshakeDuotone className="h-3.5 w-3.5 text-red-400" />
             {activeLoanCount} Pinjaman Aktif
           </span>
           <span className="inline-flex items-center gap-1.5 rounded-lg border border-slate-600/40 bg-slate-700/50 px-3 py-1.5 text-xs font-medium text-slate-200 backdrop-blur-sm">
-            <PiCubeDuotone className="h-3.5 w-3.5 text-teal-400" />
+            <PiCubeDuotone className="h-3.5 w-3.5 text-red-400" />
             {productCount} Produk Toko
           </span>
         </div>
@@ -268,12 +268,12 @@ export default async function Home() {
         <FadeUp>
           <div className="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
             {/* Gradient accent bar */}
-            <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-teal-400 to-emerald-400 opacity-0 transition-opacity group-hover:opacity-100" />
+            <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-red-400 to-rose-400 opacity-0 transition-opacity group-hover:opacity-100" />
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-gray-500">
                 Total Simpanan Anggota
               </span>
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-teal-50 to-emerald-50 text-teal-600 ring-1 ring-teal-100 transition-all duration-300 group-hover:scale-110 group-hover:shadow-md group-hover:shadow-teal-100">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-red-50 to-rose-50 text-red-700 ring-1 ring-red-100 transition-all duration-300 group-hover:scale-110 group-hover:shadow-md group-hover:shadow-red-100">
                 <PiCoinsDuotone className="h-5 w-5" />
               </div>
             </div>
@@ -281,7 +281,7 @@ export default async function Home() {
               <h3 className="text-2xl font-bold text-gray-900">
                 <AnimatedCounter value={totalSavings} prefix="Rp " />
               </h3>
-              <p className="mt-1.5 flex items-center gap-1 text-xs font-medium text-teal-600">
+              <p className="mt-1.5 flex items-center gap-1 text-xs font-medium text-red-600">
                 <PiTrendUpDuotone className="h-3.5 w-3.5" />
                 <span>Total seluruh rekening simpanan</span>
               </p>
@@ -386,7 +386,7 @@ export default async function Home() {
               </div>
               <Link
                 href="/toko/produk"
-                className="flex items-center gap-1 rounded-lg bg-teal-50 px-3 py-1.5 text-xs font-semibold text-teal-700 transition-colors hover:bg-teal-100"
+                className="flex items-center gap-1 rounded-lg bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-700 transition-colors hover:bg-red-100"
               >
                 <span>Lihat Katalog</span>
                 <PiArrowRightBold className="h-3 w-3" />
@@ -445,7 +445,7 @@ export default async function Home() {
           <div className="group rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition-all duration-300 hover:shadow-md">
             <div className="flex items-center justify-between border-b border-gray-100 pb-4">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-teal-50 to-emerald-50 text-teal-600 ring-1 ring-teal-100">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-red-50 to-rose-50 text-red-700 ring-1 ring-red-100">
                   <PiShieldCheckDuotone className="h-5 w-5" />
                 </div>
                 <div>
@@ -459,7 +459,7 @@ export default async function Home() {
               </div>
               <Link
                 href="/sistem"
-                className="flex items-center gap-1 rounded-lg bg-teal-50 px-3 py-1.5 text-xs font-semibold text-teal-700 transition-colors hover:bg-teal-100"
+                className="flex items-center gap-1 rounded-lg bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-700 transition-colors hover:bg-red-100"
               >
                 <span>Status Server</span>
                 <PiArrowRightBold className="h-3 w-3" />
@@ -509,9 +509,9 @@ export default async function Home() {
         <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
           {/* Column 1: Simpanan Terbaru */}
           <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
-            <div className="border-b border-gray-100 bg-gradient-to-r from-teal-50/50 to-transparent p-5">
+            <div className="border-b border-gray-100 bg-gradient-to-r from-red-50/50 to-transparent p-5">
               <div className="flex items-center gap-2.5">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-100 text-teal-600">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-100 text-red-600">
                   <PiCoinsDuotone className="h-4 w-4" />
                 </div>
                 <div>
@@ -552,7 +552,7 @@ export default async function Home() {
                     <span
                       className={`whitespace-nowrap rounded-lg px-2 py-0.5 text-xs font-bold ${
                         tx.type === "DEPOSIT"
-                          ? "bg-teal-50 text-teal-700"
+                          ? "bg-red-50 text-red-700"
                           : "bg-rose-50 text-rose-700"
                       }`}
                     >
@@ -662,7 +662,7 @@ export default async function Home() {
                         })}
                       </p>
                     </div>
-                    <span className="whitespace-nowrap rounded-lg bg-teal-50 px-2 py-0.5 text-xs font-bold text-teal-700">
+                    <span className="whitespace-nowrap rounded-lg bg-red-50 px-2 py-0.5 text-xs font-bold text-red-700">
                       Rp {formatNumber(Number(tx.totalAmount))}
                     </span>
                   </ActivityItem>

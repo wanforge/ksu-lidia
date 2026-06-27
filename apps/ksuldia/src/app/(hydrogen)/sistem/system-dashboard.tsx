@@ -101,7 +101,7 @@ function formatStamp(epochMs: number, tz: string) {
 
 function StatusIcon({ status }: { status: CheckStatus }) {
   if (status === "ok")
-    return <PiCheckCircleDuotone className="h-4 w-4 shrink-0 text-teal-600" />;
+    return <PiCheckCircleDuotone className="h-4 w-4 shrink-0 text-red-600" />;
   if (status === "warn")
     return (
       <PiWarningCircleDuotone className="h-4 w-4 shrink-0 text-amber-600" />
@@ -113,7 +113,7 @@ function StatusIcon({ status }: { status: CheckStatus }) {
 
 function statusBadge(status: CheckStatus) {
   const map: Record<CheckStatus, string> = {
-    ok: "border-teal-200 bg-teal-50 text-teal-800",
+    ok: "border-red-200 bg-red-50 text-red-800",
     warn: "border-amber-200 bg-amber-50 text-amber-800",
     error: "border-rose-200 bg-rose-50 text-rose-800",
     info: "border-gray-200 bg-gray-50 text-gray-600",
@@ -141,7 +141,7 @@ function ProgressBar({
   tone: "teal" | "amber" | "rose";
 }) {
   const bar = {
-    teal: "bg-teal-500",
+    teal: "bg-red-500",
     amber: "bg-amber-400",
     rose: "bg-rose-500",
   }[tone];
@@ -169,7 +169,7 @@ function Row({ label, value }: { label: string; value: React.ReactNode }) {
 function DriftPill({ ms }: { ms: number }) {
   const tone = driftTone(Math.abs(ms));
   const cls = {
-    ok: "border-teal-200 bg-teal-50 text-teal-800",
+    ok: "border-red-200 bg-red-50 text-red-800",
     warn: "border-amber-200 bg-amber-50 text-amber-800",
     error: "border-rose-200 bg-rose-50 text-rose-800",
     info: "border-gray-200 bg-gray-50 text-gray-600",
@@ -197,7 +197,7 @@ function Card({
   return (
     <div className="flex flex-col rounded-md border border-gray-200 bg-white">
       <div className="flex items-center gap-3 border-b border-gray-200 px-4 py-3">
-        <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-teal-200 bg-teal-50 text-teal-800">
+        <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-red-200 bg-red-50 text-red-800">
           {icon}
         </span>
         <span className="flex-1 text-sm font-semibold text-gray-950">
@@ -239,7 +239,7 @@ function AudioTestPanel() {
   const toneStyle: Record<NotificationTone, ToneStyle> = {
     success: {
       color:
-        "border-teal-200 bg-teal-50 text-teal-800 hover:bg-teal-100 disabled:opacity-50",
+        "border-red-200 bg-red-50 text-red-800 hover:bg-red-100 disabled:opacity-50",
       icon: <PiCheckCircleDuotone className="h-4 w-4 shrink-0" />,
     },
     error: {
@@ -275,7 +275,7 @@ function AudioTestPanel() {
       title="Uji Audio Notifikasi"
       badge={
         supported ? (
-          <span className="inline-flex rounded border border-teal-200 bg-teal-50 px-1.5 py-0.5 text-[10px] font-bold uppercase text-teal-700">
+          <span className="inline-flex rounded border border-red-200 bg-red-50 px-1.5 py-0.5 text-[10px] font-bold uppercase text-red-700">
             Didukung
           </span>
         ) : (
@@ -548,21 +548,21 @@ export default function SystemDashboard({ checks }: Props) {
   return (
     <div className="space-y-6">
       {/* Live clock bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-teal-200 bg-teal-50 px-4 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-red-200 bg-red-50 px-4 py-3">
         <div className="flex items-center gap-3">
-          <PiClockDuotone className="h-5 w-5 text-teal-700" />
+          <PiClockDuotone className="h-5 w-5 text-red-700" />
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-teal-600">
+            <p className="text-xs font-semibold uppercase tracking-wider text-red-600">
               {appConfig.timezone}
             </p>
-            <p className="font-mono text-base font-bold tabular-nums text-teal-950">
+            <p className="font-mono text-base font-bold tabular-nums text-red-950">
               {now ? formatClock(now, appConfig.timezone) : "—"}
             </p>
           </div>
         </div>
         <div className="flex items-center gap-3">
           {lastUpdated ? (
-            <span className="text-xs text-teal-700">
+            <span className="text-xs text-red-700">
               Data diperbarui{" "}
               {new Intl.DateTimeFormat("id-ID", {
                 hour: "2-digit",
@@ -576,7 +576,7 @@ export default function SystemDashboard({ checks }: Props) {
             onClick={fetchSnapshot}
             disabled={loading}
             variant="primary-soft"
-            className="border-teal-300 bg-white text-teal-800 hover:bg-teal-50"
+            className="border-red-300 bg-white text-red-800 hover:bg-red-50"
           >
             <PiArrowsClockwiseBold
               className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`}
@@ -673,7 +673,7 @@ export default function SystemDashboard({ checks }: Props) {
                     ? "text-rose-600"
                     : memTone === "amber"
                       ? "text-amber-600"
-                      : "text-teal-600"
+                      : "text-red-600"
                 }`}
               >
                 {snapshot.memory.usedPercent}%
@@ -726,7 +726,7 @@ export default function SystemDashboard({ checks }: Props) {
                           ? "text-rose-600"
                           : tone === "amber"
                             ? "text-amber-600"
-                            : "text-teal-600"
+                            : "text-red-600"
                       }`}
                     >
                       {disk.usedPercent}%

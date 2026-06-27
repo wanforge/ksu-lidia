@@ -192,7 +192,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
           type="button"
           className={`inline-flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
             tab === "list"
-              ? "border-teal-700 text-teal-700"
+              ? "border-red-700 text-red-700"
               : "border-transparent text-gray-500 hover:text-gray-800"
           }`}
           onClick={() => setTab("list")}
@@ -209,7 +209,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
             type="button"
             className={`inline-flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
               tab === "detail"
-                ? "border-teal-700 text-teal-700"
+                ? "border-red-700 text-red-700"
                 : "border-transparent text-gray-500 hover:text-gray-800"
             }`}
             onClick={() => setTab("detail")}
@@ -223,7 +223,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
           type="button"
           className={`inline-flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
             tab === "create"
-              ? "border-teal-700 text-teal-700"
+              ? "border-red-700 text-red-700"
               : "border-transparent text-gray-500 hover:text-gray-800"
           }`}
           onClick={() => setTab("create")}
@@ -251,7 +251,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                 <div
                   className={
                     createState.success
-                      ? "rounded-md border border-teal-200 bg-teal-50 px-4 py-3 text-sm font-medium text-teal-800 md:col-span-2"
+                      ? "rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-800 md:col-span-2"
                       : "rounded-md border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-800 md:col-span-2"
                   }
                 >
@@ -354,8 +354,8 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
             <div className="space-y-6">
               {/* Member Summary Header */}
               <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-                <div className="rounded-lg border border-teal-100 bg-teal-50/50 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-teal-800">
+                <div className="rounded-lg border border-red-100 bg-red-50/50 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-red-800">
                     Simpanan Pokok
                   </p>
                   <p className="mt-2 text-2xl font-bold text-gray-900">
@@ -365,8 +365,8 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                     )}
                   </p>
                 </div>
-                <div className="rounded-lg border border-teal-100 bg-teal-50/50 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-teal-800">
+                <div className="rounded-lg border border-red-100 bg-red-50/50 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-red-800">
                     Simpanan Wajib
                   </p>
                   <p className="mt-2 text-2xl font-bold text-gray-900">
@@ -376,8 +376,8 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                     )}
                   </p>
                 </div>
-                <div className="rounded-lg border border-teal-100 bg-teal-50/50 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-teal-800">
+                <div className="rounded-lg border border-red-100 bg-red-50/50 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-red-800">
                     Simpanan Sukarela
                   </p>
                   <p className="mt-2 text-2xl font-bold text-gray-900">
@@ -387,8 +387,8 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                     )}
                   </p>
                 </div>
-                <div className="rounded-lg border border-teal-200 bg-teal-600 p-4 text-white">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-teal-100">
+                <div className="rounded-lg border border-red-200 bg-red-700 p-4 text-white">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-red-100">
                     Total Simpanan
                   </p>
                   <p className="mt-2 text-2xl font-bold">
@@ -401,7 +401,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
               <div className="flex gap-2">
                 <Button
                   size="sm"
-                  className="bg-teal-700 text-white hover:bg-teal-800"
+                  className="bg-red-700 text-white hover:bg-red-800"
                   onClick={() =>
                     setTxModal({
                       isOpen: true,
@@ -416,7 +416,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                 <Button
                   size="sm"
                   variant="primary-soft"
-                  className="border-teal-700 text-teal-700 hover:bg-teal-50"
+                  className="border-red-700 text-red-700 hover:bg-red-50"
                   onClick={() =>
                     setTxModal({
                       isOpen: true,
@@ -443,7 +443,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                       value={txTable.searchQuery}
                       onChange={(e) => txTable.setSearchQuery(e.target.value)}
                       placeholder="Cari jenis, mutasi, ket..."
-                      className="w-full rounded border border-gray-300 bg-white py-1 pl-8 pr-2 text-xs text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-teal-700"
+                      className="w-full rounded border border-gray-300 bg-white py-1 pl-8 pr-2 text-xs text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-red-700"
                     />
                   </label>
                 </div>
@@ -662,7 +662,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                           activeSortKey={table.sortConfig.key as string}
                           activeDirection={table.sortConfig.direction}
                           onSort={table.handleSort}
-                          className="w-full justify-end text-teal-800"
+                          className="w-full justify-end text-red-800"
                         />
                       </th>
                       <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
@@ -698,7 +698,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                           <td className="px-4 py-3 text-right font-medium">
                             Rp {formatNumber(m.sukarela)}
                           </td>
-                          <td className="bg-teal-50/10 px-4 py-3 text-right font-bold text-teal-800">
+                          <td className="bg-red-50/10 px-4 py-3 text-right font-bold text-red-800">
                             Rp {formatNumber(m.totalSavings)}
                           </td>
                           <td className="px-4 py-3 text-center">
@@ -717,7 +717,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                             <Button
                               size="sm"
                               variant="primary-soft"
-                              className="border-teal-600 text-teal-700 hover:bg-teal-50"
+                              className="border-red-700 text-red-700 hover:bg-red-50"
                               onClick={() => {
                                 setSelectedMemberId(m.id);
                                 setTab("detail");
@@ -727,7 +727,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                             </Button>
                             <Button
                               size="sm"
-                              className="bg-teal-700 text-white hover:bg-teal-800"
+                              className="bg-red-700 text-white hover:bg-red-800"
                               onClick={() =>
                                 setTxModal({
                                   isOpen: true,
@@ -830,7 +830,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                 <select
                   name="savingsType"
                   defaultValue={SavingsType.WAJIB}
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
                 >
                   <option value={SavingsType.WAJIB}>Simpanan Wajib</option>
                   <option value={SavingsType.SUKARELA}>
@@ -853,7 +853,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                   name="amount"
                   required
                   min={100}
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
                   placeholder="Contoh: 50000"
                 />
                 <p className="mt-1 text-xs text-gray-500">
@@ -873,7 +873,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                 <input
                   type="text"
                   name="description"
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
                   placeholder="Contoh: Setoran Wajib Bulanan Mei"
                 />
                 <p className="mt-1 text-xs text-gray-500">
@@ -897,7 +897,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                 </Button>
                 <Button
                   type="submit"
-                  className="bg-teal-700 text-white hover:bg-teal-800"
+                  className="bg-red-700 text-white hover:bg-red-800"
                 >
                   Catat Transaksi
                 </Button>

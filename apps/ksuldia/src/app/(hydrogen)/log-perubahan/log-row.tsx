@@ -178,7 +178,7 @@ export default function LogRow({ row }: { row: LogRowData }) {
               {fieldCount > 0 ? (
                 <>{fieldCount} field diubah</>
               ) : row.operation.startsWith("create") ? (
-                <span className="text-teal-700">Data baru</span>
+                <span className="text-red-700">Data baru</span>
               ) : row.operation.startsWith("delete") ? (
                 <span className="text-rose-700">Data dihapus</span>
               ) : (
@@ -220,7 +220,7 @@ export default function LogRow({ row }: { row: LogRowData }) {
                     {" · "}
                     <a
                       href={row.correlationHref}
-                      className="font-mono normal-case text-teal-700 underline hover:text-teal-900"
+                      className="font-mono normal-case text-red-700 underline hover:text-red-900"
                     >
                       aksi {row.correlationId?.slice(0, 8)}
                     </a>

@@ -223,7 +223,7 @@ export default function TransaksiWorkspace({
           type="button"
           className={`inline-flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
             tab === "list"
-              ? "border-teal-700 text-teal-700"
+              ? "border-red-700 text-red-700"
               : "border-transparent text-gray-500 hover:text-gray-800"
           }`}
           onClick={() => {
@@ -242,7 +242,7 @@ export default function TransaksiWorkspace({
           type="button"
           className={`inline-flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
             tab === "sale"
-              ? "border-teal-700 text-teal-700"
+              ? "border-red-700 text-red-700"
               : "border-transparent text-gray-500 hover:text-gray-800"
           }`}
           onClick={() => {
@@ -258,7 +258,7 @@ export default function TransaksiWorkspace({
           type="button"
           className={`inline-flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
             tab === "purchase"
-              ? "border-teal-700 text-teal-700"
+              ? "border-red-700 text-red-700"
               : "border-transparent text-gray-500 hover:text-gray-800"
           }`}
           onClick={() => {
@@ -349,7 +349,7 @@ export default function TransaksiWorkspace({
                   type="button"
                   onClick={addToCart}
                   disabled={!selectedProductId}
-                  className="bg-teal-700 text-xs text-white hover:bg-teal-800"
+                  className="bg-red-700 text-xs text-white hover:bg-red-800"
                 >
                   Tambahkan ke Keranjang
                 </Button>
@@ -413,7 +413,7 @@ export default function TransaksiWorkspace({
                           <td className="px-4 py-3 text-center font-bold">
                             {item.quantity}
                           </td>
-                          <td className="px-4 py-3 text-right font-bold text-teal-800">
+                          <td className="px-4 py-3 text-right font-bold text-red-800">
                             Rp {formatNumber(item.quantity * item.unitPrice)}
                           </td>
                           <td className="px-4 py-3 text-center">
@@ -488,7 +488,7 @@ export default function TransaksiWorkspace({
                 </div>
                 <div className="flex items-center justify-between pt-2 font-bold text-gray-900">
                   <span>Grand Total:</span>
-                  <span className="text-xl font-extrabold text-teal-700">
+                  <span className="text-xl font-extrabold text-red-700">
                     Rp {formatNumber(cartTotal)}
                   </span>
                 </div>
@@ -498,7 +498,7 @@ export default function TransaksiWorkspace({
                 <Button
                   type="submit"
                   disabled={cart.length === 0}
-                  className="w-full bg-teal-700 text-white hover:bg-teal-800"
+                  className="w-full bg-red-700 text-white hover:bg-red-800"
                 >
                   Catat & Simpan Transaksi
                 </Button>
@@ -613,7 +613,7 @@ export default function TransaksiWorkspace({
                           <td className="px-4 py-3 font-medium text-gray-900">
                             {tx.notes || "-"}
                           </td>
-                          <td className="text-teal-850 px-4 py-3 text-right font-bold">
+                          <td className="px-4 py-3 text-right font-bold text-red-800">
                             {tx.type === ProductTxType.ADJUSTMENT
                               ? "-"
                               : `Rp ${formatNumber(tx.totalAmountVal)}`}
@@ -627,7 +627,7 @@ export default function TransaksiWorkspace({
                               onClick={() =>
                                 setExpandedTxId(isExpanded ? null : tx.id)
                               }
-                              className="inline-flex items-center gap-1 text-xs font-semibold text-teal-700 hover:text-teal-900"
+                              className="inline-flex items-center gap-1 text-xs font-semibold text-red-700 hover:text-red-900"
                             >
                               {isExpanded ? (
                                 <>
@@ -679,7 +679,7 @@ export default function TransaksiWorkspace({
                                 {formatNumber(Number(item.unitPrice))}
                               </p>
                               {tx.type !== ProductTxType.ADJUSTMENT && (
-                                <p className="text-xs font-bold text-teal-700">
+                                <p className="text-xs font-bold text-red-700">
                                   Subtotal: Rp{" "}
                                   {formatNumber(Number(item.totalPrice))}
                                 </p>

@@ -82,7 +82,7 @@ const baseBtn =
 const enabled =
   "border-gray-300 text-gray-700 hover:border-gray-500 hover:bg-gray-50";
 const disabled = "pointer-events-none border-gray-200 text-gray-300";
-const activePage = "border-teal-600 bg-teal-600 text-white hover:bg-teal-600";
+const activePage = "border-red-700 bg-red-700 text-white hover:bg-red-800";
 
 export default function Pagination({
   basePath,

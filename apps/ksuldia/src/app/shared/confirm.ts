@@ -32,7 +32,7 @@ export async function confirmAction(
       actions: "!gap-2",
       confirmButton: options.danger
         ? "rounded-md bg-rose-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-700"
-        : "rounded-md bg-teal-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-teal-700",
+        : "rounded-md bg-red-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700",
       cancelButton:
         "rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:border-gray-500",
     },

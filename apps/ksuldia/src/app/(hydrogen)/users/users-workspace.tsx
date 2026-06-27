@@ -292,7 +292,7 @@ export default function UsersWorkspace({
                                 label={user.isActive ? "Aktif" : "Nonaktif"}
                                 className={
                                   user.isActive
-                                    ? "border-teal-200 bg-teal-50 text-teal-800"
+                                    ? "border-red-200 bg-red-50 text-red-800"
                                     : "border-gray-200 bg-gray-50 text-gray-600"
                                 }
                               />

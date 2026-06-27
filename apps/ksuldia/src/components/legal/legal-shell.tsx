@@ -37,7 +37,7 @@ export default function LegalShell({
           </span>
           <Link
             href="/signin"
-            className="inline-flex items-center gap-1.5 rounded-md border border-gray-200 px-3 py-1.5 text-sm font-semibold text-gray-700 transition hover:border-teal-300 hover:text-teal-700 dark:border-gray-700 dark:text-gray-300"
+            className="inline-flex items-center gap-1.5 rounded-md border border-gray-200 px-3 py-1.5 text-sm font-semibold text-gray-700 transition hover:border-red-300 hover:text-red-700 dark:border-gray-700 dark:text-gray-300"
           >
             <PiArrowLeftBold className="h-3.5 w-3.5" />
             Masuk
@@ -55,7 +55,7 @@ export default function LegalShell({
             {title}
           </h1>
           {subtitle ? (
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-teal-50/90">
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-red-50/90">
               {subtitle}
             </p>
           ) : null}
@@ -78,9 +78,9 @@ export default function LegalShell({
             // Lists
             "[&_ul]:mt-3 [&_ul]:space-y-2 [&_ul]:pl-1",
             "[&_li]:relative [&_li]:list-none [&_li]:pl-6",
-            "[&_li]:before:absolute [&_li]:before:left-0 [&_li]:before:top-2.5 [&_li]:before:h-1.5 [&_li]:before:w-1.5 [&_li]:before:rounded-full [&_li]:before:bg-teal-500",
+            "[&_li]:before:absolute [&_li]:before:left-0 [&_li]:before:top-2.5 [&_li]:before:h-1.5 [&_li]:before:w-1.5 [&_li]:before:rounded-full [&_li]:before:bg-red-500",
             // Links & emphasis
-            "[&_a]:font-medium [&_a]:text-teal-700 [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:text-teal-900 dark:[&_a]:text-teal-400",
+            "[&_a]:font-medium [&_a]:text-red-700 [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:text-red-900 dark:[&_a]:text-red-400",
             "[&_strong]:font-semibold [&_strong]:text-gray-900 dark:[&_strong]:text-white",
             "[&_code]:rounded [&_code]:bg-gray-100 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-[13px] [&_code]:text-gray-700 dark:[&_code]:bg-gray-800",
           ].join(" ")}
@@ -92,7 +92,7 @@ export default function LegalShell({
         <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-sm">
           <Link
             href="/privacy"
-            className="rounded-md px-3 py-1.5 font-medium text-gray-600 transition hover:bg-white hover:text-teal-700 dark:text-gray-400"
+            className="rounded-md px-3 py-1.5 font-medium text-gray-600 transition hover:bg-white hover:text-red-700 dark:text-gray-400"
           >
             Kebijakan Privasi
           </Link>
@@ -101,7 +101,7 @@ export default function LegalShell({
           </span>
           <Link
             href="/terms"
-            className="rounded-md px-3 py-1.5 font-medium text-gray-600 transition hover:bg-white hover:text-teal-700 dark:text-gray-400"
+            className="rounded-md px-3 py-1.5 font-medium text-gray-600 transition hover:bg-white hover:text-red-700 dark:text-gray-400"
           >
             Ketentuan Layanan
           </Link>
@@ -118,7 +118,7 @@ export default function LegalShell({
             href="https://wanforge.asia"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-medium text-gray-500 hover:text-teal-700"
+            className="font-medium text-gray-500 hover:text-red-700"
           >
             wanforge.asia
           </a>

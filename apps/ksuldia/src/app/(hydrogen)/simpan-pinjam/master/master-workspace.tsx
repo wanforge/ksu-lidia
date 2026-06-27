@@ -32,7 +32,7 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
       {/* 1. General Info Card */}
       <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
         <h2 className="mb-4 flex items-center gap-2 text-base font-bold text-gray-900">
-          <PiHouseDuotone className="h-5 w-5 text-teal-700" />
+          <PiHouseDuotone className="h-5 w-5 text-red-700" />
           Informasi & Identitas Koperasi
         </h2>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -112,7 +112,7 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
       {/* 3. Pinjaman Settings Card */}
       <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
         <h2 className="mb-4 flex items-center gap-2 text-base font-bold text-gray-900">
-          <PiCoinsDuotone className="h-5 w-5 text-teal-700" />
+          <PiCoinsDuotone className="h-5 w-5 text-red-700" />
           Konfigurasi Pinjaman & Perkreditan
         </h2>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">

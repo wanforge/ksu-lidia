@@ -141,7 +141,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
           type="button"
           className={`inline-flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
             tab === "list"
-              ? "border-teal-700 text-teal-700"
+              ? "border-red-700 text-red-700"
               : "border-transparent text-gray-500 hover:text-gray-800"
           }`}
           onClick={() => setTab("list")}
@@ -156,7 +156,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
           type="button"
           className={`inline-flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
             tab === "create"
-              ? "border-teal-700 text-teal-700"
+              ? "border-red-700 text-red-700"
               : "border-transparent text-gray-500 hover:text-gray-800"
           }`}
           onClick={() => setTab("create")}
@@ -181,7 +181,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                 type="text"
                 name="code"
                 required
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
                 placeholder="Contoh: IND-001"
               />
               <p className="mt-1 text-xs text-gray-500">
@@ -202,7 +202,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                 type="text"
                 name="name"
                 required
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
                 placeholder="Contoh: Beras Ramos 5kg"
               />
               <p className="mt-1 text-xs text-gray-500">
@@ -222,7 +222,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
               <input
                 type="text"
                 name="category"
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
                 placeholder="Contoh: Sembako, Minuman, Sabun"
               />
               <p className="mt-1 text-xs text-gray-500">
@@ -239,7 +239,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                   type="number"
                   name="stock"
                   defaultValue={0}
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
                 />
                 <p className="mt-1 text-xs text-gray-500">Stok awal fisik.</p>
               </div>
@@ -252,7 +252,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                   type="number"
                   name="purchasePrice"
                   defaultValue={0}
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
                 />
                 <p className="mt-1 text-xs text-gray-500">Harga modal beli.</p>
               </div>
@@ -265,7 +265,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                   type="number"
                   name="sellingPrice"
                   defaultValue={0}
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
                 />
                 <p className="mt-1 text-xs text-gray-500">Harga jual retail.</p>
               </div>
@@ -274,7 +274,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
             <div className="pt-2">
               <Button
                 type="submit"
-                className="bg-teal-700 text-white hover:bg-teal-800"
+                className="bg-red-700 text-white hover:bg-red-800"
               >
                 Simpan Produk
               </Button>
@@ -396,7 +396,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                           activeSortKey={table.sortConfig.key as string}
                           activeDirection={table.sortConfig.direction}
                           onSort={table.handleSort}
-                          className="w-full justify-end text-teal-800"
+                          className="w-full justify-end text-red-800"
                         />
                       </th>
                       <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
@@ -416,7 +416,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                           </td>
                           <td className="px-4 py-3">
                             {p.category ? (
-                              <span className="inline-flex rounded-full border border-teal-100 bg-teal-50 px-2 py-0.5 text-xs text-teal-800">
+                              <span className="inline-flex rounded-full border border-red-100 bg-red-50 px-2 py-0.5 text-xs text-red-800">
                                 {p.category}
                               </span>
                             ) : (
@@ -444,7 +444,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                             <Button
                               size="sm"
                               variant="primary-soft"
-                              className="border-teal-600 text-teal-700 hover:bg-teal-50"
+                              className="border-red-700 text-red-700 hover:bg-red-50"
                               onClick={() =>
                                 setEditModal({
                                   isOpen: true,
@@ -529,7 +529,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                   name="code"
                   required
                   defaultValue={editModal.product.code}
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
                 />
                 <p className="mt-1 text-xs text-gray-500">
                   Kode unik atau barcode pembeda barang.
@@ -545,7 +545,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                   name="name"
                   required
                   defaultValue={editModal.product.name}
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
                 />
                 <p className="mt-1 text-xs text-gray-500">
                   Nama lengkap produk retail.
@@ -560,7 +560,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                   type="text"
                   name="category"
                   defaultValue={editModal.product.category || ""}
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
                 />
                 <p className="mt-1 text-xs text-gray-500">
                   Grup penggolongan tipe produk.
@@ -577,7 +577,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                     name="purchasePrice"
                     required
                     defaultValue={Number(editModal.product.purchasePrice)}
-                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
                   />
                   <p className="mt-1 text-xs text-gray-500">
                     Harga modal beli.
@@ -593,7 +593,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                     name="sellingPrice"
                     required
                     defaultValue={Number(editModal.product.sellingPrice)}
-                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
                   />
                   <p className="mt-1 text-xs text-gray-500">
                     Harga jual retail.
@@ -611,7 +611,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                 </Button>
                 <Button
                   type="submit"
-                  className="bg-teal-700 text-white hover:bg-teal-800"
+                  className="bg-red-700 text-white hover:bg-red-800"
                 >
                   Simpan Perubahan
                 </Button>
@@ -642,7 +642,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
               </span>{" "}
               <br />
               Stok Sistem Saat Ini:{" "}
-              <span className="font-bold text-teal-800">
+              <span className="font-bold text-red-800">
                 {adjModal.product.stock} unit
               </span>
             </p>
@@ -663,7 +663,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                   name="quantity"
                   required
                   placeholder="Contoh: -3 untuk susut, 5 untuk bertambah"
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
                 />
                 <p className="mt-1 text-xs text-gray-500">
                   Masukkan nilai negatif (misal -5) untuk stok susut, atau
@@ -680,7 +680,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                   name="reason"
                   required
                   placeholder="Contoh: Selisih hitung fisik, kemasan pecah"
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
                 />
                 <p className="mt-1 text-xs text-gray-500">
                   Catatan/keterangan penyebab terjadinya perbedaan jumlah stok
@@ -698,7 +698,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                 </Button>
                 <Button
                   type="submit"
-                  className="bg-teal-700 text-white hover:bg-teal-800"
+                  className="bg-red-700 text-white hover:bg-red-800"
                 >
                   Simpan Penyesuaian
                 </Button>

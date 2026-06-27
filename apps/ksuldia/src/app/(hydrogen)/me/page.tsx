@@ -73,7 +73,7 @@ export default async function MePage() {
     <div className="flex w-full flex-col gap-6">
       <section className="flex flex-col gap-4 border-b border-gray-200 pb-5 xl:flex-row xl:items-end xl:justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.14em] text-teal-700">
+          <p className="text-sm font-semibold uppercase tracking-[0.14em] text-red-700">
             Portal Pengguna
           </p>
           <h1 className="mt-2 text-2xl font-bold text-gray-950 md:text-3xl">
@@ -88,7 +88,7 @@ export default async function MePage() {
           <span
             className={`inline-flex rounded-md border px-2 py-1 text-xs font-semibold ${
               user.isActive
-                ? "border-teal-200 bg-teal-50 text-teal-800"
+                ? "border-red-200 bg-red-50 text-red-800"
                 : "border-gray-200 bg-gray-50 text-gray-600"
             }`}
           >
@@ -103,7 +103,7 @@ export default async function MePage() {
       <section className="mx-auto grid w-full max-w-4xl grid-cols-1 gap-6 md:grid-cols-[280px_1fr]">
         {/* Profile Card */}
         <div className="flex flex-col items-center rounded-xl border border-gray-200 bg-white p-6 text-center">
-          <div className="inline-flex h-24 w-24 items-center justify-center rounded-full border-2 border-teal-100 bg-teal-50 text-teal-600">
+          <div className="inline-flex h-24 w-24 items-center justify-center rounded-full border-2 border-red-100 bg-red-50 text-red-600">
             <PiUserCircleDuotone className="h-16 w-16" />
           </div>
           <h2 className="mt-4 text-lg font-bold text-gray-950">{user.name}</h2>

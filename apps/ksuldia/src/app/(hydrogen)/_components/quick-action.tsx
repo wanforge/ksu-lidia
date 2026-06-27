@@ -12,8 +12,8 @@ export type QuickActionTone = "teal" | "slate" | "amber" | "rose" | "blue";
 
 const TONES: Record<QuickActionTone, { icon: string; ring: string }> = {
   teal: {
-    icon: "border-teal-200 bg-teal-50 text-teal-700",
-    ring: "group-hover:border-teal-400",
+    icon: "border-red-200 bg-red-50 text-red-700",
+    ring: "group-hover:border-red-400",
   },
   slate: {
     icon: "border-slate-200 bg-slate-50 text-slate-700",

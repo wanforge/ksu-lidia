@@ -59,7 +59,7 @@ function StateMessage({
     <p
       className={
         success
-          ? "text-xs font-medium text-teal-700"
+          ? "text-xs font-medium text-red-700"
           : "text-xs font-medium text-rose-700"
       }
     >
@@ -250,14 +250,14 @@ export default function UserManagePanel({
               </select>
             </label>
             {linkState.resetLink ? (
-              <div className="rounded-md border border-teal-200 bg-teal-50 px-3 py-2">
-                <p className="text-xs font-medium text-teal-800">
+              <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2">
+                <p className="text-xs font-medium text-red-800">
                   Aktif sampai {formatDateTime(linkState.expiresAt)}
                 </p>
                 <input
                   readOnly
                   value={linkState.resetLink}
-                  className="mt-2 w-full rounded-md border border-teal-200 bg-white px-2 py-1 text-xs text-teal-900"
+                  className="mt-2 w-full rounded-md border border-red-200 bg-white px-2 py-1 text-xs text-red-900"
                 />
               </div>
             ) : (

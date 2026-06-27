@@ -274,7 +274,7 @@ function ActionPill({ action }: { action: AuditAction }) {
     action === AuditAction.DELETE || action === AuditAction.REJECT
       ? "border-rose-200 bg-rose-50 text-rose-800"
       : action === AuditAction.VERIFY || action === AuditAction.CREATE
-        ? "border-teal-200 bg-teal-50 text-teal-800"
+        ? "border-red-200 bg-red-50 text-red-800"
         : action === AuditAction.UPLOAD
           ? "border-cyan-200 bg-cyan-50 text-cyan-800"
           : "border-gray-200 bg-gray-50 text-gray-700";
@@ -310,7 +310,7 @@ export default async function AuditPage({
     <div className="flex w-full flex-col gap-6">
       <section className="flex flex-col gap-4 border-b border-gray-200 pb-5">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.14em] text-teal-700">
+          <p className="text-sm font-semibold uppercase tracking-[0.14em] text-red-700">
             Audit Sistem
           </p>
           <h1 className="mt-2 text-2xl font-bold text-gray-950 md:text-3xl">

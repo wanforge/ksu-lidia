@@ -270,7 +270,7 @@ export default function PinjamanWorkspace({
           type="button"
           className={`inline-flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
             tab === "list"
-              ? "border-teal-700 text-teal-700"
+              ? "border-red-700 text-red-700"
               : "border-transparent text-gray-500 hover:text-gray-800"
           }`}
           onClick={() => setTab("list")}
@@ -287,7 +287,7 @@ export default function PinjamanWorkspace({
             type="button"
             className={`inline-flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
               tab === "detail"
-                ? "border-teal-700 text-teal-700"
+                ? "border-red-700 text-red-700"
                 : "border-transparent text-gray-500 hover:text-gray-800"
             }`}
             onClick={() => setTab("detail")}
@@ -301,7 +301,7 @@ export default function PinjamanWorkspace({
           type="button"
           className={`inline-flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
             tab === "create"
-              ? "border-teal-700 text-teal-700"
+              ? "border-red-700 text-red-700"
               : "border-transparent text-gray-500 hover:text-gray-800"
           }`}
           onClick={() => setTab("create")}
@@ -330,7 +330,7 @@ export default function PinjamanWorkspace({
                   onChange={(e) =>
                     setFormDataVal({ ...formDataVal, memberId: e.target.value })
                   }
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
                 >
                   <option value="">-- Pilih Anggota --</option>
                   {eligibleMembers.map((em) => (
@@ -365,7 +365,7 @@ export default function PinjamanWorkspace({
                       amount: Number(e.target.value),
                     })
                   }
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
                 />
                 <p className="mt-1 text-xs text-gray-500">
                   Jumlah dana pinjaman yang diajukan oleh anggota.
@@ -394,7 +394,7 @@ export default function PinjamanWorkspace({
                         interestRate: Number(e.target.value),
                       })
                     }
-                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
                   />
                   <p className="mt-1 text-xs text-gray-500">
                     Persentase bunga tetap bulanan flat.
@@ -421,7 +421,7 @@ export default function PinjamanWorkspace({
                         tenor: Number(e.target.value),
                       })
                     }
-                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-teal-600"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
                   />
                   <p className="mt-1 text-xs text-gray-500">
                     Jangka waktu pelunasan cicilan bulanan.
@@ -437,7 +437,7 @@ export default function PinjamanWorkspace({
               <div className="pt-2">
                 <Button
                   type="submit"
-                  className="bg-teal-700 text-white hover:bg-teal-800"
+                  className="bg-red-700 text-white hover:bg-red-800"
                   disabled={!formDataVal.memberId}
                 >
                   Cairkan Pinjaman
@@ -447,8 +447,8 @@ export default function PinjamanWorkspace({
           </div>
 
           {/* Calculator Info Panel */}
-          <div className="h-fit space-y-4 rounded-lg border border-teal-100 bg-teal-50/50 p-6">
-            <h3 className="border-b border-teal-200 pb-2 font-bold text-teal-800">
+          <div className="h-fit space-y-4 rounded-lg border border-red-100 bg-red-50/50 p-6">
+            <h3 className="border-b border-red-200 pb-2 font-bold text-red-800">
               Simulasi Potongan & Angsuran
             </h3>
 
@@ -459,7 +459,7 @@ export default function PinjamanWorkspace({
                   Rp {formatNumber(formDataVal.amount)}
                 </span>
               </div>
-              <div className="flex justify-between border-b border-teal-100 pb-2">
+              <div className="flex justify-between border-b border-red-100 pb-2">
                 <span>Tenor:</span>
                 <span className="font-semibold">{formDataVal.tenor} Bulan</span>
               </div>
@@ -472,7 +472,7 @@ export default function PinjamanWorkspace({
                   - Rp {formatNumber(liveCalc.provision)}
                 </span>
               </div>
-              <div className="flex justify-between border-b border-teal-100 pb-2">
+              <div className="flex justify-between border-b border-red-100 pb-2">
                 <span className="flex items-center text-rose-700">
                   Potongan CRK (1x Angsuran):
                 </span>
@@ -483,12 +483,12 @@ export default function PinjamanWorkspace({
 
               <div className="flex justify-between pt-1 font-bold text-gray-900">
                 <span>Sisa Diterima Peminjam:</span>
-                <span className="text-lg text-teal-700">
+                <span className="text-lg text-red-700">
                   Rp {formatNumber(liveCalc.receivedAmount)}
                 </span>
               </div>
 
-              <div className="my-4 space-y-2 border-t border-teal-200 pt-3">
+              <div className="my-4 space-y-2 border-t border-red-200 pt-3">
                 <p className="text-xs font-semibold uppercase text-gray-500">
                   Detail Kewajiban Bulanan
                 </p>
@@ -502,7 +502,7 @@ export default function PinjamanWorkspace({
                   <span>Bunga Berjalan ({formDataVal.interestRate}%):</span>
                   <span>Rp {formatNumber(liveCalc.monthlyInterest)}</span>
                 </div>
-                <div className="flex justify-between border-t border-teal-100 pt-2 font-bold text-teal-900">
+                <div className="flex justify-between border-t border-red-100 pt-2 font-bold text-red-900">
                   <span>Angsuran per Bulan:</span>
                   <span>Rp {formatNumber(liveCalc.installmentAmount)}</span>
                 </div>
@@ -581,7 +581,7 @@ export default function PinjamanWorkspace({
                   <p className="text-xs font-medium text-gray-500">
                     Diterima Bersih
                   </p>
-                  <p className="font-semibold text-teal-800">
+                  <p className="font-semibold text-red-800">
                     Rp {formatNumber(Number(selectedLoan.receivedAmount))}
                   </p>
                 </div>
@@ -599,7 +599,7 @@ export default function PinjamanWorkspace({
                       value={instTable.searchQuery}
                       onChange={(e) => instTable.setSearchQuery(e.target.value)}
                       placeholder="Cari status, jatuh tempo..."
-                      className="w-full rounded border border-gray-300 bg-white py-1 pl-8 pr-2 text-xs text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-teal-700"
+                      className="w-full rounded border border-gray-300 bg-white py-1 pl-8 pr-2 text-xs text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-red-700"
                     />
                   </label>
                 </div>
@@ -662,7 +662,7 @@ export default function PinjamanWorkspace({
                             activeSortKey={instTable.sortConfig.key as string}
                             activeDirection={instTable.sortConfig.direction}
                             onSort={instTable.handleSort}
-                            className="w-full justify-end text-teal-800"
+                            className="w-full justify-end text-red-800"
                           />
                         </th>
                         <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
@@ -696,7 +696,7 @@ export default function PinjamanWorkspace({
                             <td className="px-4 py-3 text-right font-medium text-rose-700">
                               Rp {formatNumber(inst.penaltyVal)}
                             </td>
-                            <td className="bg-teal-50/5 px-4 py-3 text-right font-bold text-teal-800">
+                            <td className="bg-red-50/5 px-4 py-3 text-right font-bold text-red-800">
                               Rp {formatNumber(inst.totalVal)}
                             </td>
                             <td className="px-4 py-3 text-center">
@@ -717,7 +717,7 @@ export default function PinjamanWorkspace({
                               {!isPaid && selectedLoan.status === "ACTIVE" ? (
                                 <Button
                                   size="sm"
-                                  className="bg-teal-700 text-white hover:bg-teal-800"
+                                  className="bg-red-700 text-white hover:bg-red-800"
                                   onClick={() =>
                                     openPayModal(selectedLoan, inst as any)
                                   }
@@ -897,7 +897,7 @@ export default function PinjamanWorkspace({
                           <td className="px-4 py-3 text-center font-medium">
                             {l.tenor} bulan
                           </td>
-                          <td className="px-4 py-3 text-right font-bold text-teal-800">
+                          <td className="px-4 py-3 text-right font-bold text-red-800">
                             Rp {formatNumber(l.installmentAmountVal)}
                           </td>
                           <td className="px-4 py-3 text-center">
@@ -918,7 +918,7 @@ export default function PinjamanWorkspace({
                               </span>
                               <div className="h-1.5 w-16 rounded-full bg-gray-200">
                                 <div
-                                  className="h-1.5 rounded-full bg-teal-600"
+                                  className="h-1.5 rounded-full bg-red-700"
                                   style={{
                                     width: `${(l.paidCount / l.tenor) * 100}%`,
                                   }}
@@ -929,7 +929,7 @@ export default function PinjamanWorkspace({
                           <td className="px-4 py-3 text-center">
                             <Button
                               size="sm"
-                              className="bg-teal-700 text-white hover:bg-teal-800"
+                              className="bg-red-700 text-white hover:bg-red-800"
                               onClick={() => {
                                 setSelectedLoanId(l.id);
                                 setTab("detail");
@@ -1004,7 +1004,7 @@ export default function PinjamanWorkspace({
               </span>{" "}
               <br />
               Angsuran Ke-{" "}
-              <span className="font-semibold text-teal-800">
+              <span className="font-semibold text-red-800">
                 {payModal.installment.monthNumber}
               </span>{" "}
               dari {payModal.loan.tenor} bulan
@@ -1057,7 +1057,7 @@ export default function PinjamanWorkspace({
                           addPenalty: e.target.checked,
                         })
                       }
-                      className="rounded border-gray-300 text-teal-600 focus:ring-teal-500"
+                      className="rounded border-gray-300 text-red-600 focus:ring-red-500"
                     />
                     <span className="text-xs font-semibold uppercase tracking-wide text-rose-800">
                       Kenakan Denda Keterlambatan (5%)
@@ -1077,7 +1077,7 @@ export default function PinjamanWorkspace({
 
                 <div className="flex justify-between border-t border-gray-200 pt-3 font-bold text-gray-900">
                   <span>Total yang Dibayar:</span>
-                  <span className="text-lg text-teal-700">
+                  <span className="text-lg text-red-700">
                     Rp {formatNumber(payModalTotal.total)}
                   </span>
                 </div>
@@ -1103,7 +1103,7 @@ export default function PinjamanWorkspace({
                 </Button>
                 <Button
                   type="submit"
-                  className="bg-teal-700 text-white hover:bg-teal-800"
+                  className="bg-red-700 text-white hover:bg-red-800"
                 >
                   Konfirmasi Pembayaran
                 </Button>

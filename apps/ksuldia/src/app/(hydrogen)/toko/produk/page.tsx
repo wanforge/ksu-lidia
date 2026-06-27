@@ -29,8 +29,8 @@ export default async function ProdukPage() {
     <div className="flex w-full flex-col gap-6">
       <section className="flex flex-col gap-4 border-b border-gray-200 pb-5">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.14em] text-teal-700">
-            KSU Lidia GKJ Manahan
+          <p className="text-sm font-semibold uppercase tracking-[0.14em] text-red-700">
+            Manajemen Retail
           </p>
           <h1 className="mt-2 text-2xl font-bold text-gray-950 md:text-3xl">
             Katalog Produk & Inventaris

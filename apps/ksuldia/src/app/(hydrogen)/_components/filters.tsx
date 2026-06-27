@@ -16,7 +16,7 @@ export const filterControlClass =
   "h-10 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-700";
 
 export const filterSubmitClass =
-  "inline-flex h-10 items-center rounded-md bg-teal-600 px-4 text-sm font-semibold text-white transition hover:bg-teal-700";
+  "inline-flex h-10 items-center rounded-md bg-red-700 px-4 text-sm font-semibold text-white transition hover:bg-red-800";
 
 export const filterResetClass =
   "inline-flex h-10 items-center rounded-md border border-gray-300 px-3 text-sm font-semibold text-gray-700 transition hover:border-gray-500";

@@ -237,7 +237,7 @@ export default function SearchList({ onClose }: { onClose?: () => void }) {
                             className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-xs font-bold transition ${
                               isActive
                                 ? "bg-primary text-primary-foreground"
-                                : "bg-teal-100 text-teal-800 group-hover:bg-teal-200"
+                                : "bg-red-100 text-red-800 group-hover:bg-red-200"
                             }`}
                           >
                             {hit.initials}

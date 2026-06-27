@@ -20,7 +20,7 @@ const toneIconClass: Record<EmptyStateTone, string> = {
   default: "text-gray-300",
   warn: "text-amber-400",
   error: "text-rose-400",
-  info: "text-teal-400",
+  info: "text-red-400",
 };
 
 type EmptyStateProps = {

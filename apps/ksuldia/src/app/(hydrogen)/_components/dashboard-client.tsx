@@ -132,7 +132,7 @@ export function FloatingOrbs() {
   return (
     <>
       <motion.div
-        className="pointer-events-none absolute -right-10 -top-10 h-72 w-72 rounded-full bg-teal-400/10 blur-3xl"
+        className="pointer-events-none absolute -right-10 -top-10 h-72 w-72 rounded-full bg-red-400/10 blur-3xl"
         animate={{
           scale: [1, 1.15, 1],
           x: [0, 10, 0],

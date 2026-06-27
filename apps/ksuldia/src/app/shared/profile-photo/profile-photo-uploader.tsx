@@ -52,7 +52,7 @@ export default function ProfilePhotoUploader() {
       <Avatar name={name} src={image} className="!h-14 !w-14" />
       <form ref={uploadFormRef} action={uploadAction}>
         <label
-          className={`cursor-pointer text-xs font-semibold text-teal-700 hover:text-teal-900 ${
+          className={`cursor-pointer text-xs font-semibold text-red-700 hover:text-red-900 ${
             uploadPending ? "cursor-not-allowed opacity-60" : ""
           }`}
         >

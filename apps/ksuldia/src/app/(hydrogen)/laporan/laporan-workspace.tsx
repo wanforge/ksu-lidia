@@ -265,7 +265,7 @@ export default function LaporanWorkspace({
       <section className="flex flex-col justify-between gap-4 border-b border-gray-200 pb-5 sm:flex-row sm:items-center">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.14em] text-red-700">
-            KSU Lidia GKJ Manahan
+            Pelaporan & Buku Besar
           </p>
           <h1 className="mt-2 text-2xl font-bold text-gray-950 md:text-3xl">
             Laporan Keuangan & Buku Besar

@@ -43,7 +43,7 @@ export function TableControls({
           <select
             value={pageSize}
             onChange={(e) => onPageSizeChange(Number(e.target.value))}
-            className="h-8 rounded-md border border-gray-300 bg-white px-2 text-xs font-semibold text-gray-700 outline-none transition focus:border-teal-700"
+            className="h-8 rounded-md border border-gray-300 bg-white px-2 text-xs font-semibold text-gray-700 outline-none transition focus:border-red-700"
           >
             <option value={10}>10</option>
             <option value={25}>25</option>
@@ -75,7 +75,7 @@ export function TableControls({
           size="sm"
           variant="primary-soft"
           onClick={onExport}
-          className="border-teal-700 text-teal-700 hover:bg-teal-50"
+          className="border-red-700 text-red-700 hover:bg-red-50"
         >
           <PiDownloadSimpleBold className="mr-1.5 h-4 w-4" />
           {exportLabel}
@@ -137,9 +137,9 @@ export function SortableHeader({
       <span>{label}</span>
       {isSorted ? (
         activeDirection === "asc" ? (
-          <PiCaretUpBold className="h-3 w-3 font-bold text-teal-700" />
+          <PiCaretUpBold className="h-3 w-3 font-bold text-red-700" />
         ) : (
-          <PiCaretDownBold className="h-3 w-3 font-bold text-teal-700" />
+          <PiCaretDownBold className="h-3 w-3 font-bold text-red-700" />
         )
       ) : (
         <PiCaretUpDownBold className="h-3.5 w-3.5 text-gray-400 opacity-60" />

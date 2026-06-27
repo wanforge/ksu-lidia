@@ -49,7 +49,7 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         <div
           className={
             state.success
-              ? "rounded-md border border-teal-200 bg-teal-50 px-4 py-3 text-sm font-medium text-teal-800"
+              ? "rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-800"
               : "rounded-md border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-800"
           }
         >

@@ -67,7 +67,7 @@ const operationLabels: Record<string, string> = {
 
 function operationTone(operation: string) {
   if (operation.startsWith("create") || operation === "upsert")
-    return "border-teal-200 bg-teal-50 text-teal-800";
+    return "border-red-200 bg-red-50 text-red-800";
   if (operation.startsWith("delete"))
     return "border-rose-200 bg-rose-50 text-rose-800";
   return "border-amber-200 bg-amber-50 text-amber-800";
@@ -99,7 +99,7 @@ function semanticOperation(
     if (wasRestored) {
       return {
         label: "Pulihkan",
-        tone: "border-teal-200 bg-teal-50 text-teal-800",
+        tone: "border-red-200 bg-red-50 text-red-800",
       };
     }
   }
@@ -172,7 +172,7 @@ export default async function DataChangeLogPage({
   return (
     <div className="flex w-full flex-col gap-6">
       <section className="border-b border-gray-200 pb-5">
-        <p className="text-sm font-semibold uppercase tracking-[0.14em] text-teal-700">
+        <p className="text-sm font-semibold uppercase tracking-[0.14em] text-red-700">
           Keamanan &amp; Audit
         </p>
         <h1 className="mt-2 text-2xl font-bold text-gray-950 md:text-3xl">
@@ -192,18 +192,18 @@ export default async function DataChangeLogPage({
       ) : null}
 
       {correlationId ? (
-        <section className="rounded-md border border-teal-200 bg-teal-50/60 p-4">
+        <section className="rounded-md border border-red-200 bg-red-50/60 p-4">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <p className="text-sm font-semibold text-teal-900">
+            <p className="text-sm font-semibold text-red-900">
               Menampilkan satu aksi · {formatNumber(rows.length)} perubahan
               baris
-              <span className="ms-2 font-mono text-xs font-normal text-teal-700">
+              <span className="ms-2 font-mono text-xs font-normal text-red-700">
                 {correlationId.slice(0, 8)}
               </span>
             </p>
             <a
               href={routes.dataChangeLog}
-              className="text-xs font-semibold text-teal-800 underline hover:text-teal-950"
+              className="text-xs font-semibold text-red-800 underline hover:text-red-950"
             >
               Hapus filter
             </a>
@@ -227,7 +227,7 @@ export default async function DataChangeLogPage({
               ))}
             </ul>
           ) : (
-            <p className="mt-2 text-xs text-teal-800">
+            <p className="mt-2 text-xs text-red-800">
               Tidak ada entri audit log untuk aksi ini (mungkin aksi
               non-bisnis).
             </p>

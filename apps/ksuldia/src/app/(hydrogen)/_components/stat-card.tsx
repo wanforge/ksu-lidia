@@ -32,10 +32,10 @@ const TONES: Record<
     icon: "border-slate-200 bg-white text-slate-700",
   },
   teal: {
-    card: "border-teal-200 bg-teal-50/70",
-    label: "text-teal-700",
-    value: "text-teal-900",
-    icon: "border-teal-200 bg-white text-teal-700",
+    card: "border-red-200 bg-red-50/70",
+    label: "text-red-700",
+    value: "text-red-900",
+    icon: "border-red-200 bg-white text-red-700",
   },
   amber: {
     card: "border-amber-200 bg-amber-50/70",
