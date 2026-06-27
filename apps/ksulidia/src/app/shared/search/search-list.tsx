@@ -25,7 +25,7 @@ type Hit = {
   title: string;
   subtitle?: string;
   href: string;
-  group: "Halaman";
+  group: "Halaman" | "Anggota" | "Produk";
   /** Visual: either a named icon or initials for an avatar. */
   icon?: React.ReactNode;
   initials?: string;
@@ -65,6 +65,14 @@ function matchPages(query: string): Hit[] {
 
 const GROUP_META: Record<Hit["group"], { label: string; tone: string }> = {
   Halaman: { label: "Halaman", tone: "text-gray-500" },
+  Anggota: {
+    label: "Anggota Koperasi",
+    tone: "text-red-700 dark:text-red-400 font-bold text-sm",
+  },
+  Produk: {
+    label: "Produk Toko",
+    tone: "text-amber-700 dark:text-amber-400 font-bold text-sm",
+  },
 };
 
 export default function SearchList({ onClose }: { onClose?: () => void }) {
@@ -73,15 +81,66 @@ export default function SearchList({ onClose }: { onClose?: () => void }) {
   const listRef = useRef<HTMLDivElement | null>(null);
   const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(false);
+  const [dbHits, setDbHits] = useState<Hit[]>([]);
   const [active, setActive] = useState(0);
 
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
 
-  const hits = useMemo<Hit[]>(() => {
-    return matchPages(searchText);
+  useEffect(() => {
+    const q = searchText.trim();
+    if (q.length < 2) {
+      setDbHits([]);
+      return;
+    }
+
+    setLoading(true);
+    const delayDebounce = setTimeout(async () => {
+      try {
+        const res = await fetch(
+          `/api/ksulidia/search?q=${encodeURIComponent(q)}`
+        );
+        if (res.ok) {
+          const data: SearchResponse = await res.json();
+          const memberHits: Hit[] = (data.members || []).map((m) => ({
+            id: m.id,
+            title: m.title,
+            subtitle: m.subtitle,
+            href: m.href,
+            group: "Anggota",
+            initials: m.title
+              .split(" ")
+              .map((n) => n[0])
+              .slice(0, 2)
+              .join("")
+              .toUpperCase(),
+          }));
+          const productHits: Hit[] = (data.products || []).map((p) => ({
+            id: p.id,
+            title: p.title,
+            subtitle: p.subtitle,
+            href: p.href,
+            group: "Produk",
+            icon: <PiArchiveDuotone className="h-5 w-5" />,
+          }));
+          setDbHits([...memberHits, ...productHits]);
+        }
+      } catch (err) {
+        console.error("Search fetch failed", err);
+      } finally {
+        setLoading(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(delayDebounce);
   }, [searchText]);
+
+  const hits = useMemo<Hit[]>(() => {
+    const pages = matchPages(searchText);
+    if (!searchText.trim()) return pages;
+    return [...pages, ...dbHits];
+  }, [searchText, dbHits]);
 
   // Keep the active index in range whenever the result set changes.
   useEffect(() => {
@@ -119,7 +178,7 @@ export default function SearchList({ onClose }: { onClose?: () => void }) {
 
   // Render hits grouped while preserving the flat index used for navigation.
   let flatIndex = -1;
-  const groups: Hit["group"][] = ["Halaman"];
+  const groups: Hit["group"][] = ["Halaman", "Anggota", "Produk"];
 
   return (
     <div

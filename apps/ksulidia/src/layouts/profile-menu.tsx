@@ -8,6 +8,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { hasPermission, PERMISSIONS } from "@/lib/rbac/permissions";
+import {
+  PiGaugeDuotone,
+  PiUserDuotone,
+  PiShieldCheckDuotone,
+  PiSignOutBold,
+} from "react-icons/pi";
 
 const roleLabels: Record<string, string> = {
   ADMIN: "Administrator",
@@ -84,15 +90,33 @@ function DropdownMenu() {
   const image = session?.user?.image ?? undefined;
   const role = (session?.user as { role?: string } | undefined)?.role;
 
-  const menuItems: { name: string; href: string }[] = [];
+  const menuItems: { name: string; href: string; icon: React.ReactNode }[] = [];
   if (hasPermission(role, PERMISSIONS.DASHBOARD_VIEW)) {
-    menuItems.push({ name: "Dashboard", href: routes.dashboard });
+    menuItems.push({
+      name: "Dashboard",
+      href: routes.dashboard,
+      icon: (
+        <PiGaugeDuotone className="h-4.5 w-4.5 text-gray-500 group-hover:text-gray-900" />
+      ),
+    });
   }
   if (hasPermission(role, PERMISSIONS.PORTAL_VIEW)) {
-    menuItems.push({ name: "Data Saya", href: routes.me.dashboard });
+    menuItems.push({
+      name: "Profil Saya",
+      href: routes.me.dashboard,
+      icon: (
+        <PiUserDuotone className="h-4.5 w-4.5 text-gray-500 group-hover:text-gray-900" />
+      ),
+    });
   }
   if (hasPermission(role, PERMISSIONS.AUDIT_VIEW)) {
-    menuItems.push({ name: "Log Aktivitas", href: routes.audit.list });
+    menuItems.push({
+      name: "Log Aktivitas",
+      href: routes.audit.list,
+      icon: (
+        <PiShieldCheckDuotone className="h-4.5 w-4.5 text-gray-500 group-hover:text-gray-900" />
+      ),
+    });
   }
 
   return (
@@ -118,18 +142,20 @@ function DropdownMenu() {
           <Link
             key={item.name}
             href={item.href}
-            className="group my-0.5 flex items-center rounded-md px-2.5 py-2 hover:bg-gray-100 focus:outline-none hover:dark:bg-gray-50/50"
+            className="group my-0.5 flex items-center gap-2.5 rounded-md px-2.5 py-2 hover:bg-gray-100 focus:outline-none hover:dark:bg-gray-50/50"
           >
+            {item.icon}
             {item.name}
           </Link>
         ))}
       </div>
       <div className="border-t border-gray-300 px-6 pb-6 pt-5">
         <Button
-          className="h-auto w-full justify-start p-0 font-medium text-gray-700 outline-none focus-within:text-gray-600 hover:text-gray-900 focus-visible:ring-0"
+          className="flex h-auto w-full items-center justify-start gap-2.5 p-0 font-medium text-gray-700 outline-none focus-within:text-gray-600 hover:text-gray-900 focus-visible:ring-0"
           variant="text"
           onClick={() => signOut({ callbackUrl: routes.signIn })}
         >
+          <PiSignOutBold className="h-4.5 w-4.5 text-gray-500 group-hover:text-gray-900" />
           Keluar
         </Button>
       </div>

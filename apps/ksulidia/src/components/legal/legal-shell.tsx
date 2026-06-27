@@ -46,7 +46,7 @@ export default function LegalShell({
       </header>
 
       {/* Hero */}
-      <div className="bg-gradient-to-br from-teal-600 via-teal-700 to-teal-900">
+      <div className="bg-gradient-to-br from-red-700 via-red-800 to-red-950">
         <div className="mx-auto max-w-3xl px-5 py-10 text-white">
           <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-white/15 ring-1 ring-white/20 backdrop-blur">
             <PiShieldCheckDuotone className="h-6 w-6" />
@@ -72,7 +72,7 @@ export default function LegalShell({
             "rounded-xl border border-gray-200 bg-white p-6 shadow-sm md:p-9 dark:border-gray-800 dark:bg-gray-900",
             "text-[15px] leading-7 text-gray-700 dark:text-gray-300",
             // Headings
-            "[&_h2]:mt-8 [&_h2]:scroll-mt-20 [&_h2]:border-l-4 [&_h2]:border-teal-500 [&_h2]:pl-3 [&_h2]:text-base [&_h2]:font-bold [&_h2]:text-gray-900 first:[&_h2]:mt-0 dark:[&_h2]:text-white",
+            "[&_h2]:mt-8 [&_h2]:scroll-mt-20 [&_h2]:border-l-4 [&_h2]:border-red-700 [&_h2]:pl-3 [&_h2]:text-base [&_h2]:font-bold [&_h2]:text-gray-900 first:[&_h2]:mt-0 dark:[&_h2]:text-white",
             // Paragraphs
             "[&_p]:mt-3",
             // Lists

@@ -201,7 +201,7 @@ function Card({
   return (
     <div className="flex flex-col rounded-md border border-gray-200 bg-white">
       <div className="flex items-center gap-3 border-b border-gray-200 px-4 py-3">
-        <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-primary-lighter bg-primary-lighter/30 text-primary-dark">
+        <span className="border-primary-lighter bg-primary-lighter/30 text-primary-dark inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border">
           {icon}
         </span>
         <span className="flex-1 text-sm font-semibold text-gray-950">
@@ -552,21 +552,21 @@ export default function SystemDashboard({ checks }: Props) {
   return (
     <div className="space-y-6">
       {/* Live clock bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-primary-lighter bg-primary-lighter/30 px-4 py-3">
+      <div className="border-primary-lighter bg-primary-lighter/30 flex flex-wrap items-center justify-between gap-3 rounded-md border px-4 py-3">
         <div className="flex items-center gap-3">
-          <PiClockDuotone className="h-5 w-5 text-primary-dark" />
+          <PiClockDuotone className="text-primary-dark h-5 w-5" />
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-primary-dark/80">
+            <p className="text-primary-dark/80 text-xs font-semibold uppercase tracking-wider">
               {appConfig.timezone}
             </p>
-            <p className="font-mono text-base font-bold tabular-nums text-primary-dark">
+            <p className="text-primary-dark font-mono text-base font-bold tabular-nums">
               {now ? formatClock(now, appConfig.timezone) : "—"}
             </p>
           </div>
         </div>
         <div className="flex items-center gap-3">
           {lastUpdated ? (
-            <span className="text-xs text-primary-dark/80">
+            <span className="text-primary-dark/80 text-xs">
               Data diperbarui{" "}
               {new Intl.DateTimeFormat("id-ID", {
                 hour: "2-digit",
@@ -580,7 +580,7 @@ export default function SystemDashboard({ checks }: Props) {
             onClick={fetchSnapshot}
             disabled={loading}
             variant="primary-soft"
-            className="border-primary-lighter bg-white text-primary-dark hover:bg-primary-lighter/30"
+            className="border-primary-lighter text-primary-dark hover:bg-primary-lighter/30 bg-white"
           >
             <PiArrowsClockwiseBold
               className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`}
@@ -603,7 +603,10 @@ export default function SystemDashboard({ checks }: Props) {
           deviceEpoch={lastUpdated?.getTime() ?? null}
         />
       ) : loading ? (
-        <SkeletonCard icon={<PiClockDuotone className="h-5 w-5" />} title="Perbandingan Waktu Sistem">
+        <SkeletonCard
+          icon={<PiClockDuotone className="h-5 w-5" />}
+          title="Perbandingan Waktu Sistem"
+        >
           <SkeletonRow />
           <SkeletonRow />
           <SkeletonRow />
@@ -636,7 +639,10 @@ export default function SystemDashboard({ checks }: Props) {
             </>
           </Card>
         ) : (
-          <SkeletonCard icon={<PiGearDuotone className="h-5 w-5" />} title="Runtime">
+          <SkeletonCard
+            icon={<PiGearDuotone className="h-5 w-5" />}
+            title="Runtime"
+          >
             <SkeletonRow />
             <SkeletonRow />
             <SkeletonRow />
@@ -921,7 +927,10 @@ export default function SystemDashboard({ checks }: Props) {
             <span className="block h-3 w-full rounded bg-gray-200" />
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
               {[0, 1, 2].map((i) => (
-                <div key={i} className="flex items-center gap-2.5 rounded-md border border-gray-200 bg-gray-50 px-3 py-2.5">
+                <div
+                  key={i}
+                  className="flex items-center gap-2.5 rounded-md border border-gray-200 bg-gray-50 px-3 py-2.5"
+                >
                   <span className="h-4 w-4 shrink-0 rounded-full bg-gray-200" />
                   <div className="min-w-0 flex-1 space-y-1">
                     <span className="block h-3 w-3/4 rounded bg-gray-200" />

@@ -248,8 +248,8 @@ export default function PinjamanWorkspace({
   const payModalTotal = useMemo(() => {
     const base = payModal.principal + payModal.interest;
     if (payModal.addPenalty) {
-      // 5% of monthly installment
-      const installmentAmount = payModal.principal + payModal.interest;
+      // 5% of monthly principal installment
+      const installmentAmount = payModal.principal;
       const penaltyAmount = installmentAmount * 0.05;
       return {
         penalty: penaltyAmount,
