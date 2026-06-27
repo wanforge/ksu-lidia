@@ -167,7 +167,18 @@ export default function NotificationDropdown({
   }, [load]);
 
   useEffect(() => {
-    if (isOpen) load();
+    if (isOpen) {
+      load();
+      // Mark as read when dropdown is opened
+      if (items.length > 0) {
+        fetch("/api/ksulidia/notifications/read", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ids: items.map((i) => i.id) }),
+        }).catch(() => {});
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, load]);
 
   return (

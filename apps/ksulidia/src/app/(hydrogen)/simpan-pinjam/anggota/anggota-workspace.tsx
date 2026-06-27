@@ -689,7 +689,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                           className="w-full justify-end text-red-800"
                         />
                       </th>
-                      <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                         Pinjaman Aktif
                       </th>
                       <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
@@ -732,18 +732,18 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                           <td className="bg-red-50/10 px-4 py-3 text-right font-bold text-red-800">
                             Rp {formatNumber(m.totalSavings)}
                           </td>
-                          <td className="px-4 py-3 text-center">
+                          <td className="px-4 py-3 text-left">
                             {hasActiveLoan ? (
-                              <div className="flex flex-col items-center gap-0.5">
-                                <span className="inline-flex rounded-md border border-rose-200 bg-rose-50 px-2 py-0.5 text-xs font-semibold text-rose-800">
-                                  Ada
-                                </span>
-                                <span className="text-xs font-medium text-gray-700">
+                              <div className="flex flex-col gap-0.5 text-left">
+                                <span className="font-semibold text-gray-900">
                                   Rp {formatNumber(Number(m.loans[0].amount))}
+                                </span>
+                                <span className="text-[10px] font-bold uppercase tracking-wider text-rose-700">
+                                  Pinjaman Aktif
                                 </span>
                               </div>
                             ) : (
-                              <span className="inline-flex rounded-md border border-gray-200 bg-gray-50 px-2 py-0.5 text-xs font-semibold text-gray-500">
+                              <span className="text-xs text-gray-400">
                                 Tidak ada
                               </span>
                             )}

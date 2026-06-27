@@ -13,6 +13,12 @@ datasource db {
 // Enums
 // ---------------------------------------------------------------------------
 
+enum NotificationTone {
+  danger
+  warning
+  info
+}
+
 enum UserRole {
   ADMIN
   VIEWER
@@ -303,4 +309,18 @@ model ProductTransactionItem {
   @@index([transactionId])
   @@index([productId])
   @@map("product_transaction_items")
+}
+
+model Notification {
+  id          String           @id @default(uuid(7))
+  title       String
+  description String?
+  href        String?
+  tone        NotificationTone @default(info)
+  isRead      Boolean          @default(false)
+  createdAt   DateTime         @default(now())
+
+  @@index([isRead])
+  @@index([createdAt])
+  @@map("notifications")
 }
