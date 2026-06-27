@@ -32,7 +32,6 @@ import {
   FadeUp,
   AnimatedCounter,
   PulseRing,
-  WavingHand,
   ShimmerBar,
   FloatingOrbs,
   ActivityItem,
@@ -52,12 +51,12 @@ function greeting(now: Date) {
 function getMotivation(now: Date) {
   const h = now.getHours();
   if (h < 11)
-    return "Semangat memulai hari! ☀️ Yuk cek aktivitas terbaru hari ini.";
+    return "Semangat memulai hari — mari cek aktivitas terbaru hari ini.";
   if (h < 15)
-    return "Tetap produktif di jam sibuk! 💪 Pastikan semua transaksi tercatat.";
+    return "Tetap produktif di jam sibuk. Pastikan semua transaksi tercatat dengan baik.";
   if (h < 19)
-    return "Sore yang produktif! 🌅 Saatnya review progres hari ini.";
-  return "Terima kasih atas kerja kerasnya hari ini! 🌙 Jangan lupa istirahat.";
+    return "Sore yang produktif. Saatnya meninjau perkembangan hari ini.";
+  return "Terima kasih atas kerja kerasnya hari ini. Jangan lupa istirahat yang cukup.";
 }
 
 export default async function Home() {
@@ -155,7 +154,7 @@ export default async function Home() {
   const quickActions = [
     {
       label: "Portal Saya",
-      hint: "Akses profil dan akun pribadi Anda",
+      hint: "Kelola profil dan akun pribadi Anda",
       href: routes.me.dashboard,
       icon: PiUserCircleDuotone,
       tone: "blue" as const,
@@ -171,7 +170,7 @@ export default async function Home() {
     },
     {
       label: "Audit Log",
-      hint: "Lihat log riwayat aktivitas sistem",
+      hint: "Lihat riwayat aktivitas sistem",
       href: routes.audit.list,
       icon: PiClockCountdownDuotone,
       tone: "slate" as const,
@@ -179,7 +178,7 @@ export default async function Home() {
     },
     {
       label: "Log Perubahan Data",
-      hint: "Pantau riwayat perubahan detail data",
+      hint: "Pantau riwayat perubahan data",
       href: routes.dataChangeLog,
       icon: PiClockCounterClockwiseDuotone,
       tone: "amber" as const,
@@ -200,7 +199,7 @@ export default async function Home() {
       {/* ╔══════════════════════════════════════════════╗
           ║          HERO WELCOME BANNER                 ║
           ╚══════════════════════════════════════════════╝ */}
-      <section className="relative flex flex-col gap-4 overflow-hidden rounded-2xl border border-amber-200/50 bg-gradient-to-br from-amber-950 via-red-950/90 to-amber-900 p-7 text-white shadow-lg sm:p-8">
+      <section className="relative flex flex-col gap-4 overflow-hidden rounded-2xl border border-slate-700/50 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-7 text-white shadow-lg sm:p-8">
         {/* Animated background orbs */}
         <FloatingOrbs />
         {/* Shimmer sweep */}
@@ -208,43 +207,38 @@ export default async function Home() {
 
         {/* Decorative mesh pattern */}
         <div
-          className="pointer-events-none absolute inset-0 opacity-[0.03]"
+          className="pointer-events-none absolute inset-0 opacity-[0.04]"
           style={{
             backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`,
             backgroundSize: "24px 24px",
           }}
         />
 
+        {/* Subtle teal glow accent */}
+        <div className="pointer-events-none absolute -right-20 top-0 h-40 w-80 rounded-full bg-teal-500/10 blur-3xl" />
+
         <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-amber-300 backdrop-blur-sm">
-                <PulseRing color="bg-emerald-400" />
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-teal-400/30 bg-teal-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-teal-300 backdrop-blur-sm">
+                <PulseRing color="bg-teal-400" />
                 Sistem Aktif
               </span>
             </div>
 
-            <h1 className="text-2xl font-bold tracking-tight md:text-3xl lg:text-4xl">
+            <h1 className="text-2xl font-bold tracking-tight text-white md:text-3xl lg:text-4xl">
               {greeting(now)},{" "}
-              {firstName ? (
-                <>
-                  {firstName} <WavingHand />
-                </>
-              ) : (
-                <>
-                  Rekan Kerja <WavingHand />
-                </>
-              )}
+              {firstName ? firstName : "Rekan Kerja"}
             </h1>
 
-            <p className="max-w-xl text-sm leading-relaxed text-amber-100/80">
+            <p className="max-w-xl text-sm leading-relaxed text-slate-300">
               {getMotivation(now)}
             </p>
           </div>
 
           <div className="flex flex-col items-end gap-2">
             <LiveClock />
-            <p className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] font-medium text-amber-200/70 backdrop-blur-sm">
+            <p className="rounded-lg border border-slate-600/50 bg-slate-700/40 px-3 py-1.5 text-[11px] font-medium text-slate-300 backdrop-blur-sm">
               KSU Lidia GKJ Manahan
             </p>
           </div>
@@ -252,16 +246,16 @@ export default async function Home() {
 
         {/* Quick summary chips */}
         <div className="relative z-10 mt-1 flex flex-wrap gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-xs font-medium text-white/90 backdrop-blur-sm">
-            <PiUsersDuotone className="h-3.5 w-3.5 text-amber-300" />
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-slate-600/40 bg-slate-700/50 px-3 py-1.5 text-xs font-medium text-slate-200 backdrop-blur-sm">
+            <PiUsersDuotone className="h-3.5 w-3.5 text-teal-400" />
             {memberCount} Anggota
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-xs font-medium text-white/90 backdrop-blur-sm">
-            <PiHandshakeDuotone className="h-3.5 w-3.5 text-amber-300" />
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-slate-600/40 bg-slate-700/50 px-3 py-1.5 text-xs font-medium text-slate-200 backdrop-blur-sm">
+            <PiHandshakeDuotone className="h-3.5 w-3.5 text-teal-400" />
             {activeLoanCount} Pinjaman Aktif
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-xs font-medium text-white/90 backdrop-blur-sm">
-            <PiCubeDuotone className="h-3.5 w-3.5 text-amber-300" />
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-slate-600/40 bg-slate-700/50 px-3 py-1.5 text-xs font-medium text-slate-200 backdrop-blur-sm">
+            <PiCubeDuotone className="h-3.5 w-3.5 text-teal-400" />
             {productCount} Produk Toko
           </span>
         </div>
@@ -290,7 +284,7 @@ export default async function Home() {
               </h3>
               <p className="mt-1.5 flex items-center gap-1 text-xs font-medium text-teal-600">
                 <PiTrendUpDuotone className="h-3.5 w-3.5" />
-                <span>Dari seluruh rekening tabungan</span>
+                <span>Total seluruh rekening simpanan</span>
               </p>
             </div>
           </div>
@@ -302,7 +296,7 @@ export default async function Home() {
             <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-rose-400 to-pink-400 opacity-0 transition-opacity group-hover:opacity-100" />
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-gray-500">
-                Outstanding Pinjaman
+                Saldo Pinjaman Aktif
               </span>
               <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-rose-50 to-pink-50 text-rose-600 ring-1 ring-rose-100 transition-all duration-300 group-hover:scale-110 group-hover:shadow-md group-hover:shadow-rose-100">
                 <PiReceiptDuotone className="h-5 w-5" />
@@ -315,7 +309,7 @@ export default async function Home() {
               <p className="mt-1.5 flex items-center gap-1 text-xs font-medium text-rose-600">
                 <PiTrendDownDuotone className="h-3.5 w-3.5" />
                 <span>
-                  Penyaluran pinjaman aktif ({activeLoanCount} kontrak)
+                  Total pinjaman berjalan ({activeLoanCount} kontrak)
                 </span>
               </p>
             </div>
@@ -340,7 +334,7 @@ export default async function Home() {
               </h3>
               <p className="mt-1.5 flex items-center gap-1 text-xs font-medium text-blue-600">
                 <PiStorefrontDuotone className="h-3.5 w-3.5" />
-                <span>Akumulasi transaksi penjualan</span>
+                <span>Total seluruh transaksi penjualan</span>
               </p>
             </div>
           </div>
@@ -364,7 +358,7 @@ export default async function Home() {
               </h3>
               <p className="mt-1.5 flex items-center gap-1 text-xs font-medium text-amber-600">
                 <PiUsersThreeDuotone className="h-3.5 w-3.5" />
-                <span>Anggota terintegrasi aktif</span>
+                <span>Total anggota aktif terdaftar</span>
               </p>
             </div>
           </div>
@@ -388,10 +382,10 @@ export default async function Home() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900">
-                    Kesehatan Inventori Toko
+                    Inventaris Toko
                   </h3>
                   <p className="text-xs text-gray-500">
-                    Stok produk ritel &amp; toko KSU
+                    Stok produk toko KSU
                   </p>
                 </div>
               </div>
@@ -399,7 +393,7 @@ export default async function Home() {
                 href="/toko/produk"
                 className="flex items-center gap-1 rounded-lg bg-teal-50 px-3 py-1.5 text-xs font-semibold text-teal-700 transition-colors hover:bg-teal-100"
               >
-                <span>Detail Katalog</span>
+                <span>Lihat Katalog</span>
                 <PiArrowRightBold className="h-3 w-3" />
               </Link>
             </div>
@@ -408,12 +402,12 @@ export default async function Home() {
               <div className="rounded-xl border border-gray-100 bg-gradient-to-br from-gray-50 to-white p-4">
                 <span className="flex items-center gap-1.5 text-xs font-medium text-gray-500">
                   <PiCubeDuotone className="h-3.5 w-3.5" />
-                  Total Item Katalog
+                  Total Produk Katalog
                 </span>
                 <span className="mt-2 block text-2xl font-bold text-gray-900">
                   <AnimatedCounter value={productCount} duration={0.8} />
                 </span>
-                <span className="text-xs text-gray-400">Jenis Produk</span>
+                <span className="text-xs text-gray-400">jenis produk</span>
               </div>
               <div
                 className={`rounded-xl border p-4 ${
@@ -426,7 +420,7 @@ export default async function Home() {
                   <PiWarningCircleDuotone
                     className={`h-3.5 w-3.5 ${lowStockProductCount > 0 ? "text-red-500" : ""}`}
                   />
-                  Stok Menipis (&lt; 10)
+                  Stok Rendah (&lt; 10)
                 </span>
                 <span
                   className={`mt-2 flex items-center gap-1.5 text-2xl font-bold ${
@@ -444,7 +438,7 @@ export default async function Home() {
                 <span
                   className={`text-xs ${lowStockProductCount > 0 ? "text-red-400" : "text-gray-400"}`}
                 >
-                  Item perlu restok
+                  produk perlu diisi ulang
                 </span>
               </div>
             </div>
@@ -464,7 +458,7 @@ export default async function Home() {
                     Keamanan &amp; Akses Pengguna
                   </h3>
                   <p className="text-xs text-gray-500">
-                    Status kelayakan server &amp; hak akses
+                    Status server dan hak akses pengguna
                   </p>
                 </div>
               </div>
@@ -486,17 +480,17 @@ export default async function Home() {
                 <span className="mt-2 block text-2xl font-bold text-gray-900">
                   <AnimatedCounter value={userCount} duration={0.8} />
                 </span>
-                <span className="text-xs text-gray-400">Akun Terdaftar</span>
+                <span className="text-xs text-gray-400">akun terdaftar</span>
               </div>
               <div className="rounded-xl border border-emerald-100 bg-gradient-to-br from-emerald-50/50 to-white p-4">
                 <span className="flex items-center gap-1.5 text-xs font-medium text-gray-500">
                   <PulseRing color="bg-emerald-500" />
-                  Status Sesi Aktif
+                  Pengguna Aktif
                 </span>
                 <span className="mt-2 block text-2xl font-bold text-emerald-700">
                   <AnimatedCounter value={activeUserCount} duration={0.8} />
                 </span>
-                <span className="text-xs text-emerald-500">Online / Aktif</span>
+                <span className="text-xs text-emerald-500">sedang aktif</span>
               </div>
             </div>
           </div>
@@ -513,7 +507,7 @@ export default async function Home() {
             Aktivitas Terbaru
           </h2>
           <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-semibold text-gray-500">
-            LIVE
+            TERKINI
           </span>
         </div>
 
@@ -527,10 +521,10 @@ export default async function Home() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900">
-                    Setoran &amp; Penarikan
+                    Setoran dan Penarikan
                   </h3>
                   <p className="text-[11px] text-gray-500">
-                    Mutasi simpanan anggota teranyar
+                    Mutasi simpanan anggota terbaru
                   </p>
                 </div>
               </div>
@@ -585,10 +579,10 @@ export default async function Home() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900">
-                    Pinjaman Baru Disalurkan
+                    Pinjaman Terbaru
                   </h3>
                   <p className="text-[11px] text-gray-500">
-                    Akad pembiayaan kredit terbaru
+                    Penyaluran pinjaman terbaru
                   </p>
                 </div>
               </div>
@@ -598,7 +592,7 @@ export default async function Home() {
                 <div className="flex flex-col items-center gap-2 py-10 text-center">
                   <PiHandshakeDuotone className="h-8 w-8 text-gray-300" />
                   <p className="text-sm text-gray-400">
-                    Belum ada penyaluran
+                    Belum ada pinjaman
                   </p>
                 </div>
               ) : (
@@ -613,7 +607,7 @@ export default async function Home() {
                         {l.member.name}
                       </p>
                       <p className="text-xs text-gray-500">
-                        Tenor {l.tenor} Bln •{" "}
+                        Tenor {l.tenor} bulan •{" "}
                         {new Date(l.dateDisbursed).toLocaleDateString("id-ID", {
                           day: "numeric",
                           month: "short",
@@ -638,10 +632,10 @@ export default async function Home() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900">
-                    Penjualan Kasir Toko
+                    Penjualan Toko
                   </h3>
                   <p className="text-[11px] text-gray-500">
-                    Catatan omzet penjualan ritel terbaru
+                    Transaksi penjualan toko terbaru
                   </p>
                 </div>
               </div>
@@ -666,7 +660,7 @@ export default async function Home() {
                         {tx.notes || "Transaksi Toko"}
                       </p>
                       <p className="text-xs text-gray-500">
-                        {tx.items.length} item •{" "}
+                        {tx.items.length} produk •{" "}
                         {new Date(tx.date).toLocaleDateString("id-ID", {
                           day: "numeric",
                           month: "short",

@@ -35,7 +35,7 @@ export default async function RootLayout({
 
   return (
     <html
-      // 💡 Prevent next-themes hydration warning
+      // Prevent next-themes hydration warning
       suppressHydrationWarning
     >
       <body

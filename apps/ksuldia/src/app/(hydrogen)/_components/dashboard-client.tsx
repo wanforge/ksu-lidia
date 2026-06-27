@@ -115,24 +115,6 @@ export function PulseRing({
   );
 }
 
-/* ─── Greeting with waving hand animation ──────────────── */
-export function WavingHand() {
-  return (
-    <motion.span
-      className="inline-block origin-[70%_70%]"
-      animate={{
-        rotate: [0, 14, -8, 14, -4, 10, 0],
-      }}
-      transition={{
-        duration: 2.2,
-        ease: "easeInOut",
-        repeat: 0,
-      }}
-    >
-      👋
-    </motion.span>
-  );
-}
 
 /* ─── Shimmer highlight bar on hero ────────────────────── */
 export function ShimmerBar() {
@@ -155,7 +137,7 @@ export function FloatingOrbs() {
   return (
     <>
       <motion.div
-        className="pointer-events-none absolute -right-10 -top-10 h-72 w-72 rounded-full bg-amber-400/15 blur-3xl"
+        className="pointer-events-none absolute -right-10 -top-10 h-72 w-72 rounded-full bg-teal-400/10 blur-3xl"
         animate={{
           scale: [1, 1.15, 1],
           x: [0, 10, 0],
@@ -164,7 +146,7 @@ export function FloatingOrbs() {
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="pointer-events-none absolute -bottom-16 left-1/3 h-48 w-48 rounded-full bg-rose-500/10 blur-3xl"
+        className="pointer-events-none absolute -bottom-16 left-1/3 h-48 w-48 rounded-full bg-slate-500/10 blur-3xl"
         animate={{
           scale: [1, 1.2, 1],
           x: [0, -12, 0],
@@ -231,8 +213,8 @@ export function LiveClock() {
   });
 
   return (
-    <p className="flex items-center gap-2 text-sm text-amber-200/80">
-      <span className="inline-flex h-5 items-center rounded-full bg-white/10 px-2.5 text-[11px] font-semibold uppercase tracking-wider text-amber-300">
+    <p className="flex items-center gap-2 text-sm text-slate-300">
+      <span className="inline-flex h-5 items-center rounded-full bg-slate-700/60 px-2.5 text-[11px] font-semibold uppercase tracking-wider text-slate-300">
         {dayName}
       </span>
       <span>
