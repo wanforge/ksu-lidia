@@ -46,9 +46,9 @@
     /* ----------------------------------- */
     /* primary/brand colors */
     /* ----------------------------------- */
-    --primary-lighter: 227 227 227; /* #e3e3e3 */
-    --primary-default: 17 17 17; /* #111111 */
-    --primary-dark: 0 0 0; /* #000000 */
+    --primary-lighter: 158 40 64; /* Lighter Burgundy */
+    --primary-default: 128 0 32; /* Burgundy */
+    --primary-dark: 100 0 25; /* Darker Burgundy */
     --primary-foreground: 255 255 255; /* #ffffff */
 
     /* ----------------------------------- */

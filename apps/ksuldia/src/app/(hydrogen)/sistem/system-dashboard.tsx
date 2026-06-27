@@ -29,7 +29,11 @@ import {
 import type { SystemSnapshot } from "@/lib/diagnostics/system-info";
 import type { CheckStatus, ConfigCheck } from "@/lib/diagnostics/config-check";
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
+import {
+  SkeletonCard,
+  SkeletonProgressBar,
+  SkeletonRow,
+} from "@/components/skeletons/skeleton-card";
 
 function fmt(n: number, unit: string) {
   return `${n.toLocaleString("id-ID")} ${unit}`;
@@ -113,7 +117,7 @@ function StatusIcon({ status }: { status: CheckStatus }) {
 
 function statusBadge(status: CheckStatus) {
   const map: Record<CheckStatus, string> = {
-    ok: "border-red-200 bg-red-50 text-red-800",
+    ok: "border-green-200 bg-green-50 text-green-800",
     warn: "border-amber-200 bg-amber-50 text-amber-800",
     error: "border-rose-200 bg-rose-50 text-rose-800",
     info: "border-gray-200 bg-gray-50 text-gray-600",
@@ -138,10 +142,10 @@ function ProgressBar({
   tone,
 }: {
   percent: number;
-  tone: "teal" | "amber" | "rose";
+  tone: "primary" | "amber" | "rose";
 }) {
   const bar = {
-    teal: "bg-red-500",
+    primary: "bg-primary-default",
     amber: "bg-amber-400",
     rose: "bg-rose-500",
   }[tone];
@@ -169,7 +173,7 @@ function Row({ label, value }: { label: string; value: React.ReactNode }) {
 function DriftPill({ ms }: { ms: number }) {
   const tone = driftTone(Math.abs(ms));
   const cls = {
-    ok: "border-red-200 bg-red-50 text-red-800",
+    ok: "border-green-200 bg-green-50 text-green-800",
     warn: "border-amber-200 bg-amber-50 text-amber-800",
     error: "border-rose-200 bg-rose-50 text-rose-800",
     info: "border-gray-200 bg-gray-50 text-gray-600",
@@ -197,7 +201,7 @@ function Card({
   return (
     <div className="flex flex-col rounded-md border border-gray-200 bg-white">
       <div className="flex items-center gap-3 border-b border-gray-200 px-4 py-3">
-        <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-red-200 bg-red-50 text-red-800">
+        <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-primary-lighter bg-primary-lighter/30 text-primary-dark">
           {icon}
         </span>
         <span className="flex-1 text-sm font-semibold text-gray-950">
@@ -543,26 +547,26 @@ export default function SystemDashboard({ checks }: Props) {
       ? "rose"
       : (snapshot?.memory.usedPercent ?? 0) > 70
         ? "amber"
-        : "teal";
+        : "primary";
 
   return (
     <div className="space-y-6">
       {/* Live clock bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-red-200 bg-red-50 px-4 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-primary-lighter bg-primary-lighter/30 px-4 py-3">
         <div className="flex items-center gap-3">
-          <PiClockDuotone className="h-5 w-5 text-red-700" />
+          <PiClockDuotone className="h-5 w-5 text-primary-dark" />
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-red-600">
+            <p className="text-xs font-semibold uppercase tracking-wider text-primary-dark/80">
               {appConfig.timezone}
             </p>
-            <p className="font-mono text-base font-bold tabular-nums text-red-950">
+            <p className="font-mono text-base font-bold tabular-nums text-primary-dark">
               {now ? formatClock(now, appConfig.timezone) : "—"}
             </p>
           </div>
         </div>
         <div className="flex items-center gap-3">
           {lastUpdated ? (
-            <span className="text-xs text-red-700">
+            <span className="text-xs text-primary-dark/80">
               Data diperbarui{" "}
               {new Intl.DateTimeFormat("id-ID", {
                 hour: "2-digit",
@@ -576,7 +580,7 @@ export default function SystemDashboard({ checks }: Props) {
             onClick={fetchSnapshot}
             disabled={loading}
             variant="primary-soft"
-            className="border-red-300 bg-white text-red-800 hover:bg-red-50"
+            className="border-primary-lighter bg-white text-primary-dark hover:bg-primary-lighter/30"
           >
             <PiArrowsClockwiseBold
               className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`}
@@ -598,13 +602,20 @@ export default function SystemDashboard({ checks }: Props) {
           snapshot={snapshot}
           deviceEpoch={lastUpdated?.getTime() ?? null}
         />
+      ) : loading ? (
+        <SkeletonCard icon={<PiClockDuotone className="h-5 w-5" />} title="Perbandingan Waktu Sistem">
+          <SkeletonRow />
+          <SkeletonRow />
+          <SkeletonRow />
+          <SkeletonRow />
+        </SkeletonCard>
       ) : null}
 
       {/* Top row: Runtime + CPU + Memory */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
         {/* Runtime */}
-        <Card icon={<PiGearDuotone className="h-5 w-5" />} title="Runtime">
-          {snapshot ? (
+        {snapshot ? (
+          <Card icon={<PiGearDuotone className="h-5 w-5" />} title="Runtime">
             <>
               <Row
                 label="Aplikasi"
@@ -623,14 +634,22 @@ export default function SystemDashboard({ checks }: Props) {
                 value={fmtUptime(snapshot.runtime.uptimeSeconds)}
               />
             </>
-          ) : (
-            <p className="text-xs text-gray-400">Memuat...</p>
-          )}
-        </Card>
+          </Card>
+        ) : (
+          <SkeletonCard icon={<PiGearDuotone className="h-5 w-5" />} title="Runtime">
+            <SkeletonRow />
+            <SkeletonRow />
+            <SkeletonRow />
+            <SkeletonRow />
+            <SkeletonRow />
+            <SkeletonRow />
+            <SkeletonRow />
+          </SkeletonCard>
+        )}
 
         {/* CPU */}
-        <Card icon={<PiCpuDuotone className="h-5 w-5" />} title="CPU">
-          {snapshot ? (
+        {snapshot ? (
+          <Card icon={<PiCpuDuotone className="h-5 w-5" />} title="CPU">
             <>
               <Row label="Model" value={snapshot.cpu.model} />
               <Row
@@ -656,32 +675,38 @@ export default function SystemDashboard({ checks }: Props) {
               <Row label="Load avg (5m)" value={snapshot.cpu.loadAvg5} />
               <Row label="Load avg (15m)" value={snapshot.cpu.loadAvg15} />
             </>
-          ) : (
-            <p className="text-xs text-gray-400">Memuat...</p>
-          )}
-        </Card>
+          </Card>
+        ) : (
+          <SkeletonCard icon={<PiCpuDuotone className="h-5 w-5" />} title="CPU">
+            <SkeletonRow />
+            <SkeletonRow />
+            <SkeletonRow />
+            <SkeletonRow />
+            <SkeletonRow />
+          </SkeletonCard>
+        )}
 
         {/* Memory */}
-        <Card
-          icon={<PiCpuDuotone className="h-5 w-5" />}
-          title="Memori"
-          badge={
-            snapshot ? (
-              <span
-                className={`text-xs font-bold ${
-                  memTone === "rose"
-                    ? "text-rose-600"
-                    : memTone === "amber"
-                      ? "text-amber-600"
-                      : "text-red-600"
-                }`}
-              >
-                {snapshot.memory.usedPercent}%
-              </span>
-            ) : null
-          }
-        >
-          {snapshot ? (
+        {snapshot ? (
+          <Card
+            icon={<PiCpuDuotone className="h-5 w-5" />}
+            title="Memori"
+            badge={
+              snapshot ? (
+                <span
+                  className={`text-xs font-bold ${
+                    memTone === "rose"
+                      ? "text-rose-600"
+                      : memTone === "amber"
+                        ? "text-amber-600"
+                        : "text-primary-dark"
+                  }`}
+                >
+                  {snapshot.memory.usedPercent}%
+                </span>
+              ) : null
+            }
+          >
             <>
               <Row label="Total" value={fmtBytes(snapshot.memory.totalBytes)} />
               <Row
@@ -694,18 +719,27 @@ export default function SystemDashboard({ checks }: Props) {
                 tone={memTone}
               />
             </>
-          ) : (
-            <p className="text-xs text-gray-400">Memuat...</p>
-          )}
-        </Card>
+          </Card>
+        ) : (
+          <SkeletonCard
+            icon={<PiCpuDuotone className="h-5 w-5" />}
+            title="Memori"
+            badge={<span className="h-4 w-1/4 rounded bg-gray-200" />}
+          >
+            <SkeletonRow />
+            <SkeletonRow />
+            <SkeletonRow />
+            <SkeletonProgressBar />
+          </SkeletonCard>
+        )}
       </div>
 
       {/* Disk */}
-      <Card
-        icon={<PiHardDrivesDuotone className="h-5 w-5" />}
-        title="Penyimpanan / Block Device"
-      >
-        {snapshot ? (
+      {snapshot ? (
+        <Card
+          icon={<PiHardDrivesDuotone className="h-5 w-5" />}
+          title="Penyimpanan / Block Device"
+        >
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {snapshot.disks.map((disk) => {
               const tone =
@@ -713,7 +747,7 @@ export default function SystemDashboard({ checks }: Props) {
                   ? "rose"
                   : disk.usedPercent > 75
                     ? "amber"
-                    : "teal";
+                    : "primary";
               return (
                 <div key={disk.path}>
                   <div className="mb-2 flex items-center justify-between">
@@ -726,7 +760,7 @@ export default function SystemDashboard({ checks }: Props) {
                           ? "text-rose-600"
                           : tone === "amber"
                             ? "text-amber-600"
-                            : "text-red-600"
+                            : "text-primary-dark"
                       }`}
                     >
                       {disk.usedPercent}%
@@ -754,19 +788,42 @@ export default function SystemDashboard({ checks }: Props) {
               );
             })}
           </div>
-        ) : (
-          <p className="text-xs text-gray-400">Memuat...</p>
-        )}
-      </Card>
+        </Card>
+      ) : (
+        <SkeletonCard
+          icon={<PiHardDrivesDuotone className="h-5 w-5" />}
+          title="Penyimpanan / Block Device"
+        >
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            {[0, 1].map((i) => (
+              <div key={i}>
+                <div className="mb-2 flex items-center justify-between">
+                  <span className="h-3 w-2/5 rounded bg-gray-200" />
+                  <span className="h-3 w-1/6 rounded bg-gray-200" />
+                </div>
+                <SkeletonProgressBar />
+                <div className="mt-2 grid grid-cols-3 gap-1 text-center">
+                  {[0, 1, 2].map((j) => (
+                    <div key={j} className="rounded bg-gray-100 px-2 py-1.5">
+                      <span className="mx-auto block h-2.5 w-3/4 rounded bg-gray-200" />
+                      <span className="mx-auto mt-1 block h-3 w-2/3 rounded bg-gray-200" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </SkeletonCard>
+      )}
 
       {/* DB Time + NTP */}
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-        <Card
-          icon={<PiDatabaseDuotone className="h-5 w-5" />}
-          title="Waktu Server Database"
-        >
-          {snapshot ? (
-            snapshot.db.ok ? (
+        {snapshot ? (
+          <Card
+            icon={<PiDatabaseDuotone className="h-5 w-5" />}
+            title="Waktu Server Database"
+          >
+            {snapshot.db.ok ? (
               <>
                 <Row label="Zona waktu global" value={snapshot.db.globalTz} />
                 <Row label="Zona waktu sesi" value={snapshot.db.sessionTz} />
@@ -791,18 +848,27 @@ export default function SystemDashboard({ checks }: Props) {
               <p className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-medium text-amber-900">
                 {snapshot.db.error}
               </p>
-            )
-          ) : (
-            <p className="text-xs text-gray-400">Memuat...</p>
-          )}
-        </Card>
+            )}
+          </Card>
+        ) : (
+          <SkeletonCard
+            icon={<PiDatabaseDuotone className="h-5 w-5" />}
+            title="Waktu Server Database"
+          >
+            <SkeletonRow />
+            <SkeletonRow />
+            <SkeletonRow />
+            <SkeletonRow />
+            <SkeletonRow />
+          </SkeletonCard>
+        )}
 
-        <Card
-          icon={<PiPulseDuotone className="h-5 w-5" />}
-          title="Sinkronisasi NTP"
-        >
-          {snapshot ? (
-            snapshot.ntp.ok ? (
+        {snapshot ? (
+          <Card
+            icon={<PiPulseDuotone className="h-5 w-5" />}
+            title="Sinkronisasi NTP"
+          >
+            {snapshot.ntp.ok ? (
               <>
                 <Row label="Server NTP" value={snapshot.ntp.host} />
                 <Row
@@ -829,18 +895,77 @@ export default function SystemDashboard({ checks }: Props) {
                   {snapshot.ntp.error}
                 </p>
               </>
-            )
-          ) : (
-            <p className="text-xs text-gray-400">Memuat...</p>
-          )}
-        </Card>
+            )}
+          </Card>
+        ) : (
+          <SkeletonCard
+            icon={<PiPulseDuotone className="h-5 w-5" />}
+            title="Sinkronisasi NTP"
+          >
+            <SkeletonRow />
+            <SkeletonRow />
+            <SkeletonRow />
+            <SkeletonRow />
+          </SkeletonCard>
+        )}
       </div>
 
       {/* Audio */}
-      <AudioTestPanel />
+      {loading ? (
+        <SkeletonCard
+          icon={<PiSpeakerHighDuotone className="h-5 w-5" />}
+          title="Uji Audio Notifikasi"
+          badge={<span className="h-4 w-1/4 rounded bg-gray-200" />}
+        >
+          <div className="space-y-3">
+            <span className="block h-3 w-full rounded bg-gray-200" />
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+              {[0, 1, 2].map((i) => (
+                <div key={i} className="flex items-center gap-2.5 rounded-md border border-gray-200 bg-gray-50 px-3 py-2.5">
+                  <span className="h-4 w-4 shrink-0 rounded-full bg-gray-200" />
+                  <div className="min-w-0 flex-1 space-y-1">
+                    <span className="block h-3 w-3/4 rounded bg-gray-200" />
+                    <span className="block h-3 w-1/2 rounded bg-gray-200" />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <span className="block h-2.5 w-full rounded bg-gray-200" />
+          </div>
+        </SkeletonCard>
+      ) : (
+        <AudioTestPanel />
+      )}
 
       {/* Config */}
-      <ConfigPanel checks={checks} />
+      {loading ? (
+        <SkeletonCard
+          icon={<PiGearDuotone className="h-5 w-5" />}
+          title="Konfigurasi"
+          badge={<span className="h-4 w-1/4 rounded bg-gray-200" />}
+        >
+          <div className="space-y-4">
+            {[0, 1].map((i) => (
+              <div key={i}>
+                <span className="mb-2 block h-3 w-1/3 rounded bg-gray-200" />
+                <div className="space-y-2">
+                  {[0, 1, 2].map((j) => (
+                    <div key={j} className="flex items-start gap-2">
+                      <span className="h-4 w-4 shrink-0 rounded-full bg-gray-200" />
+                      <div className="min-w-0 flex-1 space-y-1">
+                        <span className="block h-3 w-full rounded bg-gray-200" />
+                        <span className="block h-2.5 w-full rounded bg-gray-200" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </SkeletonCard>
+      ) : (
+        <ConfigPanel checks={checks} />
+      )}
 
       <p className="flex items-center gap-2 text-xs text-gray-400">
         <PiCheckCircleDuotone className="h-3.5 w-3.5" />
