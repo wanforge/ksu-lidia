@@ -105,7 +105,7 @@ export default function SignInForm() {
                 id="rememberMe"
                 {...register("rememberMe")}
                 label="Ingat saya"
-                className="[&>label>span]:font-medium"
+                className="[&>label>span]:font-medium [&_svg]:hidden"
               />
             </div>
             <Button
