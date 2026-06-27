@@ -196,10 +196,7 @@ export default async function Home() {
 
   return (
     <div className="flex w-full flex-col gap-7">
-      {/* ╔══════════════════════════════════════════════╗
-          ║          HERO WELCOME BANNER                 ║
-          ╚══════════════════════════════════════════════╝ */}
-      <section className="relative flex flex-col gap-4 overflow-hidden rounded-2xl border border-slate-700/50 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-7 text-white shadow-lg sm:p-8">
+      <section className="relative flex flex-col gap-4 overflow-hidden rounded-2xl border border-red-100 bg-gradient-to-br from-red-50/50 via-white to-red-50/10 p-7 text-gray-900 shadow-sm sm:p-8">
         {/* Animated background orbs */}
         <FloatingOrbs />
         {/* Shimmer sweep */}
@@ -209,35 +206,38 @@ export default async function Home() {
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.04]"
           style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`,
+            backgroundImage: `radial-gradient(circle at 1px 1px, #fecaca 1.5px, transparent 0)`,
             backgroundSize: "24px 24px",
           }}
         />
 
-        {/* Subtle teal glow accent */}
+        {/* Subtle red glow accent */}
         <div className="pointer-events-none absolute -right-20 top-0 h-40 w-80 rounded-full bg-red-500/10 blur-3xl" />
 
         <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-red-400/30 bg-red-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-red-300 backdrop-blur-sm">
-                <PulseRing color="bg-red-400" />
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-red-200 bg-red-50 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-red-800">
+                <PulseRing color="bg-red-600" />
                 Sistem Aktif
               </span>
             </div>
 
-            <h1 className="text-2xl font-bold tracking-tight text-white md:text-3xl lg:text-4xl">
+            <h1 className="text-2xl font-bold tracking-tight text-gray-950 md:text-3xl lg:text-4xl">
               {greeting(now)}, {firstName ? firstName : "Rekan Kerja"}
             </h1>
 
-            <p className="max-w-xl text-sm leading-relaxed text-slate-300">
+            <p className="max-w-xl text-sm leading-relaxed text-gray-600">
               {getMotivation(now)}
             </p>
           </div>
 
           <div className="flex flex-col items-end gap-2">
-            <LiveClock />
-            <p className="rounded-lg border border-slate-600/50 bg-slate-700/40 px-3 py-1.5 text-[11px] font-medium text-slate-300 backdrop-blur-sm">
+            <LiveClock
+              className="text-gray-600"
+              pillClassName="bg-red-50 text-red-850"
+            />
+            <p className="rounded-lg border border-red-200/60 bg-white px-3 py-1.5 text-[11px] font-semibold text-red-800 shadow-sm">
               KSU Lidia GKJ Manahan
             </p>
           </div>
@@ -245,16 +245,16 @@ export default async function Home() {
 
         {/* Quick summary chips */}
         <div className="relative z-10 mt-1 flex flex-wrap gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-slate-600/40 bg-slate-700/50 px-3 py-1.5 text-xs font-medium text-slate-200 backdrop-blur-sm">
-            <PiUsersDuotone className="h-3.5 w-3.5 text-red-400" />
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-red-100 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-sm">
+            <PiUsersDuotone className="h-3.5 w-3.5 text-red-600" />
             {memberCount} Anggota
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-slate-600/40 bg-slate-700/50 px-3 py-1.5 text-xs font-medium text-slate-200 backdrop-blur-sm">
-            <PiHandshakeDuotone className="h-3.5 w-3.5 text-red-400" />
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-red-100 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-sm">
+            <PiHandshakeDuotone className="h-3.5 w-3.5 text-red-600" />
             {activeLoanCount} Pinjaman Aktif
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-slate-600/40 bg-slate-700/50 px-3 py-1.5 text-xs font-medium text-slate-200 backdrop-blur-sm">
-            <PiCubeDuotone className="h-3.5 w-3.5 text-red-400" />
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-red-100 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-sm">
+            <PiCubeDuotone className="h-3.5 w-3.5 text-red-600" />
             {productCount} Produk Toko
           </span>
         </div>

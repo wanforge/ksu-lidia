@@ -2,6 +2,7 @@
 
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { motion, useInView } from "motion/react";
+import cn from "@core/utils/class-names";
 
 /* ─── Stagger wrapper ──────────────────────────────────── */
 export function StaggerContainer({
@@ -185,7 +186,13 @@ export function ActivityItem({
 }
 
 /* ─── Current time display (re-renders every 30s) ──────── */
-export function LiveClock() {
+export function LiveClock({
+  className = "text-gray-600",
+  pillClassName = "bg-gray-100 text-gray-700",
+}: {
+  className?: string;
+  pillClassName?: string;
+}) {
   const [now, setNow] = useState<Date | null>(null);
 
   useEffect(() => {
@@ -208,8 +215,13 @@ export function LiveClock() {
   });
 
   return (
-    <p className="flex items-center gap-2 text-sm text-slate-300">
-      <span className="inline-flex h-5 items-center rounded-full bg-slate-700/60 px-2.5 text-[11px] font-semibold uppercase tracking-wider text-slate-300">
+    <p className={cn("flex items-center gap-2 text-sm", className)}>
+      <span
+        className={cn(
+          "inline-flex h-5 items-center rounded-full px-2.5 text-[11px] font-semibold uppercase tracking-wider",
+          pillClassName
+        )}
+      >
         {dayName}
       </span>
       <span>
