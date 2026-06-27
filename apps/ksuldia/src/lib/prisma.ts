@@ -38,9 +38,19 @@ const REDACT_KEYS = new Set([
   "secret",
 ]);
 
+function isDecimal(value: unknown): boolean {
+  if (value == null || typeof value !== "object") return false;
+  return (
+    Prisma.Decimal.isDecimal(value) ||
+    value.constructor?.name === "Decimal" ||
+    ("d" in value && "e" in value && "s" in value && Array.isArray((value as any).d))
+  );
+}
+
 function redact(value: unknown, depth = 0): unknown {
   if (value === null || value === undefined || depth > 6) return value;
   if (value instanceof Date) return value;
+  if (isDecimal(value)) return (value as any).toString();
   if (Array.isArray(value)) return value.map((item) => redact(item, depth + 1));
   if (typeof value === "object") {
     const out: Record<string, unknown> = {};
@@ -66,10 +76,10 @@ function createBaseClient() {
 // Base (un-extended) client. Dipakai khusus untuk menulis baris log agar tidak
 // memicu ekstensi secara rekursif.
 const globalForBase = globalThis as unknown as {
-  basePrisma?: PrismaClient;
+  basePrisma_v3?: PrismaClient;
 };
-const basePrisma = globalForBase.basePrisma ?? createBaseClient();
-if (env.NODE_ENV !== "production") globalForBase.basePrisma = basePrisma;
+const basePrisma = globalForBase.basePrisma_v3 ?? createBaseClient();
+if (env.NODE_ENV !== "production") globalForBase.basePrisma_v3 = basePrisma;
 
 function modelDelegateName(model: string): string {
   return model.charAt(0).toLowerCase() + model.slice(1);
@@ -252,9 +262,9 @@ function createExtendedClient() {
 // tipenya dipertahankan sebagai PrismaClient agar seluruh kode lama — termasuk
 // yang memakai Prisma.TransactionClient — tetap kompatibel.
 const globalForPrisma = globalThis as unknown as {
-  prisma?: PrismaClient;
+  prisma_v3?: PrismaClient;
 };
 
 export const prisma: PrismaClient =
-  globalForPrisma.prisma ?? (createExtendedClient() as unknown as PrismaClient);
-if (env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+  globalForPrisma.prisma_v3 ?? (createExtendedClient() as unknown as PrismaClient);
+if (env.NODE_ENV !== "production") globalForPrisma.prisma_v3 = prisma;
