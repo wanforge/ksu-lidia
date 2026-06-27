@@ -91,7 +91,7 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
             Statistik & Dashboard Analisis
           </h1>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-gray-600">
-            Monitor perkembangan total tabungan anggota, outstanding pinjaman
+            Monitor perkembangan total tabungan anggota, saldo pinjaman aktif
             perkreditan, penjualan toko kelontong, dan laba berjalan koperasi.
           </p>
         </div>
@@ -146,11 +146,11 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
           </div>
         </div>
 
-        {/* Card 3: Loans Outstanding */}
+        {/* Card 3: Saldo Pinjaman Aktif */}
         <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition hover:border-orange-200">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">
-              Outstanding Pinjaman
+              Saldo Pinjaman Aktif
             </span>
             <div className="rounded-lg bg-orange-50 p-2 text-orange-600">
               <PiCoinsDuotone className="h-6 w-6" />
@@ -208,7 +208,7 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
             {formatIDR(metrics.totalSpProfit)}
           </span>
           <p className="mt-1 text-xs text-gray-500">
-            Real-time dari transaksi berjalan
+            Waktu nyata dari transaksi berjalan
           </p>
         </div>
       </div>
@@ -347,7 +347,7 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
         {/* Simpanan vs Pinjaman */}
         <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
           <h3 className="mb-2 text-base font-bold text-gray-950">
-            Simpanan vs Outstanding Pinjaman
+            Simpanan vs Saldo Pinjaman Aktif
           </h3>
           <p className="mb-6 text-xs text-gray-500">
             Likuiditas simpan pinjam anggota berjalan.

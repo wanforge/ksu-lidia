@@ -271,8 +271,8 @@ export default function LaporanWorkspace({
             Laporan Keuangan & Buku Besar
           </h1>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-gray-600">
-            Akses rekapitulasi data simpanan anggota, rincian kredit
-            outstanding, mutasi kas simpan pinjam, serta laporan rugi/laba toko.
+            Akses rekapitulasi data simpanan anggota, rincian saldo pinjaman
+            berjalan, mutasi kas simpan pinjam, serta laporan rugi/laba toko.
           </p>
         </div>
         <button
@@ -312,7 +312,7 @@ export default function LaporanWorkspace({
           }`}
         >
           <PiCoinsDuotone className="h-4.5 w-4.5" />
-          Outstanding Kredit
+          Saldo Pinjaman Aktif
         </button>
         <button
           onClick={() => {

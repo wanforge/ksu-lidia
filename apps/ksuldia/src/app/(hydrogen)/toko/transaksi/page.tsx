@@ -47,9 +47,9 @@ export default async function TransaksiPage() {
             Transaksi & Mutasi Toko
           </h1>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-gray-600">
-            Catat dan pantau transaksi pembelian stok (restock dari supplier)
+            Catat dan pantau transaksi pembelian stok (pasokan dari pemasok)
             serta rekap transaksi penjualan produk. Sistem otomatis memperbarui
-            kuantitas inventaris barang secara real-time.
+            stok inventaris barang secara waktu nyata.
           </p>
         </div>
       </section>

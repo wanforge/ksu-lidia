@@ -30,7 +30,7 @@ type UserManagePanelProps = {
 };
 
 const ROLE_OPTIONS = [
-  { value: "ADMIN", label: "Admin" },
+  { value: "ADMIN", label: "Administrator" },
   { value: "VIEWER", label: "Viewer" },
 ];
 
@@ -117,7 +117,7 @@ export default function UserManagePanel({
       {/* Edit akun */}
       <form action={editAction} className={cardClass}>
         <input type="hidden" name="userId" value={user.id} />
-        <h4 className="mb-3 text-sm font-semibold text-gray-900">Edit akun</h4>
+        <h4 className="mb-3 text-sm font-semibold text-gray-900">Ubah akun</h4>
         <div className="space-y-3">
           <label className={labelClass}>
             <LabelWithHint
@@ -134,8 +134,8 @@ export default function UserManagePanel({
           </label>
           <label className={labelClass}>
             <LabelWithHint
-              text="Role"
-              hint="Hak akses akun. Menurunkan/menonaktifkan admin aktif terakhir atau akun sendiri tidak diizinkan."
+              text="Peran"
+              hint="Hak akses akun. Menurunkan atau menonaktifkan administrator aktif terakhir atau akun sendiri tidak diizinkan."
             />
             {/* Hidden input preserves role value when select is disabled (self-edit). */}
             {isSelf ? (
@@ -169,7 +169,7 @@ export default function UserManagePanel({
           />
           {isSelf ? (
             <p className="text-xs text-gray-400">
-              Role dan status aktif akun sendiri tidak bisa diubah di sini.
+              Peran dan status aktif akun sendiri tidak dapat diubah di sini.
             </p>
           ) : null}
           <StateMessage
@@ -191,13 +191,13 @@ export default function UserManagePanel({
       <form action={resetAction} className={cardClass}>
         <input type="hidden" name="userId" value={user.id} />
         <h4 className="mb-3 text-sm font-semibold text-gray-900">
-          Reset password langsung
+          Atur ulang kata sandi langsung
         </h4>
         <div className="space-y-3">
           <label className={labelClass}>
             <LabelWithHint
-              text="Password Baru"
-              hint="Minimal 8 karakter. Mengganti password langsung akan mencabut link reset aktif."
+              text="Kata Sandi Baru"
+              hint="Minimal 8 karakter. Mengganti kata sandi secara langsung akan mencabut tautan atur ulang yang aktif."
             />
             <input
               name="password"
@@ -219,7 +219,7 @@ export default function UserManagePanel({
             isLoading={resetPending}
             className="w-full"
           >
-            {resetPending ? "Menyimpan..." : "Ganti password"}
+            {resetPending ? "Menyimpan..." : "Ganti kata sandi"}
           </Button>
         </div>
       </form>
@@ -227,15 +227,15 @@ export default function UserManagePanel({
       {/* Link + delete */}
       <div className={cardClass}>
         <h4 className="mb-3 text-sm font-semibold text-gray-900">
-          Link reset & hapus
+          Tautan atur ulang dan hapus
         </h4>
         <div className="space-y-3">
           <form action={linkAction} className="space-y-2">
             <input type="hidden" name="userId" value={user.id} />
             <label className={labelClass}>
               <LabelWithHint
-                text="Masa Berlaku Link"
-                hint="Lama link reset sekali pakai berlaku. Membuat link baru mencabut link sebelumnya."
+                text="Masa Berlaku Tautan"
+                hint="Lama tautan atur ulang sekali pakai berlaku. Membuat tautan baru mencabut tautan sebelumnya."
               />
               <select
                 name="ttlHours"
@@ -273,7 +273,7 @@ export default function UserManagePanel({
               isLoading={linkPending}
               className="w-full"
             >
-              {linkPending ? "Menerbitkan..." : "Generate link sekali pakai"}
+              {linkPending ? "Menerbitkan..." : "Terbitkan tautan sekali pakai"}
             </Button>
           </form>
 
@@ -286,17 +286,17 @@ export default function UserManagePanel({
               disabled={isSelf}
               onClick={async (event) => {
                 const form = event.currentTarget.form;
-                if (await confirmDelete(`user ${user.name}`)) {
+                if (await confirmDelete(`pengguna ${user.name}`)) {
                   form?.requestSubmit();
                 }
               }}
               className="w-full"
             >
-              {deletePending ? "Menghapus..." : "Hapus user"}
+              {deletePending ? "Menghapus..." : "Hapus pengguna"}
             </Button>
             {isSelf ? (
               <p className="mt-1 text-xs text-gray-400">
-                Tidak bisa menghapus akun sendiri.
+                Tidak dapat menghapus akun sendiri.
               </p>
             ) : null}
             <StateMessage

@@ -30,8 +30,4 @@ export const pageLinks = [
     name: "Log Perubahan Data",
     href: routes.dataChangeLog,
   },
-  {
-    name: "Sampah",
-    href: routes.trash,
-  },
 ];

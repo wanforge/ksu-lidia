@@ -38,7 +38,6 @@ const PAGE_ICONS: Record<string, React.ReactNode> = {
   [routes.users.list]: <PiUsersThreeDuotone className="h-5 w-5" />,
   [routes.audit.list]: <PiShieldCheckDuotone className="h-5 w-5" />,
   [routes.dataChangeLog]: <PiClockCountdownDuotone className="h-5 w-5" />,
-  [routes.trash]: <PiArchiveDuotone className="h-5 w-5" />,
 };
 
 const PAGE_HITS: Hit[] = pageLinks

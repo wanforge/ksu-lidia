@@ -48,11 +48,11 @@ const auditActionLabels: Record<string, string> = {
   VERIFY: "Verifikasi",
   REJECT: "Tolak",
   REQUEST_REVISION: "Minta Revisi",
-  LOGIN: "Login",
-  LOGOUT: "Logout",
-  PASSWORD_RESET_ISSUED: "Terbitkan Reset Password",
-  PASSWORD_RESET_USED: "Pakai Reset Password",
-  PASSWORD_CHANGED: "Ganti Password",
+  LOGIN: "Masuk",
+  LOGOUT: "Keluar",
+  PASSWORD_RESET_ISSUED: "Terbitkan Atur Ulang Kata Sandi",
+  PASSWORD_RESET_USED: "Gunakan Atur Ulang Kata Sandi",
+  PASSWORD_CHANGED: "Ubah Kata Sandi",
 };
 
 const operationLabels: Record<string, string> = {

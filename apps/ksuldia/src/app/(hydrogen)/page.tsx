@@ -290,7 +290,7 @@ export default async function Home() {
           </div>
         </FadeUp>
 
-        {/* Metric Card 2: Outstanding Pinjaman */}
+        {/* Metric Card 2: Saldo Pinjaman Aktif */}
         <FadeUp>
           <div className="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
             <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-rose-400 to-pink-400 opacity-0 transition-opacity group-hover:opacity-100" />

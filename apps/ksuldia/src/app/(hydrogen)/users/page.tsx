@@ -131,7 +131,7 @@ export default async function UsersPage() {
   if (!session?.user || session.user.role !== UserRole.ADMIN) {
     return (
       <div className="mx-auto w-full max-w-[900px] rounded-md border border-rose-200 bg-rose-50 px-5 py-4 text-sm font-medium text-rose-800">
-        Hanya admin yang bisa mengelola user.
+        Hanya administrator yang dapat mengelola pengguna.
       </div>
     );
   }
@@ -146,26 +146,26 @@ export default async function UsersPage() {
             Administrasi Akses
           </p>
           <h1 className="mt-2 text-2xl font-bold text-gray-950 md:text-3xl">
-            Manajemen User
+            Manajemen Pengguna
           </h1>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-gray-600">
-            Kelola akun internal: tambah, ubah role, reset password, dan
-            nonaktifkan/hapus. Registrasi publik dinonaktifkan.
+            Kelola akun internal: tambah, ubah peran, atur ulang kata sandi, dan
+            nonaktifkan atau hapus. Pendaftaran publik dinonaktifkan.
           </p>
         </div>
       </section>
 
       {!data.databaseReady ? (
         <div className="rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-          Data belum bisa dimuat saat ini. Manajemen user akan aktif setelah
-          migration berjalan.
+          Data belum dapat dimuat saat ini. Manajemen pengguna akan aktif setelah
+          migrasi berjalan.
         </div>
       ) : null}
 
       <section className="grid grid-cols-2 gap-4 md:grid-cols-3">
-        <StatCard label="Total user" value={data.totalUsers} />
+        <StatCard label="Total Pengguna" value={data.totalUsers} />
         <StatCard label="Aktif" value={data.activeUsers} />
-        <StatCard label="Admin" value={data.adminUsers} />
+        <StatCard label="Administrator" value={data.adminUsers} />
       </section>
 
       <UsersWorkspace

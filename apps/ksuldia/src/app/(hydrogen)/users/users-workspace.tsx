@@ -47,7 +47,7 @@ type UsersWorkspaceProps = {
 };
 
 const roleLabels: Record<string, string> = {
-  ADMIN: "Admin",
+  ADMIN: "Administrator",
   VIEWER: "Viewer",
 };
 
@@ -121,7 +121,7 @@ export default function UsersWorkspace({
           onClick={() => setTab("list")}
         >
           <PiUsersThreeDuotone className="h-4 w-4" />
-          Daftar User
+          Daftar Pengguna
           <span className="ml-1 rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
             {formatNumber(users.length)}
           </span>
@@ -132,7 +132,7 @@ export default function UsersWorkspace({
           onClick={() => setTab("deleted")}
         >
           <PiTrashDuotone className="h-4 w-4" />
-          User Terhapus
+          Pengguna Terhapus
           {deletedUsers.length > 0 ? (
             <span className="ml-1 rounded-full bg-rose-100 px-2 py-0.5 text-xs font-semibold text-rose-700">
               {formatNumber(deletedUsers.length)}
@@ -145,7 +145,7 @@ export default function UsersWorkspace({
           onClick={() => setTab("create")}
         >
           <PiPlusBold className="h-4 w-4" />
-          Tambah User
+          Tambah Pengguna
         </button>
       </div>
 
@@ -158,7 +158,7 @@ export default function UsersWorkspace({
           <div className="flex items-start gap-2 border-b border-gray-100 bg-rose-50/50 px-5 py-3 text-xs text-rose-800">
             <PiTrashDuotone className="mt-0.5 h-4 w-4 shrink-0" />
             <p>
-              Penghapusan user bersifat <strong>soft-delete</strong> — data
+              Penghapusan pengguna bersifat <strong>soft-delete</strong> — data
               tetap tersimpan dan akunnya dinonaktifkan. Pulihkan untuk
               mengaktifkan kembali.
             </p>
@@ -166,8 +166,8 @@ export default function UsersWorkspace({
           {deletedUsers.length === 0 ? (
             <EmptyState
               icon={PiTrashDuotone}
-              title="Tidak ada user terhapus"
-              description="User yang dihapus akan muncul di sini dan bisa dipulihkan."
+              title="Tidak ada pengguna terhapus"
+              description="Pengguna yang dihapus akan muncul di sini dan dapat dipulihkan."
             />
           ) : (
             <ul className="divide-y divide-gray-100">
@@ -211,7 +211,7 @@ export default function UsersWorkspace({
               onChange={(e) => setRoleFilter(e.target.value)}
               className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition focus:border-gray-700"
             >
-              <option value="">Semua Role</option>
+              <option value="">Semua Peran</option>
               {Object.entries(roleLabels).map(([value, label]) => (
                 <option key={value} value={value}>
                   {label}
@@ -223,8 +223,8 @@ export default function UsersWorkspace({
           {filtered.length === 0 ? (
             <EmptyState
               icon={PiUsersThreeDuotone}
-              title="Tidak ada user yang cocok"
-              description="Ubah kata kunci atau filter role."
+              title="Tidak ada pengguna yang cocok"
+              description="Ubah kata kunci atau filter peran."
             />
           ) : (
             <div className="overflow-x-auto">
@@ -232,14 +232,14 @@ export default function UsersWorkspace({
                 <thead className="bg-gray-50">
                   <tr>
                     <ClientSortHeader
-                      label="User"
+                      label="Pengguna"
                       active={sortKey === "name"}
                       dir={sortDir}
                       onClick={() => requestSort("name")}
                       className="min-w-[240px]"
                     />
                     <ClientSortHeader
-                      label="Role / Status"
+                      label="Peran / Status"
                       active={sortKey === "role"}
                       dir={sortDir}
                       onClick={() => requestSort("role")}
@@ -247,7 +247,7 @@ export default function UsersWorkspace({
                     />
 
                     <ClientSortHeader
-                      label="Login"
+                      label="Masuk"
                       active={sortKey === "lastLoginAt"}
                       dir={sortDir}
                       onClick={() => requestSort("lastLoginAt")}
@@ -300,11 +300,11 @@ export default function UsersWorkspace({
                               Terakhir: {formatDate(user.lastLoginAt)}
                             </p>
                             <p className="mt-1 text-xs text-gray-500">
-                              Password: {formatDate(user.passwordChangedAt)}
+                              Kata Sandi: {formatDate(user.passwordChangedAt)}
                             </p>
                             {user.activeTokenExpiresAt ? (
                               <p className="mt-1 text-xs font-medium text-amber-800">
-                                Token sampai{" "}
+                                Token hingga{" "}
                                 {formatDate(user.activeTokenExpiresAt)}
                               </p>
                             ) : null}

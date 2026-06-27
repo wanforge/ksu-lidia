@@ -834,7 +834,7 @@ export default function PinjamanWorkspace({
                       </th>
                       <th className="px-4 py-3 text-right font-bold text-teal-800">
                         <SortableHeader
-                          label="Angsuran / Bln"
+                          label="Angsuran / Bulan"
                           sortKey="installmentAmountVal"
                           activeSortKey={table.sortConfig.key as string}
                           activeDirection={table.sortConfig.direction}
@@ -882,7 +882,7 @@ export default function PinjamanWorkspace({
                             Rp {formatNumber(l.amountVal)}
                           </td>
                           <td className="px-4 py-3 text-center font-medium">
-                            {l.tenor} Bln
+                            {l.tenor} bulan
                           </td>
                           <td className="px-4 py-3 text-right font-bold text-teal-800">
                             Rp {formatNumber(l.installmentAmountVal)}

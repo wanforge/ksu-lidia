@@ -35,8 +35,8 @@ export default function RestoreUserButton({
         isLoading={pending}
         onClick={async () => {
           const ok = await confirmAction({
-            title: "Pulihkan user ini?",
-            text: `"${name}" akan diaktifkan kembali dan bisa login.`,
+            title: "Pulihkan pengguna ini?",
+            text: `"${name}" akan diaktifkan kembali dan dapat masuk ke sistem.`,
             confirmText: "Ya, pulihkan",
             icon: "question",
           });

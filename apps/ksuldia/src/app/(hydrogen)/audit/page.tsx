@@ -84,21 +84,21 @@ const actionOptions: AuditAction[] = [
 ];
 
 const actionLabels: Record<AuditAction, string> = {
-  CREATE: "Create",
-  UPDATE: "Update",
-  DELETE: "Delete",
-  RESTORE: "Restore",
-  UPLOAD: "Upload",
-  DOWNLOAD: "Download",
-  EXPORT: "Export",
-  VERIFY: "Verify",
-  REJECT: "Reject",
-  REQUEST_REVISION: "Request Revision",
-  LOGIN: "Login",
-  LOGOUT: "Logout",
-  PASSWORD_RESET_ISSUED: "Reset Issued",
-  PASSWORD_RESET_USED: "Reset Used",
-  PASSWORD_CHANGED: "Password Changed",
+  CREATE: "Tambah",
+  UPDATE: "Ubah",
+  DELETE: "Hapus",
+  RESTORE: "Pulihkan",
+  UPLOAD: "Unggah",
+  DOWNLOAD: "Unduh",
+  EXPORT: "Ekspor",
+  VERIFY: "Verifikasi",
+  REJECT: "Tolak",
+  REQUEST_REVISION: "Minta Revisi",
+  LOGIN: "Masuk",
+  LOGOUT: "Keluar",
+  PASSWORD_RESET_ISSUED: "Terbitkan Atur Ulang Kata Sandi",
+  PASSWORD_RESET_USED: "Gunakan Atur Ulang Kata Sandi",
+  PASSWORD_CHANGED: "Ubah Kata Sandi",
 };
 
 function normalizeSearchParams(params: SearchParams) {
@@ -333,12 +333,12 @@ export default async function AuditPage({
       <section className="grid grid-cols-1 gap-4 md:grid-cols-5">
         <StatCard
           tone="slate"
-          label="Total Filter"
+          label="Total Terfilter"
           value={formatNumber(data.total)}
         />
         <StatCard
           tone="blue"
-          label="Upload"
+          label="Unggah"
           value={formatNumber(data.uploadCount)}
         />
         <StatCard
@@ -353,7 +353,7 @@ export default async function AuditPage({
         />
         <StatCard
           tone="violet"
-          label="Password"
+          label="Kata Sandi"
           value={formatNumber(data.passwordCount)}
         />
       </section>

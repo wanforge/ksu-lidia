@@ -70,7 +70,7 @@ export default function UserCreateForm() {
           <input
             name="name"
             className={inputClass}
-            placeholder="Nama user"
+            placeholder="Nama pengguna"
             required
           />
           <FieldError messages={state.errors?.name} />
@@ -79,7 +79,7 @@ export default function UserCreateForm() {
         <label className={labelClass}>
           <LabelWithHint
             text="Email"
-            hint="Email dinas; dipakai sebagai username saat login."
+            hint="Email dinas; digunakan sebagai nama pengguna saat masuk ke sistem."
           />
           <input
             name="email"
@@ -93,8 +93,8 @@ export default function UserCreateForm() {
 
         <label className={labelClass}>
           <LabelWithHint
-            text="Password Awal"
-            hint="Minimal 8 karakter. Sampaikan ke user lewat kanal aman; user bisa diganti/di-reset nanti."
+            text="Kata Sandi Awal"
+            hint="Minimal 8 karakter. Sampaikan kepada pengguna melalui saluran yang aman; kata sandi dapat diatur ulang nanti."
           />
           <input
             name="password"
@@ -108,11 +108,11 @@ export default function UserCreateForm() {
 
         <label className={labelClass}>
           <LabelWithHint
-            text="Role"
-            hint="Hak akses: Admin (kelola sistem & transaksi), Viewer (lihat-saja)."
+            text="Peran"
+            hint="Hak akses: Administrator (mengelola sistem dan transaksi), Viewer (hanya melihat)."
           />
           <select name="role" className={inputClass} defaultValue="VIEWER">
-            <option value="ADMIN">Admin</option>
+            <option value="ADMIN">Administrator</option>
             <option value="VIEWER">Viewer</option>
           </select>
           <FieldError messages={state.errors?.role} />
@@ -121,7 +121,7 @@ export default function UserCreateForm() {
 
       <div className="flex justify-end border-t border-gray-200 px-5 py-4">
         <Button type="submit" size="md" isLoading={pending}>
-          {pending ? "Menyimpan..." : "Buat user"}
+          {pending ? "Menyimpan..." : "Buat pengguna"}
         </Button>
       </div>
     </form>

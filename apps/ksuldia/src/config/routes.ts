@@ -7,7 +7,6 @@ export const routes = {
     list: "/audit",
   },
   dataChangeLog: "/log-perubahan",
-  trash: "/sampah",
   system: "/sistem",
   simpanPinjam: {
     anggota: "/simpan-pinjam/anggota",

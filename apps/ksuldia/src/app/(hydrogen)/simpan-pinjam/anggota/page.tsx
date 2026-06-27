@@ -49,7 +49,7 @@ export default async function AnggotaPage() {
           <p className="mt-2 max-w-3xl text-sm leading-6 text-gray-600">
             Kelola data simpanan pokok, wajib, dan sukarela anggota. Lakukan
             setoran, penarikan, serta pantau buku tabungan mutasi kas secara
-            real-time.
+            waktu nyata.
           </p>
         </div>
       </section>
