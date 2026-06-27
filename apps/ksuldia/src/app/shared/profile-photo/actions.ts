@@ -2,6 +2,9 @@
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { USER_PHOTO_COLLECTION, deletePhoto, savePhoto } from "@/lib/storage";
+import { ensureAuditContext } from "@/lib/audit-context";
+import { recordAuditLog } from "@/lib/audit";
+import { AuditAction, AttachmentSource } from "@prisma/client";
 import type { PhotoActionState } from "./state";
 
 export type { PhotoActionState };
@@ -18,6 +21,12 @@ export async function updateOwnPhotoAction(
   formData: FormData
 ): Promise<PhotoActionState> {
   const session = await getSession();
+  ensureAuditContext(
+    session?.user
+      ? { actorId: session.user.id, actorRole: session.user.role }
+      : undefined
+  );
+
   if (!session?.user) {
     return {
       success: false,
@@ -44,6 +53,16 @@ export async function updateOwnPhotoAction(
     });
     if (current?.image) await deletePhoto(current.image);
 
+    await recordAuditLog(prisma, {
+      actorId: session.user.id,
+      actorRole: session.user.role as any,
+      action: AuditAction.UPLOAD,
+      entityType: "User",
+      entityId: userId,
+      summary: "Memperbarui foto profil mandiri",
+      source: AttachmentSource.SYSTEM,
+    });
+
     return { success: true, message: "Foto profil diperbarui." };
   } catch (e) {
     const msg =
@@ -58,6 +77,12 @@ export async function removeOwnPhotoAction(
   _formData: FormData
 ): Promise<PhotoActionState> {
   const session = await getSession();
+  ensureAuditContext(
+    session?.user
+      ? { actorId: session.user.id, actorRole: session.user.role }
+      : undefined
+  );
+
   if (!session?.user) {
     return {
       success: false,
@@ -77,6 +102,16 @@ export async function removeOwnPhotoAction(
         data: { image: null },
       });
       await deletePhoto(current.image);
+
+      await recordAuditLog(prisma, {
+        actorId: session.user.id,
+        actorRole: session.user.role as any,
+        action: AuditAction.DELETE,
+        entityType: "User",
+        entityId: userId,
+        summary: "Menghapus foto profil mandiri",
+        source: AttachmentSource.SYSTEM,
+      });
     }
     return { success: true, message: "Foto profil dihapus." };
   } catch {

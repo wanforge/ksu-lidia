@@ -3,6 +3,11 @@
 import fs from "fs/promises";
 import path from "path";
 import { revalidatePath } from "next/cache";
+import { getSession } from "@/lib/auth";
+import { ensureAuditContext } from "@/lib/audit-context";
+import { recordAuditLog } from "@/lib/audit";
+import { prisma } from "@/lib/prisma";
+import { AuditAction, AttachmentSource } from "@prisma/client";
 
 const configPath = path.join(process.cwd(), "src/config/cooperative.json");
 
@@ -27,6 +32,20 @@ export async function updateMasterConfigAction(
   prevState: MasterActionState,
   formData: FormData
 ): Promise<MasterActionState> {
+  const session = await getSession();
+  ensureAuditContext(
+    session?.user
+      ? { actorId: session.user.id, actorRole: session.user.role }
+      : undefined
+  );
+
+  if (!session?.user || session.user.role !== "ADMIN") {
+    return {
+      success: false,
+      message: "Hanya administrator yang berwenang memperbarui konfigurasi.",
+    };
+  }
+
   try {
     const interestRate =
       parseFloat(formData.get("interestRate") as string) || 0;
@@ -57,6 +76,16 @@ export async function updateMasterConfigAction(
       JSON.stringify(updatedConfig, null, 2),
       "utf-8"
     );
+
+    await recordAuditLog(prisma, {
+      actorId: session.user.id,
+      actorRole: session.user.role as any,
+      action: AuditAction.UPDATE,
+      entityType: "CooperativeConfig",
+      entityId: "cooperative.json",
+      summary: `Memperbarui konfigurasi master koperasi: ${cooperativeName}`,
+      source: AttachmentSource.SYSTEM,
+    });
 
     revalidatePath("/simpan-pinjam/master");
     revalidatePath("/statistik");
