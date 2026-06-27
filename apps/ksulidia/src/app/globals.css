@@ -45,9 +45,9 @@
     /* ----------------------------------- */
     /* primary/brand colors — Dark Red */
     /* ----------------------------------- */
-    --primary-lighter: 254 226 226; /* #fee2e2 (red-100) */
-    --primary-default: 185 28 28; /* #b91c1c (red-700) */
-    --primary-dark: 127 29 29; /* #7f1d1d (red-900) */
+    --primary-lighter: 254 242 242; /* #fef2f2 (red-50) */
+    --primary-default: 127 29 29; /* #7f1d1d (red-900) - Merah Tua / Maroon */
+    --primary-dark: 69 10 10; /* #450a0a (red-950) - Sangat Tua */
     --primary-foreground: 255 255 255; /* #ffffff */
 
     /* ----------------------------------- */
@@ -59,11 +59,11 @@
     --secondary-foreground: 255 255 255; /* #ffffff */
 
     /* ----------------------------------- */
-    /* red/error colors - Orange Red */
+    /* red/error colors - Orange Red / Danger */
     /* ----------------------------------- */
-    --red-lighter: 255 237 213; /* #ffedd5 (orange-100) */
-    --red-default: 234 88 12; /* #ea580c (orange-600) */
-    --red-dark: 194 65 12; /* #c2410c (orange-700) */
+    --red-lighter: 254 226 226; /* #fee2e2 (red-100) */
+    --red-default: 239 68 68; /* #ef4444 (red-500) - Merah Terang / Danger */
+    --red-dark: 185 28 28; /* #b91c1c (red-700) */
 
     /* ----------------------------------- */
     /* orange/warning colors */
@@ -136,9 +136,9 @@
     /* ----------------------------------- */
     /* primary/brand colors — Dark Red */
     /* ----------------------------------- */
-    --primary-lighter: 127 29 29; /* #7f1d1d */
-    --primary-default: 220 38 38; /* #dc2626 (red-600) */
-    --primary-dark: 248 113 113; /* #f87171 (red-400) */
+    --primary-lighter: 69 10 10; /* #450a0a */
+    --primary-default: 153 27 27; /* #991b1b (red-800) */
+    --primary-dark: 239 68 68; /* #ef4444 (red-500) */
     --primary-foreground: 255 255 255; /* #ffffff */
 
     /* ----------------------------------- */
@@ -151,8 +151,9 @@
     /* ----------------------------------- */
     /* red/error colors */
     /* ----------------------------------- */
-    --red-lighter: 154 52 18; /* #9a3412 (orange-800) */
-    --red-dark: 253 186 116; /* #fdba74 (orange-300) */
+    --red-lighter: 127 29 29; /* #7f1d1d */
+    --red-default: 248 113 113; /* #f87171 (red-400) */
+    --red-dark: 252 165 165; /* #fca5a5 (red-300) */
 
     /* ----------------------------------- */
     /* orange/warning colors */

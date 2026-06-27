@@ -81,9 +81,9 @@ export async function GET(request: Request): Promise<Response> {
     // Build rich status badges in subtitle
     const statusParts: string[] = [];
     if (m.isDeceased) {
-      statusParts.push("MENINGGAL ❌");
+      statusParts.push("Status: Wafat");
     } else {
-      statusParts.push("Aktif ✅");
+      statusParts.push("Status: Aktif");
     }
     if (activeLoanAmount > 0) {
       statusParts.push(
@@ -92,7 +92,7 @@ export async function GET(request: Request): Promise<Response> {
     }
     if (penaltyAmount > 0) {
       statusParts.push(
-        `Denda Late: Rp ${penaltyAmount.toLocaleString("id-ID")} ⚠️`
+        `Denda Keterlambatan: Rp ${penaltyAmount.toLocaleString("id-ID")}`
       );
     }
 

@@ -36,13 +36,13 @@ const sizeStyles: Record<ButtonSize, string> = {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    "border border-transparent bg-red-700 text-white hover:bg-red-800 focus-visible:ring-red-500",
+    "border border-transparent bg-primary text-primary-foreground hover:bg-primary-dark focus-visible:ring-primary",
   "primary-soft":
-    "border border-red-300 bg-red-50 text-red-700 hover:bg-red-100 focus-visible:ring-red-500",
+    "border border-primary/20 bg-primary/5 text-primary hover:bg-primary/10 focus-visible:ring-primary",
   danger:
-    "border border-transparent bg-rose-600 text-white hover:bg-rose-700 focus-visible:ring-rose-500",
+    "border border-transparent bg-red text-white hover:bg-red-dark focus-visible:ring-red",
   "danger-soft":
-    "border border-rose-300 bg-rose-50 text-rose-700 hover:bg-rose-100 focus-visible:ring-rose-500",
+    "border border-red/20 bg-red/5 text-red hover:bg-red/10 focus-visible:ring-red",
   warning:
     "border border-amber-300 bg-amber-50 text-amber-700 hover:bg-amber-100 focus-visible:ring-amber-500",
   neutral:

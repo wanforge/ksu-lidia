@@ -11,6 +11,7 @@ import {
   PiUserCirclePlusDuotone,
   PiClockCounterClockwiseDuotone,
   PiXBold,
+  PiWarningBold,
 } from "react-icons/pi";
 import EmptyState from "@/app/(hydrogen)/_components/empty-state";
 import { formatNumber } from "@/lib/format";
@@ -355,7 +356,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
             <div className="space-y-6">
               {memberDetail.isDeceased && (
                 <div className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-4 text-sm font-semibold text-red-800 dark:border-red-900/50 dark:bg-red-950/20 dark:text-red-300">
-                  <span>⚠️</span>
+                  <PiWarningBold className="h-5 w-5 shrink-0" />
                   <span>
                     Anggota ini telah dinyatakan Meninggal Dunia (Wafat). Semua
                     transaksi simpan-pinjam ditutup sementara untuk proses ahli
@@ -399,7 +400,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                     )}
                   </p>
                 </div>
-                <div className="rounded-lg border border-red-200 bg-red-700 p-4 text-white">
+                <div className="border-primary/30 bg-primary rounded-lg border p-4 text-white">
                   <p className="text-xs font-semibold uppercase tracking-wider text-red-100">
                     Total Simpanan
                   </p>
@@ -413,7 +414,6 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
               <div className="flex gap-2">
                 <Button
                   size="sm"
-                  className="bg-red-700 text-white hover:bg-red-800"
                   disabled={memberDetail.isDeceased}
                   onClick={() =>
                     setTxModal({
@@ -429,7 +429,6 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                 <Button
                   size="sm"
                   variant="primary-soft"
-                  className="border-red-700 text-red-700 hover:bg-red-50"
                   disabled={memberDetail.isDeceased}
                   onClick={() =>
                     setTxModal({
@@ -702,7 +701,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                               </p>
                               {m.isDeceased && (
                                 <span className="inline-flex rounded-md bg-red-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-red-800 dark:bg-red-950 dark:text-red-300">
-                                  Wafat ❌
+                                  Wafat
                                 </span>
                               )}
                             </div>
@@ -738,7 +737,6 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                             <Button
                               size="sm"
                               variant="primary-soft"
-                              className="border-red-700 text-red-700 hover:bg-red-50"
                               onClick={() => {
                                 setSelectedMemberId(m.id);
                                 setTab("detail");
@@ -748,7 +746,6 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                             </Button>
                             <Button
                               size="sm"
-                              className="bg-red-700 text-white hover:bg-red-800"
                               disabled={m.isDeceased}
                               onClick={() =>
                                 setTxModal({
@@ -918,12 +915,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                 >
                   Batal
                 </Button>
-                <Button
-                  type="submit"
-                  className="bg-red-700 text-white hover:bg-red-800"
-                >
-                  Catat Transaksi
-                </Button>
+                <Button type="submit">Catat Transaksi</Button>
               </div>
             </form>
           </div>
