@@ -10,7 +10,8 @@ import {
   updateProductSchema,
   stockAdjustmentSchema,
 } from "@/validators/ksulidia.schema";
-import { ProductTxType } from "@prisma/client";
+import { ProductTxType, AuditAction, AttachmentSource } from "@prisma/client";
+import { recordAuditLog } from "@/lib/audit";
 
 export type ProductActionState = {
   success: boolean;
@@ -104,6 +105,17 @@ export async function createProductAction(
           },
         });
       }
+
+      // Write Audit Log
+      await recordAuditLog(tx, {
+        actorId: session.user.id,
+        actorRole: session.user.role,
+        action: AuditAction.CREATE,
+        entityType: "Product",
+        entityId: product.id,
+        summary: `Menambahkan produk baru ke katalog: ${product.code} - ${product.name} (Stok awal: ${product.stock})`,
+        source: AttachmentSource.SYSTEM,
+      });
     });
 
     revalidatePath(routes.toko.produk);
@@ -172,7 +184,7 @@ export async function updateProductAction(
       };
     }
 
-    await prisma.product.update({
+    const product = await prisma.product.update({
       where: { id: parsed.data.productId },
       data: {
         code: parsed.data.code,
@@ -181,6 +193,16 @@ export async function updateProductAction(
         purchasePrice: parsed.data.purchasePrice,
         sellingPrice: parsed.data.sellingPrice,
       },
+    });
+
+    await recordAuditLog(prisma, {
+      actorId: session.user.id,
+      actorRole: session.user.role,
+      action: AuditAction.UPDATE,
+      entityType: "Product",
+      entityId: product.id,
+      summary: `Memperbarui katalog produk: ${product.code} - ${product.name}`,
+      source: AttachmentSource.SYSTEM,
     });
 
     revalidatePath(routes.toko.produk);
@@ -271,6 +293,17 @@ export async function adjustProductStockAction(
               : product.sellingPrice,
           totalPrice: 0,
         },
+      });
+
+      // Write Audit Log
+      await recordAuditLog(tx, {
+        actorId: session.user.id,
+        actorRole: session.user.role,
+        action: AuditAction.UPDATE,
+        entityType: "Product",
+        entityId: product.id,
+        summary: `Menyesuaikan stok produk ${product.code} - ${product.name}: ${parsed.data.quantity >= 0 ? "+" : ""}${parsed.data.quantity} (Stok baru: ${newStock})`,
+        source: AttachmentSource.SYSTEM,
       });
     });
 

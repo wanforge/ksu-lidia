@@ -6,7 +6,8 @@ import { prisma } from "@/lib/prisma";
 import { ensureAuditContext } from "@/lib/audit-context";
 import { routes } from "@/config/routes";
 import { createProductTransactionSchema } from "@/validators/ksulidia.schema";
-import { ProductTxType } from "@prisma/client";
+import { ProductTxType, AuditAction, AttachmentSource } from "@prisma/client";
+import { recordAuditLog } from "@/lib/audit";
 
 export type TxActionState = {
   success: boolean;
@@ -120,6 +121,17 @@ export async function recordTransactionAction(
           },
         });
       }
+
+      // Write Audit Log
+      await recordAuditLog(tx, {
+        actorId: session.user.id,
+        actorRole: session.user.role,
+        action: AuditAction.CREATE,
+        entityType: "ProductTransaction",
+        entityId: trans.id,
+        summary: `Mencatat transaksi ${parsed.data.type === ProductTxType.SALE ? "Penjualan" : "Pembelian"} toko: Total Rp ${totalAmount.toLocaleString("id-ID")}`,
+        source: AttachmentSource.SYSTEM,
+      });
     });
 
     revalidatePath(routes.toko.transaksi);

@@ -9,7 +9,8 @@ import {
   createLoanSchema,
   payInstallmentSchema,
 } from "@/validators/ksulidia.schema";
-import { LoanStatus, InstallmentStatus } from "@prisma/client";
+import { LoanStatus, InstallmentStatus, AuditAction, AttachmentSource } from "@prisma/client";
+import { recordAuditLog } from "@/lib/audit";
 
 export type LoanActionState = {
   success: boolean;
@@ -116,6 +117,17 @@ export async function createLoanAction(
           },
         });
       }
+
+      // Write Audit Log
+      await recordAuditLog(tx, {
+        actorId: session.user.id,
+        actorRole: session.user.role,
+        action: AuditAction.CREATE,
+        entityType: "Loan",
+        entityId: loan.id,
+        summary: `Mencairkan pinjaman baru: Rp ${loanAmount.toLocaleString("id-ID")} untuk Anggota ID ${parsed.data.memberId} (Tenor: ${months} bulan)`,
+        source: AttachmentSource.SYSTEM,
+      });
     });
 
     revalidatePath(routes.simpanPinjam.pinjaman);
@@ -209,6 +221,17 @@ export async function payInstallmentAction(
           data: { status: LoanStatus.PAID },
         });
       }
+
+      // Write Audit Log
+      await recordAuditLog(tx, {
+        actorId: session.user.id,
+        actorRole: session.user.role,
+        action: AuditAction.UPDATE,
+        entityType: "LoanInstallment",
+        entityId: inst.id,
+        summary: `Mencatat pembayaran angsuran ke-${inst.monthNumber} untuk Pinjaman ID ${inst.loanId}: Total Rp ${totalPaid.toLocaleString("id-ID")}`,
+        source: AttachmentSource.SYSTEM,
+      });
     });
 
     revalidatePath(routes.simpanPinjam.pinjaman);

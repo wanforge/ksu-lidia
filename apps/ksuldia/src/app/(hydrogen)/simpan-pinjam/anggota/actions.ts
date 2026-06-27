@@ -10,7 +10,8 @@ import {
   updateMemberSchema,
   savingsTransactionSchema,
 } from "@/validators/ksulidia.schema";
-import { SavingsType, SavingsTxType } from "@prisma/client";
+import { SavingsType, SavingsTxType, AuditAction, AttachmentSource } from "@prisma/client";
+import { recordAuditLog } from "@/lib/audit";
 
 export type MemberActionState = {
   success: boolean;
@@ -99,6 +100,17 @@ export async function createMemberAction(
           balance: 0,
         },
       });
+
+      // Write Audit Log
+      await recordAuditLog(tx, {
+        actorId: session.user.id,
+        actorRole: session.user.role,
+        action: AuditAction.CREATE,
+        entityType: "Member",
+        entityId: member.id,
+        summary: `Menambahkan anggota baru: No. ${member.no} - ${member.name}`,
+        source: AttachmentSource.SYSTEM,
+      });
     });
 
     revalidatePath(routes.simpanPinjam.anggota);
@@ -146,13 +158,23 @@ export async function updateMemberAction(
   }
 
   try {
-    await prisma.member.update({
+    const member = await prisma.member.update({
       where: { id: parsed.data.memberId },
       data: {
         name: parsed.data.name,
         phone: parsed.data.phone,
         address: parsed.data.address,
       },
+    });
+
+    await recordAuditLog(prisma, {
+      actorId: session.user.id,
+      actorRole: session.user.role,
+      action: AuditAction.UPDATE,
+      entityType: "Member",
+      entityId: member.id,
+      summary: `Memperbarui data anggota: No. ${member.no} - ${member.name}`,
+      source: AttachmentSource.SYSTEM,
     });
 
     revalidatePath(routes.simpanPinjam.anggota);
@@ -241,7 +263,7 @@ export async function postSavingsTransactionAction(
       });
 
       // Create transaction log
-      await tx.savingsTransaction.create({
+      const txLog = await tx.savingsTransaction.create({
         data: {
           memberId: parsed.data.memberId,
           type: parsed.data.type,
@@ -254,6 +276,17 @@ export async function postSavingsTransactionAction(
               : "Penarikan tunai"),
           date: new Date(),
         },
+      });
+
+      // Write Audit Log
+      await recordAuditLog(tx, {
+        actorId: session.user.id,
+        actorRole: session.user.role,
+        action: AuditAction.CREATE,
+        entityType: "SavingsTransaction",
+        entityId: txLog.id,
+        summary: `${parsed.data.type === SavingsTxType.DEPOSIT ? "Setoran" : "Penarikan"} simpanan ${parsed.data.savingsType} sebesar Rp ${Number(parsed.data.amount).toLocaleString("id-ID")}`,
+        source: AttachmentSource.SYSTEM,
       });
     });
 
