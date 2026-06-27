@@ -26,10 +26,14 @@ type Hit = {
   subtitle?: string;
   href: string;
   group: "Halaman" | "Anggota" | "Produk";
-  /** Visual: either a named icon or initials for an avatar. */
   icon?: React.ReactNode;
   initials?: string;
 };
+
+function getFirstAZLetter(text: string): string {
+  const match = text.match(/[a-zA-Z]/);
+  return match ? match[0].toUpperCase() : "K";
+}
 
 /** Distinct icon per destination so the page list isn't a wall of clones. */
 const PAGE_ICONS: Record<string, React.ReactNode> = {
@@ -109,12 +113,7 @@ export default function SearchList({ onClose }: { onClose?: () => void }) {
             subtitle: m.subtitle,
             href: m.href,
             group: "Anggota",
-            initials: m.title
-              .split(" ")
-              .map((n) => n[0])
-              .slice(0, 2)
-              .join("")
-              .toUpperCase(),
+            initials: getFirstAZLetter(m.title),
           }));
           const productHits: Hit[] = (data.products || []).map((p) => ({
             id: p.id,
@@ -278,6 +277,17 @@ export default function SearchList({ onClose }: { onClose?: () => void }) {
                     flatIndex += 1;
                     const index = flatIndex;
                     const isActive = index === active;
+                    const getInitialsClass = () => {
+                      if (isActive) return "bg-primary text-primary-foreground";
+                      if (hit.group === "Halaman")
+                        return "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-100";
+                      if (hit.group === "Anggota")
+                        return "bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-200";
+                      if (hit.group === "Produk")
+                        return "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-200";
+                      return "bg-gray-100 text-gray-800";
+                    };
+
                     return (
                       <Link
                         key={hit.id}
@@ -291,25 +301,21 @@ export default function SearchList({ onClose }: { onClose?: () => void }) {
                             : "text-gray-800 hover:bg-gray-100"
                         }`}
                       >
-                        {hit.initials ? (
+                        {hit.icon ? (
                           <span
-                            className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-xs font-bold transition ${
-                              isActive
-                                ? "bg-primary text-primary-foreground"
-                                : "bg-red-100 text-red-800 group-hover:bg-red-200"
-                            }`}
-                          >
-                            {hit.initials}
-                          </span>
-                        ) : (
-                          <span
-                            className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition ${
+                            className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-all ${
                               isActive
                                 ? "border-primary/30 text-primary bg-white"
                                 : "border-gray-200 bg-gray-50 text-gray-500 group-hover:border-gray-300 group-hover:text-gray-700"
                             }`}
                           >
                             {hit.icon}
+                          </span>
+                        ) : (
+                          <span
+                            className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold transition-all ${getInitialsClass()}`}
+                          >
+                            {hit.initials}
                           </span>
                         )}
                         <span className="min-w-0 flex-1">

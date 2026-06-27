@@ -8,6 +8,9 @@ export type SearchHit = {
   title: string;
   subtitle?: string;
   href: string;
+  isDeceased?: boolean;
+  activeLoanAmount?: number;
+  penaltyAmount?: number;
 };
 
 export type SearchResponse = {
@@ -40,6 +43,13 @@ export async function GET(request: Request): Promise<Response> {
       ],
       deletedAt: null,
     },
+    include: {
+      loans: {
+        include: {
+          installments: true,
+        },
+      },
+    },
     take: 5,
   });
 
@@ -52,17 +62,56 @@ export async function GET(request: Request): Promise<Response> {
     take: 5,
   });
 
-  const memberHits: SearchHit[] = members.map((m) => ({
-    id: `member-${m.id}`,
-    title: `${m.name} (No: ${m.no})`,
-    subtitle: m.phone || "Tidak ada nomor telp",
-    href: `/simpan-pinjam/anggota?search=${encodeURIComponent(m.name)}`,
-  }));
+  const memberHits: SearchHit[] = members.map((m) => {
+    const activeLoans = m.loans.filter((l) => l.status === "ACTIVE");
+    const activeLoanAmount = activeLoans.reduce(
+      (sum, l) => sum + Number(l.amount),
+      0
+    );
+
+    const penaltyAmount = activeLoans.reduce((sum, l) => {
+      const lateCount = l.installments.filter((inst) => {
+        return inst.status === "UNPAID" && new Date(inst.dueDate) < new Date();
+      }).length;
+      const principalInstallment = Number(l.amount) / l.tenor;
+      const latePenaltyTotal = lateCount * principalInstallment * 0.05;
+      return sum + latePenaltyTotal;
+    }, 0);
+
+    // Build rich status badges in subtitle
+    const statusParts: string[] = [];
+    if (m.isDeceased) {
+      statusParts.push("MENINGGAL ❌");
+    } else {
+      statusParts.push("Aktif ✅");
+    }
+    if (activeLoanAmount > 0) {
+      statusParts.push(
+        `Pinjaman Aktif: Rp ${activeLoanAmount.toLocaleString("id-ID")}`
+      );
+    }
+    if (penaltyAmount > 0) {
+      statusParts.push(
+        `Denda Late: Rp ${penaltyAmount.toLocaleString("id-ID")} ⚠️`
+      );
+    }
+
+    return {
+      id: `member-${m.id}`,
+      title: `${m.name} (No: ${m.no})`,
+      subtitle:
+        statusParts.join(" | ") + (m.phone ? ` | Telp: ${m.phone}` : ""),
+      href: `/simpan-pinjam/anggota?search=${encodeURIComponent(m.name)}`,
+      isDeceased: m.isDeceased,
+      activeLoanAmount,
+      penaltyAmount,
+    };
+  });
 
   const productHits: SearchHit[] = products.map((p) => ({
     id: `product-${p.id}`,
     title: p.name,
-    subtitle: `Kode: ${p.code} | Stok: ${p.stock}`,
+    subtitle: `Kode: ${p.code} | Kategori: ${p.category || "Umum"} | Stok: ${p.stock}`,
     href: `/toko/produk?search=${encodeURIComponent(p.name)}`,
   }));
 

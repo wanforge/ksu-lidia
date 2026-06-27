@@ -51,16 +51,19 @@ export async function seedKsuLidiaData(prisma: PrismaClient) {
 
   for (const m of extractedMembers) {
     // 1. Create or update Member
+    const isDeceased = [10, 50, 120, 200, 250].includes(m.no);
     const member = await prisma.member.upsert({
       where: { no: m.no },
       update: {
         name: m.name,
-        isActive: true,
+        isActive: !isDeceased,
+        isDeceased,
       },
       create: {
         no: m.no,
         name: m.name,
-        isActive: true,
+        isActive: !isDeceased,
+        isDeceased,
       },
     });
     memberCount++;

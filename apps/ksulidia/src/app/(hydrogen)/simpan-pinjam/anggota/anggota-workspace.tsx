@@ -49,6 +49,7 @@ type MemberWithAccounts = {
   phone: string | null;
   address: string | null;
   isActive: boolean;
+  isDeceased: boolean;
   savingsAccounts: SavingsAccount[];
   loans: ActiveLoan[];
 };
@@ -352,6 +353,17 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
             </div>
           ) : (
             <div className="space-y-6">
+              {memberDetail.isDeceased && (
+                <div className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-4 text-sm font-semibold text-red-800 dark:border-red-900/50 dark:bg-red-950/20 dark:text-red-300">
+                  <span>⚠️</span>
+                  <span>
+                    Anggota ini telah dinyatakan Meninggal Dunia (Wafat). Semua
+                    transaksi simpan-pinjam ditutup sementara untuk proses ahli
+                    waris.
+                  </span>
+                </div>
+              )}
+
               {/* Member Summary Header */}
               <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
                 <div className="rounded-lg border border-red-100 bg-red-50/50 p-4">
@@ -402,6 +414,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                 <Button
                   size="sm"
                   className="bg-red-700 text-white hover:bg-red-800"
+                  disabled={memberDetail.isDeceased}
                   onClick={() =>
                     setTxModal({
                       isOpen: true,
@@ -417,6 +430,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                   size="sm"
                   variant="primary-soft"
                   className="border-red-700 text-red-700 hover:bg-red-50"
+                  disabled={memberDetail.isDeceased}
                   onClick={() =>
                     setTxModal({
                       isOpen: true,
@@ -682,9 +696,16 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                             {m.no}
                           </td>
                           <td className="px-4 py-3">
-                            <p className="font-medium text-gray-900">
-                              {m.name}
-                            </p>
+                            <div className="flex items-center gap-2">
+                              <p className="font-medium text-gray-900">
+                                {m.name}
+                              </p>
+                              {m.isDeceased && (
+                                <span className="inline-flex rounded-md bg-red-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-red-800 dark:bg-red-950 dark:text-red-300">
+                                  Wafat ❌
+                                </span>
+                              )}
+                            </div>
                             {m.phone && (
                               <p className="text-xs text-gray-400">{m.phone}</p>
                             )}
@@ -728,6 +749,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                             <Button
                               size="sm"
                               className="bg-red-700 text-white hover:bg-red-800"
+                              disabled={m.isDeceased}
                               onClick={() =>
                                 setTxModal({
                                   isOpen: true,
@@ -742,6 +764,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                               size="sm"
                               variant="neutral"
                               className="border-amber-600 text-amber-700 hover:bg-amber-50"
+                              disabled={m.isDeceased}
                               onClick={() =>
                                 setTxModal({
                                   isOpen: true,

@@ -167,15 +167,16 @@ enum ProductTxType {
 }
 
 model Member {
-  id        String    @id @default(uuid(7))
-  no        Int       @unique
-  name      String
-  isActive  Boolean   @default(true)
-  phone     String?
-  address   String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
+  id         String    @id @default(uuid(7))
+  no         Int       @unique
+  name       String
+  isActive   Boolean   @default(true)
+  phone      String?
+  address    String?
+  isDeceased Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
 
   savingsAccounts     SavingsAccount[]
   savingsTransactions SavingsTransaction[]
