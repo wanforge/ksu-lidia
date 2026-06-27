@@ -209,48 +209,45 @@ export default async function Home() {
 
   return (
     <div className="flex w-full flex-col gap-7">
-      <section className="relative flex flex-col gap-4 overflow-hidden rounded-2xl border border-red-100 bg-gradient-to-br from-red-50/50 via-white to-red-50/10 p-7 text-gray-900 shadow-sm sm:p-8">
-        {/* Animated background orbs */}
-        <FloatingOrbs />
-        {/* Shimmer sweep */}
-        <ShimmerBar />
-
-        {/* Decorative mesh pattern */}
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, #fecaca 1.5px, transparent 0)`,
-            backgroundSize: "24px 24px",
-          }}
-        />
-
-        {/* Subtle red glow accent */}
-        <div className="pointer-events-none absolute -right-20 top-0 h-40 w-80 rounded-full bg-red-500/10 blur-3xl" />
+      <section className="relative flex flex-col gap-4 overflow-hidden rounded-2xl border border-primary-dark bg-gradient-to-br from-primary-default via-rose-900 to-slate-900 p-7 text-white shadow-xl sm:p-8">
+        <div className="absolute inset-0 z-0 overflow-hidden rounded-2xl">
+          {/* Subtle Noise Texture for premium feel */}
+          <div
+            className="pointer-events-none absolute inset-0 opacity-[0.1]"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 500 500' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+              backgroundSize: "200px",
+            }}
+          />
+          {/* Animated background orbs using existing FloatingOrbs but styled differently */}
+          <FloatingOrbs />
+          <ShimmerBar />
+        </div>
 
         <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-red-200 bg-red-50 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-red-800">
-                <PulseRing color="bg-red-600" />
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-white backdrop-blur-md">
+                <PulseRing color="bg-emerald-400" />
                 Sistem Aktif
               </span>
             </div>
 
-            <h1 className="text-2xl font-bold tracking-tight text-gray-950 md:text-3xl lg:text-4xl">
+            <h1 className="text-2xl font-bold tracking-tight text-white md:text-3xl lg:text-4xl shadow-sm">
               {greeting(now)}, {firstName ? firstName : "Rekan Kerja"}
             </h1>
 
-            <p className="max-w-xl text-sm leading-relaxed text-gray-600">
+            <p className="max-w-xl text-sm leading-relaxed text-white/90">
               {getMotivation(now)}
             </p>
           </div>
 
           <div className="flex flex-col items-end gap-2">
             <LiveClock
-              className="text-gray-600"
-              pillClassName="bg-red-50 text-red-850"
+              className="text-white/90"
+              pillClassName="bg-white/10 text-white border border-white/20 backdrop-blur-md"
             />
-            <p className="rounded-lg border border-red-200/60 bg-white px-3 py-1.5 text-[11px] font-semibold text-red-800 shadow-sm">
+            <p className="rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 text-[11px] font-semibold text-white shadow-sm backdrop-blur-md">
               KSU Lidia GKJ Manahan
             </p>
           </div>
@@ -258,16 +255,16 @@ export default async function Home() {
 
         {/* Quick summary chips */}
         <div className="relative z-10 mt-1 flex flex-wrap gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-red-100 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-sm">
-            <PiUsersDuotone className="h-3.5 w-3.5 text-red-600" />
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-amber-300/30 bg-amber-500/20 px-3 py-1.5 text-xs font-semibold text-amber-50 shadow-sm backdrop-blur-md">
+            <PiUsersDuotone className="h-3.5 w-3.5 text-amber-200" />
             {memberCount} Anggota
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-red-100 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-sm">
-            <PiHandshakeDuotone className="h-3.5 w-3.5 text-red-600" />
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-rose-300/30 bg-rose-500/20 px-3 py-1.5 text-xs font-semibold text-rose-50 shadow-sm backdrop-blur-md">
+            <PiHandshakeDuotone className="h-3.5 w-3.5 text-rose-200" />
             {activeLoanCount} Pinjaman Aktif
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-red-100 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-sm">
-            <PiCubeDuotone className="h-3.5 w-3.5 text-red-600" />
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-300/30 bg-emerald-500/20 px-3 py-1.5 text-xs font-semibold text-emerald-50 shadow-sm backdrop-blur-md">
+            <PiCubeDuotone className="h-3.5 w-3.5 text-emerald-200" />
             {productCount} Produk Toko
           </span>
         </div>

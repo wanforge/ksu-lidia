@@ -167,7 +167,6 @@ const SvgCaptchaField = forwardRef<CaptchaHandle>((_, ref) => {
           type="text"
           value={answer}
           onChange={(e) => setAnswer(e.target.value)}
-          placeholder="Ketik karakter"
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"

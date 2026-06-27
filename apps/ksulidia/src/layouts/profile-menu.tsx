@@ -151,11 +151,10 @@ function DropdownMenu() {
       </div>
       <div className="border-t border-gray-300 px-6 pb-6 pt-5">
         <Button
-          className="flex h-auto w-full items-center justify-start gap-2.5 p-0 font-medium text-gray-700 outline-none focus-within:text-gray-600 hover:text-gray-900 focus-visible:ring-0"
-          variant="text"
+          className="w-full bg-red-700 text-white hover:bg-red-800"
           onClick={() => signOut({ callbackUrl: routes.signIn })}
         >
-          <PiSignOutBold className="h-4.5 w-4.5 text-gray-500 group-hover:text-gray-900" />
+          <PiSignOutBold className="mr-2 h-4.5 w-4.5" />
           Keluar
         </Button>
       </div>
