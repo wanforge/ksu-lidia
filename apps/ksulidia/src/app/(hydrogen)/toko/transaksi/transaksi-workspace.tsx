@@ -10,6 +10,7 @@ import {
   PiTrashDuotone,
   PiCaretDownBold,
   PiCaretUpBold,
+  PiPrinterDuotone,
 } from "react-icons/pi";
 import EmptyState from "@/app/(hydrogen)/_components/empty-state";
 import { formatNumber } from "@/lib/format";
@@ -23,6 +24,7 @@ import {
   TableControls,
   SortableHeader,
 } from "@/app/(hydrogen)/_components/table-controls";
+import { PrintStrukModal } from "./print-struk-modal";
 
 type TxItem = {
   id: string;
@@ -73,6 +75,15 @@ export default function TransaksiWorkspace({
   const [tab, setTab] = useState<"list" | "sale" | "purchase">("list");
   const [query, setQuery] = useState("");
   const [expandedTxId, setExpandedTxId] = useState<string | null>(null);
+
+  // Print Struk Modal
+  const [strukModal, setStrukModal] = useState<{
+    isOpen: boolean;
+    transaction: any | null;
+  }>({
+    isOpen: false,
+    transaction: null,
+  });
 
   // Cart/Basket State
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -691,10 +702,22 @@ export default function TransaksiWorkspace({
                   if (!tx) return null;
                   return (
                     <div className="animate-in fade-in slide-in-from-top-1 m-4 rounded-md border border-gray-200 bg-gray-50 p-4 duration-200">
-                      <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-gray-400">
-                        Rincian Item Transaksi - {tx.notes || "Umum"} (
-                        {tx.dateFormatted})
-                      </h4>
+                      <div className="mb-4 flex items-center justify-between border-b border-gray-200 pb-2">
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400">
+                          Rincian Item Transaksi - {tx.notes || "Umum"} (
+                          {tx.dateFormatted})
+                        </h4>
+                        <Button
+                          size="sm"
+                          variant="neutral"
+                          onClick={() =>
+                            setStrukModal({ isOpen: true, transaction: tx })
+                          }
+                        >
+                          <PiPrinterDuotone className="mr-2 h-4 w-4" />
+                          Cetak Struk
+                        </Button>
+                      </div>
                       <div className="space-y-2">
                         {tx.items.map((item) => (
                           <div
@@ -752,6 +775,13 @@ export default function TransaksiWorkspace({
           )}
         </div>
       )}
+
+      {/* Print Struk Modal */}
+      <PrintStrukModal
+        isOpen={strukModal.isOpen}
+        transaction={strukModal.transaction}
+        onClose={() => setStrukModal({ isOpen: false, transaction: null })}
+      />
     </div>
   );
 }

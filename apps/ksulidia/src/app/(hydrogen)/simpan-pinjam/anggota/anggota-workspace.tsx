@@ -14,6 +14,8 @@ import {
   PiXBold,
   PiWarningBold,
   PiPencilDuotone,
+  PiIdentificationCardDuotone,
+  PiPrinterDuotone,
 } from "react-icons/pi";
 import EmptyState from "@/app/(hydrogen)/_components/empty-state";
 import { formatNumber } from "@/lib/format";
@@ -36,6 +38,8 @@ import { DataTableFilters } from "@/components/ui/table/DataTableFilters";
 import { TableActionButton } from "@/components/ui/table/TableActionButton";
 import { DateInput } from "@/components/ui/form/DateInput";
 import { SAVINGS_TYPES } from "@/lib/constants";
+import { PrintIdCardModal } from "./print-id-card-modal";
+import { PrintKwitansiModal } from "./print-kwitansi-modal";
 
 type SavingsAccount = {
   id: string;
@@ -105,6 +109,26 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
     member: MemberWithAccounts | null;
   }>({
     isOpen: false,
+    member: null,
+  });
+
+  // Print ID Card Modal
+  const [printModal, setPrintModal] = useState<{
+    isOpen: boolean;
+    member: MemberWithAccounts | null;
+  }>({
+    isOpen: false,
+    member: null,
+  });
+
+  // Print Kwitansi Modal
+  const [kwitansiModal, setKwitansiModal] = useState<{
+    isOpen: boolean;
+    transaction: any | null;
+    member: MemberWithAccounts | null;
+  }>({
+    isOpen: false,
+    transaction: null,
     member: null,
   });
 
@@ -592,6 +616,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                             onSort={txTable.handleSort}
                           />
                         </Table.Head>
+                        <Table.Head>Aksi</Table.Head>
                       </Table.Row>
                     </Table.Header>
                     <Table.Body>
@@ -636,6 +661,20 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                               {formatNumber(Number(tx.amount))}
                             </Table.Cell>
                             <Table.Cell>{tx.description || "-"}</Table.Cell>
+                            <Table.Cell>
+                              <TableActionButton
+                                icon={PiPrinterDuotone}
+                                label="Cetak"
+                                variant="neutral"
+                                onClick={() => {
+                                  setKwitansiModal({
+                                    isOpen: true,
+                                    transaction: tx,
+                                    member: memberDetail,
+                                  });
+                                }}
+                              />
+                            </Table.Cell>
                           </Table.Row>
                         ))
                       )}
@@ -811,6 +850,14 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                               variant="neutral"
                               onClick={() => {
                                 setEditModal({ isOpen: true, member: m });
+                              }}
+                            />
+                            <TableActionButton
+                              icon={PiIdentificationCardDuotone}
+                              label="ID Card"
+                              variant="neutral"
+                              onClick={() => {
+                                setPrintModal({ isOpen: true, member: m });
                               }}
                             />
                             <TableActionButton
@@ -1090,6 +1137,23 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
           </div>
         </div>
       )}
+
+      {/* Print ID Card Modal */}
+      <PrintIdCardModal
+        isOpen={printModal.isOpen}
+        member={printModal.member}
+        onClose={() => setPrintModal({ isOpen: false, member: null })}
+      />
+
+      {/* Print Kwitansi Modal */}
+      <PrintKwitansiModal
+        isOpen={kwitansiModal.isOpen}
+        member={kwitansiModal.member}
+        transaction={kwitansiModal.transaction}
+        onClose={() =>
+          setKwitansiModal({ isOpen: false, member: null, transaction: null })
+        }
+      />
     </div>
   );
 }

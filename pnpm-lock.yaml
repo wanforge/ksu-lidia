@@ -1220,6 +1220,9 @@ importers:
       react-player:
         specifier: ^2.16.0
         version: 2.16.0(react@19.0.0)
+      react-qr-code:
+        specifier: ^2.2.0
+        version: 2.2.0(react@19.0.0)
       react-quill-new:
         specifier: ^3.4.6
         version: 3.4.6(quill-delta@5.1.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -6020,6 +6023,9 @@ packages:
   pure-rand@6.1.0:
     resolution: {integrity: sha512-bVWawvoZoBYpp6yIoQtQXHZjmz35RSVHnUOTefl8Vcjr8snTPY1wnpSPMWekcFwbxI6gtmT7rSYPFvz71ldiOA==}
 
+  qrcode-generator@2.0.4:
+    resolution: {integrity: sha512-mZSiP6RnbHl4xL2Ap5HfkjLnmxfKcPWpWe/c+5XxCuetEenqmNFf1FH/ftXPCtFG5/TDobjsjz6sSNL0Sr8Z9g==}
+
   qrcode.react@4.2.0:
     resolution: {integrity: sha512-QpgqWi8rD9DsS9EP3z7BT+5lY5SFhsqGjpgW5DY/i3mK4M9DTBNz3ErMi8BWYEfI3L0d8GIbGmcdFAS1uIRGjA==}
     peerDependencies:
@@ -6231,6 +6237,11 @@ packages:
 
   react-promise-suspense@0.3.4:
     resolution: {integrity: sha512-I42jl7L3Ze6kZaq+7zXWSunBa3b1on5yfvUW6Eo/3fFOj6dZ5Bqmcd264nJbTK/gn1HjjILAjSwnZbV4RpSaNQ==}
+
+  react-qr-code@2.2.0:
+    resolution: {integrity: sha512-e5nS0UUN22K3Nf8KBRUzemfdJ6OmnN5w+kbnj1lvJaol9RyVRFeGl05bCkxSN2ZegbLxjjYjX1+mmAoX9+fAhw==}
+    peerDependencies:
+      react: '*'
 
   react-quill-new@3.4.6:
     resolution: {integrity: sha512-S2kEAwoKRo+xUIAEpb94fwiPe2QU3FmwIfQ+7Lkchf+izPa2nRu1mr4i4QxyVYg8TjHDryDUiOEYZuFEV45QFA==}
@@ -11633,6 +11644,8 @@ snapshots:
 
   pure-rand@6.1.0: {}
 
+  qrcode-generator@2.0.4: {}
+
   qrcode.react@4.2.0(react@19.0.0):
     dependencies:
       react: 19.0.0
@@ -11909,6 +11922,12 @@ snapshots:
   react-promise-suspense@0.3.4:
     dependencies:
       fast-deep-equal: 2.0.1
+
+  react-qr-code@2.2.0(react@19.0.0):
+    dependencies:
+      prop-types: 15.8.1
+      qrcode-generator: 2.0.4
+      react: 19.0.0
 
   react-quill-new@3.4.6(quill-delta@5.1.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
