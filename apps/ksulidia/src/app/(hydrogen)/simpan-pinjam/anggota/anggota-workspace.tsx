@@ -13,6 +13,7 @@ import {
   PiClockCounterClockwiseDuotone,
   PiXBold,
   PiWarningBold,
+  PiPencilDuotone,
 } from "react-icons/pi";
 import EmptyState from "@/app/(hydrogen)/_components/empty-state";
 import { formatNumber } from "@/lib/format";
@@ -98,6 +99,15 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
     type: SavingsTxType.DEPOSIT,
   });
 
+  // Edit Modal
+  const [editModal, setEditModal] = useState<{
+    isOpen: boolean;
+    member: MemberWithAccounts | null;
+  }>({
+    isOpen: false,
+    member: null,
+  });
+
   // Action States
   const [createState, dispatchCreate] = useActionState<
     MemberActionState,
@@ -109,9 +119,18 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
     { success: false, message: "" }
   );
 
+  const [updateState, dispatchUpdate] = useActionState<
+    MemberActionState,
+    FormData
+  >(updateMemberAction, { success: false, message: "" });
+
   // Auto handle toast & reload
   useActionFeedback(createState, () => {
     setTab("list");
+  });
+
+  useActionFeedback(updateState, () => {
+    setEditModal({ isOpen: false, member: null });
   });
 
   useActionFeedback(txState, () => {
@@ -222,8 +241,8 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
         label: "Jenis Mutasi",
         type: "select",
         options: [
-          { label: "Setoran", value: "DEPOSIT" },
-          { label: "Penarikan", value: "WITHDRAWAL" },
+          { label: "Setoran", value: SavingsTxType.DEPOSIT },
+          { label: "Penarikan", value: SavingsTxType.WITHDRAWAL },
         ],
       },
       {
@@ -787,6 +806,14 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                               }}
                             />
                             <TableActionButton
+                              icon={PiPencilDuotone}
+                              label="Edit"
+                              variant="neutral"
+                              onClick={() => {
+                                setEditModal({ isOpen: true, member: m });
+                              }}
+                            />
+                            <TableActionButton
                               icon={PiArrowDownRightDuotone}
                               label="Setor"
                               variant="primary"
@@ -963,6 +990,97 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                   Batal
                 </Button>
                 <Button type="submit">Catat Transaksi</Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Member Modal */}
+      {editModal.isOpen && editModal.member && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="relative w-full max-w-xl rounded-lg border border-gray-200 bg-white p-6 shadow-xl">
+            <button
+              onClick={() => setEditModal({ isOpen: false, member: null })}
+              className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
+            >
+              <PiXBold className="h-5 w-5" />
+            </button>
+
+            <h3 className="mb-4 text-lg font-bold text-gray-900">
+              Edit Data Anggota
+            </h3>
+
+            <form action={dispatchUpdate} className="space-y-4">
+              <input type="hidden" name="memberId" value={editModal.member.id} />
+              
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Nomor Anggota / RAT
+                </label>
+                <input
+                  type="number"
+                  name="no"
+                  disabled
+                  defaultValue={editModal.member.no}
+                  className="w-full rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-sm text-gray-500 cursor-not-allowed"
+                />
+                <p className="mt-1 text-xs text-gray-500">
+                  Nomor anggota tidak dapat diubah.
+                </p>
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Nama Lengkap
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  required
+                  defaultValue={editModal.member.name}
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
+                />
+                {updateState.errors?.name && (
+                  <p className="mt-1 text-xs text-red-600">
+                    {updateState.errors.name[0]}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Nomor Telepon / WhatsApp
+                </label>
+                <input
+                  type="tel"
+                  name="phone"
+                  defaultValue={editModal.member.phone || ""}
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Alamat Lengkap
+                </label>
+                <textarea
+                  name="address"
+                  rows={3}
+                  defaultValue={editModal.member.address || ""}
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
+                />
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2">
+                <Button
+                  type="button"
+                  variant="neutral"
+                  onClick={() => setEditModal({ isOpen: false, member: null })}
+                >
+                  Batal
+                </Button>
+                <Button type="submit">Simpan Perubahan</Button>
               </div>
             </form>
           </div>

@@ -27,7 +27,7 @@ import {
   PiChartLineUpDuotone,
   PiShieldCheckDuotone,
 } from "react-icons/pi";
-import { SAVINGS_TYPES, LOAN_STATUS } from "@/lib/constants";
+import { SAVINGS_TYPES, LOAN_STATUS, SAVINGS_TX_TYPES } from "@/lib/constants";
 import {
   StaggerContainer,
   FadeUp,
@@ -565,7 +565,7 @@ export default async function Home() {
                         tx.savingsType
                       )}`}
                     >
-                      {tx.type === "DEPOSIT" ? "+" : "−"} Rp{" "}
+                      {tx.type === SAVINGS_TX_TYPES.DEPOSIT ? "+" : "−"} Rp{" "}
                       {formatNumber(Number(tx.amount))}
                     </span>
                   </ActivityItem>

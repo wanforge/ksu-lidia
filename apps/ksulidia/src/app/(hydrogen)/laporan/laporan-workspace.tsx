@@ -10,7 +10,7 @@ import {
   PiMagnifyingGlassBold,
 } from "react-icons/pi";
 import { formatNumber } from "@/lib/format";
-import { SAVINGS_TYPES, INSTALLMENT_STATUS } from "@/lib/constants";
+import { SAVINGS_TYPES, INSTALLMENT_STATUS, SAVINGS_TX_TYPES } from "@/lib/constants";
 import { Table } from "rizzui";
 
 type Member = {
@@ -572,7 +572,7 @@ export default function LaporanWorkspace({
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {filteredCashBook.map((t) => {
-                  const isDeposit = t.type === "DEPOSIT";
+                  const isDeposit = t.type === SAVINGS_TX_TYPES.DEPOSIT;
                   return (
                     <tr key={t.id} className="transition hover:bg-gray-50/70">
                       <td className="px-6 py-4 text-gray-600">

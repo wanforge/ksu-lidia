@@ -5,6 +5,8 @@ import {
   LoanStatus,
   InstallmentStatus,
   ProductTxType,
+  CashEntity,
+  CashTxType,
 } from "@prisma/client";
 
 export const createMemberSchema = z.object({
@@ -99,4 +101,12 @@ export const createProductTransactionSchema = z.object({
   items: z
     .array(createProductTransactionItemSchema)
     .min(1, "Minimal pilih 1 item"),
+});
+
+export const cashTransactionSchema = z.object({
+  entity: z.nativeEnum(CashEntity),
+  type: z.nativeEnum(CashTxType),
+  amount: z.coerce.number().positive("Nominal harus bernilai positif"),
+  description: z.string().min(3, "Keterangan minimal 3 karakter"),
+  referenceNo: z.string().optional(),
 });
