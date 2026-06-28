@@ -115,6 +115,56 @@ export default async function StatistikPage() {
 
   const chartData = Object.values(monthlyMap);
 
+  // 5. Fetch Cash Transactions
+  const cashTx = await prisma.cashTransaction.findMany();
+  
+  // Calculate monthly cash in and cash out
+  const cashMonthlyMap: Record<
+    number,
+    { monthName: string; cashIn: number; cashOut: number }
+  > = {
+    0: { monthName: "Jan", cashIn: 0, cashOut: 0 },
+    1: { monthName: "Feb", cashIn: 0, cashOut: 0 },
+    2: { monthName: "Mar", cashIn: 0, cashOut: 0 },
+    3: { monthName: "Apr", cashIn: 0, cashOut: 0 },
+    4: { monthName: "Mei", cashIn: 0, cashOut: 0 },
+    5: { monthName: "Jun", cashIn: 0, cashOut: 0 },
+    6: { monthName: "Jul", cashIn: 0, cashOut: 0 },
+    7: { monthName: "Agt", cashIn: 0, cashOut: 0 },
+    8: { monthName: "Sep", cashIn: 0, cashOut: 0 },
+    9: { monthName: "Okt", cashIn: 0, cashOut: 0 },
+    10: { monthName: "Nov", cashIn: 0, cashOut: 0 },
+    11: { monthName: "Des", cashIn: 0, cashOut: 0 },
+  };
+
+  cashTx.forEach((tx) => {
+    const date = new Date(tx.date);
+    const month = date.getMonth();
+    if (month >= 0 && month <= 11) {
+      const amt = Number(tx.amount) || 0;
+      if (tx.type === "IN") {
+        cashMonthlyMap[month].cashIn += amt;
+      } else if (tx.type === "OUT") {
+        cashMonthlyMap[month].cashOut += amt;
+      }
+    }
+  });
+
+  // Take only until current month to avoid flatlines for future months, but since seed has all year maybe it's fine.
+  const cashFlowData = Object.values(cashMonthlyMap).filter(m => m.cashIn > 0 || m.cashOut > 0 || m.monthName === "Jan");
+
+  // 6. Fetch Financial Reports
+  const financialReports = await prisma.financialReport.findMany();
+  
+  const financialReportData = financialReports.map(fr => ({
+    id: fr.id,
+    periodDate: fr.periodDate,
+    entity: fr.entity,
+    reportType: fr.reportType,
+    category: fr.category,
+    amount: Number(fr.amount) || 0
+  }));
+
   return (
     <StatistikDashboard
       metrics={{
@@ -131,6 +181,8 @@ export default async function StatistikPage() {
         loanCount: loans.length,
       }}
       chartData={chartData}
+      cashFlowData={cashFlowData}
+      financialReportData={financialReportData}
     />
   );
 }

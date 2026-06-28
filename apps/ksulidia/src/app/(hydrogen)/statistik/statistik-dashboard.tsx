@@ -49,12 +49,29 @@ type ChartDataPoint = {
   purchases: number;
 };
 
+type CashFlowDataPoint = {
+  monthName: string;
+  cashIn: number;
+  cashOut: number;
+};
+
+type FinancialReportDataPoint = {
+  id: string;
+  periodDate: Date;
+  entity: string;
+  reportType: string;
+  category: string;
+  amount: number;
+};
+
 type Props = {
   metrics: Metrics;
   chartData: ChartDataPoint[];
+  cashFlowData: CashFlowDataPoint[];
+  financialReportData: FinancialReportDataPoint[];
 };
 
-export default function StatistikDashboard({ metrics, chartData }: Props) {
+export default function StatistikDashboard({ metrics, chartData, cashFlowData, financialReportData }: Props) {
   const router = useRouter();
 
   // Format to IDR Rupiah currency format
@@ -83,6 +100,23 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
       Pinjaman: metrics.totalLoanRemaining,
     },
   ];
+
+  // Prepare Financial Report Pie Chart Data (e.g. Asset distribution)
+  const reportPieData = React.useMemo(() => {
+    // just a simple grouping by category for visualization
+    const grouped = financialReportData.reduce((acc, curr) => {
+      if (!acc[curr.category]) acc[curr.category] = 0;
+      acc[curr.category] += curr.amount;
+      return acc;
+    }, {} as Record<string, number>);
+
+    const colors = ["#0284c7", "#059669", "#d97706", "#dc2626", "#7c3aed", "#4f46e5"];
+    return Object.entries(grouped).map(([name, value], i) => ({
+      name,
+      value,
+      color: colors[i % colors.length]
+    })).filter(x => x.value > 0);
+  }, [financialReportData]);
 
   return (
     <div className="flex w-full flex-col gap-8">
@@ -486,6 +520,159 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
           </div>
         </div>
 
+        {/* Financial Reports Pie Chart */}
+        <div className="flex flex-col justify-between rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md lg:col-span-2">
+          <div>
+            <h3 className="mb-2 text-lg font-bold text-gray-950">
+              Ringkasan Laporan Keuangan
+            </h3>
+            <p className="mb-4 text-sm text-gray-500">
+              Distribusi saldo berdasarkan kategori laporan keuangan.
+            </p>
+          </div>
+          <div className="flex h-[260px] w-full items-center justify-center">
+            {reportPieData.length === 0 ? (
+               <div className="text-gray-400">Belum ada data laporan keuangan</div>
+            ) : (
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={reportPieData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={70}
+                  outerRadius={95}
+                  paddingAngle={5}
+                  dataKey="value"
+                  stroke="none"
+                >
+                  {reportPieData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip
+                  formatter={(value: any) => [formatIDR(Number(value)), ""]}
+                  contentStyle={{
+                    borderRadius: "12px",
+                    border: "none",
+                    boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
+                    fontWeight: 500,
+                  }}
+                  itemStyle={{ color: "#111827" }}
+                />
+                <Legend
+                  iconType="circle"
+                  layout="vertical"
+                  verticalAlign="middle"
+                  align="right"
+                  wrapperStyle={{ fontSize: 12 }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Cash Flow Row */}
+      <div className="grid grid-cols-1 gap-6">
+        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md">
+          <div className="mb-6 flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-bold text-gray-950">
+                Arus Kas (Cash Flow)
+              </h3>
+              <p className="mt-1 text-sm text-gray-500">
+                Perbandingan Kas Masuk (Debit) dan Kas Keluar (Kredit) bulanan.
+              </p>
+            </div>
+          </div>
+          <div className="h-80 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart
+                data={cashFlowData}
+                margin={{ top: 10, right: 10, left: 10, bottom: 0 }}
+              >
+                <defs>
+                  <linearGradient id="cashInGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#059669" stopOpacity={0.2} />
+                    <stop offset="95%" stopColor="#059669" stopOpacity={0} />
+                  </linearGradient>
+                  <linearGradient id="cashOutGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#dc2626" stopOpacity={0.2} />
+                    <stop offset="95%" stopColor="#dc2626" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  vertical={false}
+                  stroke="#f3f4f6"
+                />
+                <XAxis
+                  dataKey="monthName"
+                  stroke="#9ca3af"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                  dy={10}
+                />
+                <YAxis
+                  stroke="#9ca3af"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                  dx={-10}
+                  tickFormatter={(v) => `${(v / 1000000).toFixed(1)}jt`}
+                />
+                <Tooltip
+                  formatter={(value: any) => [formatIDR(Number(value)), ""]}
+                  contentStyle={{
+                    borderRadius: "12px",
+                    border: "1px solid #e5e7eb",
+                    boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
+                    fontWeight: 500,
+                  }}
+                  cursor={{
+                    stroke: "#9ca3af",
+                    strokeWidth: 2,
+                    strokeDasharray: "5 5",
+                  }}
+                />
+                <Legend
+                  iconType="circle"
+                  wrapperStyle={{
+                    fontSize: 13,
+                    fontWeight: 500,
+                    paddingTop: 15,
+                  }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="cashIn"
+                  name="Kas Masuk"
+                  stroke="#059669"
+                  strokeWidth={3}
+                  fillOpacity={1}
+                  fill="url(#cashInGrad)"
+                  activeDot={{ r: 6, strokeWidth: 0, fill: "#059669" }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="cashOut"
+                  name="Kas Keluar"
+                  stroke="#dc2626"
+                  strokeWidth={3}
+                  fillOpacity={1}
+                  fill="url(#cashOutGrad)"
+                  activeDot={{ r: 6, strokeWidth: 0, fill: "#dc2626" }}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6">
         {/* Top Products stock list */}
         <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md lg:col-span-2">
           <div className="mb-6 flex items-center justify-between">

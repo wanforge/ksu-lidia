@@ -25,6 +25,7 @@ import {
 } from "./actions";
 import { SavingsType, SavingsTxType } from "@prisma/client";
 import { Button } from "@/components/ui/button";
+import { Table } from "rizzui";
 import { useCustomTable, ColumnFilterConfig } from "@/lib/use-custom-table";
 import {
   TableControls,
@@ -522,10 +523,10 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                   />
                 </div>
                 <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-gray-200 text-sm">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                  <Table className="min-w-full">
+                    <Table.Header>
+                      <Table.Row>
+                        <Table.Head>
                           <SortableHeader
                             label="Tanggal"
                             sortKey="date"
@@ -533,8 +534,8 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                             activeDirection={txTable.sortConfig.direction}
                             onSort={txTable.handleSort}
                           />
-                        </th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        </Table.Head>
+                        <Table.Head>
                           <SortableHeader
                             label="Mutasi"
                             sortKey="type"
@@ -542,8 +543,8 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                             activeDirection={txTable.sortConfig.direction}
                             onSort={txTable.handleSort}
                           />
-                        </th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        </Table.Head>
+                        <Table.Head>
                           <SortableHeader
                             label="Simpanan"
                             sortKey="savingsType"
@@ -551,8 +552,8 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                             activeDirection={txTable.sortConfig.direction}
                             onSort={txTable.handleSort}
                           />
-                        </th>
-                        <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        </Table.Head>
+                        <Table.Head>
                           <SortableHeader
                             label="Jumlah"
                             sortKey="amount"
@@ -561,8 +562,8 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                             onSort={txTable.handleSort}
                             className="w-full justify-end"
                           />
-                        </th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        </Table.Head>
+                        <Table.Head>
                           <SortableHeader
                             label="Keterangan"
                             sortKey="description"
@@ -570,24 +571,24 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                             activeDirection={txTable.sortConfig.direction}
                             onSort={txTable.handleSort}
                           />
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-100">
+                        </Table.Head>
+                      </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
                       {txTable.paginatedItems.length === 0 ? (
-                        <tr>
-                          <td
+                        <Table.Row>
+                          <Table.Cell
                             colSpan={5}
                             className="px-4 py-8 text-center text-gray-400"
                           >
                             Belum ada riwayat transaksi simpanan.
-                          </td>
-                        </tr>
+                          </Table.Cell>
+                        </Table.Row>
                       ) : (
                         txTable.paginatedItems.map((tx: any) => (
-                          <tr key={tx.id} className="hover:bg-gray-50/50">
-                            <td className="px-4 py-3">{tx.formattedDate}</td>
-                            <td className="px-4 py-3">
+                          <Table.Row key={tx.id} className="hover:bg-gray-50/50">
+                            <Table.Cell>{tx.formattedDate}</Table.Cell>
+                            <Table.Cell>
                               <span
                                 className={`inline-flex rounded-md border px-2 py-0.5 text-xs font-semibold ${
                                   tx.type === SavingsTxType.DEPOSIT
@@ -599,11 +600,11 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                                   ? "SETOR"
                                   : "TARIK"}
                               </span>
-                            </td>
-                            <td className="px-4 py-3 font-medium text-gray-900">
+                            </Table.Cell>
+                            <Table.Cell>
                               {tx.savingsType}
-                            </td>
-                            <td
+                            </Table.Cell>
+                            <Table.Cell
                               className={`px-4 py-3 text-right font-bold ${
                                 tx.type === SavingsTxType.DEPOSIT
                                   ? "text-green-600"
@@ -612,15 +613,15 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                             >
                               {tx.type === SavingsTxType.DEPOSIT ? "+" : "-"} Rp{" "}
                               {formatNumber(Number(tx.amount))}
-                            </td>
-                            <td className="px-4 py-3 text-gray-500">
+                            </Table.Cell>
+                            <Table.Cell>
                               {tx.description || "-"}
-                            </td>
-                          </tr>
+                            </Table.Cell>
+                          </Table.Row>
                         ))
                       )}
-                    </tbody>
-                  </table>
+                    </Table.Body>
+                  </Table>
                 </div>
                 {txTable.totalItems > 0 && (
                   <TableControls
@@ -667,10 +668,10 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
           ) : (
             <>
               <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200 text-sm">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                <Table className="min-w-full">
+                  <Table.Header>
+                    <Table.Row>
+                      <Table.Head>
                         <SortableHeader
                           label="No. RAT"
                           sortKey="no"
@@ -678,8 +679,8 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                           activeDirection={table.sortConfig.direction}
                           onSort={table.handleSort}
                         />
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      </Table.Head>
+                      <Table.Head>
                         <SortableHeader
                           label="Nama Anggota"
                           sortKey="name"
@@ -687,8 +688,8 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                           activeDirection={table.sortConfig.direction}
                           onSort={table.handleSort}
                         />
-                      </th>
-                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      </Table.Head>
+                      <Table.Head>
                         <SortableHeader
                           label="Pokok"
                           sortKey="pokok"
@@ -697,8 +698,8 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                           onSort={table.handleSort}
                           className="w-full justify-end"
                         />
-                      </th>
-                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      </Table.Head>
+                      <Table.Head>
                         <SortableHeader
                           label="Wajib"
                           sortKey="wajib"
@@ -707,8 +708,8 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                           onSort={table.handleSort}
                           className="w-full justify-end"
                         />
-                      </th>
-                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      </Table.Head>
+                      <Table.Head>
                         <SortableHeader
                           label="Sukarela"
                           sortKey="sukarela"
@@ -717,8 +718,8 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                           onSort={table.handleSort}
                           className="w-full justify-end"
                         />
-                      </th>
-                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      </Table.Head>
+                      <Table.Head>
                         <SortableHeader
                           label="Total Simpanan"
                           sortKey="totalSavings"
@@ -727,24 +728,24 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                           onSort={table.handleSort}
                           className="w-full justify-end text-red-800"
                         />
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      </Table.Head>
+                      <Table.Head>
                         Pinjaman Aktif
-                      </th>
-                      <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      </Table.Head>
+                      <Table.Head>
                         Aksi
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100">
+                      </Table.Head>
+                    </Table.Row>
+                  </Table.Header>
+                  <Table.Body>
                     {table.paginatedItems.map((m) => {
                       const hasActiveLoan = m.loans.length > 0;
                       return (
-                        <tr key={m.id} className="hover:bg-gray-50/50">
-                          <td className="px-4 py-3 font-semibold text-gray-900">
+                        <Table.Row key={m.id} className="hover:bg-gray-50/50">
+                          <Table.Cell>
                             {m.no}
-                          </td>
-                          <td className="px-4 py-3">
+                          </Table.Cell>
+                          <Table.Cell>
                             <div className="flex items-center gap-2">
                               <p className="font-medium text-gray-900">
                                 {m.name}
@@ -758,20 +759,20 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                             {m.phone && (
                               <p className="text-xs text-gray-400">{m.phone}</p>
                             )}
-                          </td>
-                          <td className="px-4 py-3 text-right font-medium">
+                          </Table.Cell>
+                          <Table.Cell>
                             Rp {formatNumber(m.pokok)}
-                          </td>
-                          <td className="px-4 py-3 text-right font-medium">
+                          </Table.Cell>
+                          <Table.Cell>
                             Rp {formatNumber(m.wajib)}
-                          </td>
-                          <td className="px-4 py-3 text-right font-medium">
+                          </Table.Cell>
+                          <Table.Cell>
                             Rp {formatNumber(m.sukarela)}
-                          </td>
-                          <td className="bg-red-50/10 px-4 py-3 text-right font-bold text-red-800">
+                          </Table.Cell>
+                          <Table.Cell>
                             Rp {formatNumber(m.totalSavings)}
-                          </td>
-                          <td className="px-4 py-3 text-left">
+                          </Table.Cell>
+                          <Table.Cell>
                             {hasActiveLoan ? (
                               <div className="flex flex-col gap-0.5 text-left">
                                 <span className="font-semibold text-gray-900">
@@ -786,8 +787,8 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                                 Tidak ada
                               </span>
                             )}
-                          </td>
-                          <td className="flex items-center justify-center gap-1.5 px-4 py-3 text-center">
+                          </Table.Cell>
+                          <Table.Cell>
                             <TableActionButton
                               icon={PiBookOpenDuotone}
                               label="Mutasi"
@@ -823,12 +824,12 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                                 })
                               }
                             />
-                          </td>
-                        </tr>
+                          </Table.Cell>
+                        </Table.Row>
                       );
                     })}
-                  </tbody>
-                </table>
+                  </Table.Body>
+                </Table>
               </div>
               <TableControls
                 currentPage={table.currentPage}

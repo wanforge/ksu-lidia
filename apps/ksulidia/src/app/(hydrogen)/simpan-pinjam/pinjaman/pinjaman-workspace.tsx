@@ -20,6 +20,7 @@ import {
   LoanActionState,
 } from "./actions";
 import { Button } from "@/components/ui/button";
+import { Table } from "rizzui";
 import { useCustomTable } from "@/lib/use-custom-table";
 import {
   TableControls,
@@ -688,10 +689,10 @@ export default function PinjamanWorkspace({
                   </label>
                 </div>
                 <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-gray-200 text-sm">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                  <Table className="min-w-full">
+                    <Table.Header>
+                      <Table.Row>
+                        <Table.Head>
                           <SortableHeader
                             label="Bulan ke-"
                             sortKey="monthNumber"
@@ -699,8 +700,8 @@ export default function PinjamanWorkspace({
                             activeDirection={instTable.sortConfig.direction}
                             onSort={instTable.handleSort}
                           />
-                        </th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        </Table.Head>
+                        <Table.Head>
                           <SortableHeader
                             label="Jatuh Tempo"
                             sortKey="dueDate"
@@ -708,8 +709,8 @@ export default function PinjamanWorkspace({
                             activeDirection={instTable.sortConfig.direction}
                             onSort={instTable.handleSort}
                           />
-                        </th>
-                        <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        </Table.Head>
+                        <Table.Head>
                           <SortableHeader
                             label="Pokok"
                             sortKey="principalVal"
@@ -718,8 +719,8 @@ export default function PinjamanWorkspace({
                             onSort={instTable.handleSort}
                             className="w-full justify-end"
                           />
-                        </th>
-                        <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        </Table.Head>
+                        <Table.Head>
                           <SortableHeader
                             label="Bunga"
                             sortKey="interestVal"
@@ -728,8 +729,8 @@ export default function PinjamanWorkspace({
                             onSort={instTable.handleSort}
                             className="w-full justify-end"
                           />
-                        </th>
-                        <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        </Table.Head>
+                        <Table.Head>
                           <SortableHeader
                             label="Denda"
                             sortKey="penaltyVal"
@@ -738,8 +739,8 @@ export default function PinjamanWorkspace({
                             onSort={instTable.handleSort}
                             className="w-full justify-end"
                           />
-                        </th>
-                        <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        </Table.Head>
+                        <Table.Head>
                           <SortableHeader
                             label="Total Tagihan"
                             sortKey="totalVal"
@@ -748,42 +749,42 @@ export default function PinjamanWorkspace({
                             onSort={instTable.handleSort}
                             className="w-full justify-end text-red-800"
                           />
-                        </th>
-                        <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        </Table.Head>
+                        <Table.Head>
                           Status
-                        </th>
-                        <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        </Table.Head>
+                        <Table.Head>
                           Tanggal Bayar
-                        </th>
-                        <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        </Table.Head>
+                        <Table.Head>
                           Aksi
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-100">
+                        </Table.Head>
+                      </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
                       {instTable.paginatedItems.map((inst) => {
                         const isPaid = inst.status === "PAID";
                         return (
-                          <tr key={inst.id} className="hover:bg-gray-50/50">
-                            <td className="px-4 py-3 font-semibold text-gray-900">
+                          <Table.Row key={inst.id} className="hover:bg-gray-50/50">
+                            <Table.Cell>
                               {inst.monthNumber}
-                            </td>
-                            <td className="px-4 py-3">
+                            </Table.Cell>
+                            <Table.Cell>
                               {inst.dueDateFormatted}
-                            </td>
-                            <td className="px-4 py-3 text-right font-medium">
+                            </Table.Cell>
+                            <Table.Cell>
                               Rp {formatNumber(inst.principalVal)}
-                            </td>
-                            <td className="px-4 py-3 text-right font-medium">
+                            </Table.Cell>
+                            <Table.Cell>
                               Rp {formatNumber(inst.interestVal)}
-                            </td>
-                            <td className="px-4 py-3 text-right font-medium text-rose-700">
+                            </Table.Cell>
+                            <Table.Cell>
                               Rp {formatNumber(inst.penaltyVal)}
-                            </td>
-                            <td className="bg-red-50/5 px-4 py-3 text-right font-bold text-red-800">
+                            </Table.Cell>
+                            <Table.Cell>
                               Rp {formatNumber(inst.totalVal)}
-                            </td>
-                            <td className="px-4 py-3 text-center">
+                            </Table.Cell>
+                            <Table.Cell>
                               {isPaid ? (
                                 <span className="inline-flex rounded-md border border-green-200 bg-green-50 px-2.5 py-0.5 text-xs font-semibold text-green-800">
                                   LUNAS
@@ -793,11 +794,11 @@ export default function PinjamanWorkspace({
                                   BELUM BAYAR
                                 </span>
                               )}
-                            </td>
-                            <td className="px-4 py-3 text-center text-gray-500">
+                            </Table.Cell>
+                            <Table.Cell>
                               {inst.paidAtFormatted}
-                            </td>
-                            <td className="px-4 py-3 text-center">
+                            </Table.Cell>
+                            <Table.Cell>
                               {!isPaid && selectedLoan.status === "ACTIVE" ? (
                                 <Button
                                   size="sm"
@@ -811,12 +812,12 @@ export default function PinjamanWorkspace({
                               ) : (
                                 <span className="text-xs text-gray-400">-</span>
                               )}
-                            </td>
-                          </tr>
+                            </Table.Cell>
+                          </Table.Row>
                         );
                       })}
-                    </tbody>
-                  </table>
+                    </Table.Body>
+                  </Table>
                 </div>
                 {instTable.totalItems > 0 && (
                   <TableControls
@@ -886,10 +887,10 @@ export default function PinjamanWorkspace({
           ) : (
             <>
               <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200 text-sm">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                <Table className="min-w-full">
+                  <Table.Header>
+                    <Table.Row>
+                      <Table.Head>
                         <SortableHeader
                           label="Nama Anggota"
                           sortKey="memberName"
@@ -897,8 +898,8 @@ export default function PinjamanWorkspace({
                           activeDirection={table.sortConfig.direction}
                           onSort={table.handleSort}
                         />
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      </Table.Head>
+                      <Table.Head>
                         <SortableHeader
                           label="Tanggal Cair"
                           sortKey="dateDisbursed"
@@ -906,8 +907,8 @@ export default function PinjamanWorkspace({
                           activeDirection={table.sortConfig.direction}
                           onSort={table.handleSort}
                         />
-                      </th>
-                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      </Table.Head>
+                      <Table.Head>
                         <SortableHeader
                           label="Nilai Hutang"
                           sortKey="amountVal"
@@ -916,8 +917,8 @@ export default function PinjamanWorkspace({
                           onSort={table.handleSort}
                           className="w-full justify-end"
                         />
-                      </th>
-                      <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      </Table.Head>
+                      <Table.Head>
                         <SortableHeader
                           label="Tenor"
                           sortKey="tenor"
@@ -926,8 +927,8 @@ export default function PinjamanWorkspace({
                           onSort={table.handleSort}
                           className="w-full justify-center"
                         />
-                      </th>
-                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      </Table.Head>
+                      <Table.Head>
                         <SortableHeader
                           label="Angsuran / Bulan"
                           sortKey="installmentAmountVal"
@@ -936,8 +937,8 @@ export default function PinjamanWorkspace({
                           onSort={table.handleSort}
                           className="w-full justify-end"
                         />
-                      </th>
-                      <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      </Table.Head>
+                      <Table.Head>
                         <SortableHeader
                           label="Status"
                           sortKey="status"
@@ -946,8 +947,8 @@ export default function PinjamanWorkspace({
                           onSort={table.handleSort}
                           className="w-full justify-center"
                         />
-                      </th>
-                      <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      </Table.Head>
+                      <Table.Head>
                         <SortableHeader
                           label="Progres"
                           sortKey="paidCount"
@@ -956,35 +957,35 @@ export default function PinjamanWorkspace({
                           onSort={table.handleSort}
                           className="w-full justify-center"
                         />
-                      </th>
-                      <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      </Table.Head>
+                      <Table.Head>
                         Aksi
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100">
+                      </Table.Head>
+                    </Table.Row>
+                  </Table.Header>
+                  <Table.Body>
                     {table.paginatedItems.map((l) => {
                       return (
-                        <tr key={l.id} className="hover:bg-gray-50/50">
-                          <td className="px-4 py-3">
+                        <Table.Row key={l.id} className="hover:bg-gray-50/50">
+                          <Table.Cell>
                             <p className="font-semibold text-gray-900">
                               {l.memberName}
                             </p>
                             <p className="text-xs text-gray-400">
                               No. RAT {l.memberNo}
                             </p>
-                          </td>
-                          <td className="px-4 py-3">{l.formattedDate}</td>
-                          <td className="px-4 py-3 text-right font-semibold text-gray-950">
+                          </Table.Cell>
+                          <Table.Cell>{l.formattedDate}</Table.Cell>
+                          <Table.Cell>
                             Rp {formatNumber(l.amountVal)}
-                          </td>
-                          <td className="px-4 py-3 text-center font-medium">
+                          </Table.Cell>
+                          <Table.Cell>
                             {l.tenor} bulan
-                          </td>
-                          <td className="px-4 py-3 text-right font-bold text-red-800">
+                          </Table.Cell>
+                          <Table.Cell>
                             Rp {formatNumber(l.installmentAmountVal)}
-                          </td>
-                          <td className="px-4 py-3 text-center">
+                          </Table.Cell>
+                          <Table.Cell>
                             <span
                               className={`inline-flex rounded-md border px-2 py-0.5 text-xs font-semibold ${
                                 l.status === "ACTIVE"
@@ -994,8 +995,8 @@ export default function PinjamanWorkspace({
                             >
                               {l.status === "ACTIVE" ? "AKTIF" : "LUNAS"}
                             </span>
-                          </td>
-                          <td className="px-4 py-3 text-center font-medium">
+                          </Table.Cell>
+                          <Table.Cell>
                             <div className="flex items-center justify-center gap-1.5">
                               <span className="text-xs text-gray-500">
                                 {l.progressText}
@@ -1009,8 +1010,8 @@ export default function PinjamanWorkspace({
                                 />
                               </div>
                             </div>
-                          </td>
-                          <td className="px-4 py-3 text-center">
+                          </Table.Cell>
+                          <Table.Cell>
                             <Button
                               size="sm"
                               className="bg-red-700 text-white hover:bg-red-800"
@@ -1021,12 +1022,12 @@ export default function PinjamanWorkspace({
                             >
                               Buka Kartu
                             </Button>
-                          </td>
-                        </tr>
+                          </Table.Cell>
+                        </Table.Row>
                       );
                     })}
-                  </tbody>
-                </table>
+                  </Table.Body>
+                </Table>
               </div>
               <TableControls
                 currentPage={table.currentPage}
