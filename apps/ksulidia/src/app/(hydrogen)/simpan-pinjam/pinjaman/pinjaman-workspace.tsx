@@ -42,6 +42,9 @@ type LoanWithMember = {
   id: string;
   amount: any;
   interestRate: any;
+  provisionRate: any;
+  crkRate: any;
+  penaltyRate: any;
   tenor: number;
   provision: any;
   crk: any;
@@ -65,11 +68,18 @@ type EligibleMember = {
 type PinjamanWorkspaceProps = {
   loans: LoanWithMember[];
   eligibleMembers: EligibleMember[];
+  defaultRates: {
+    interestRate: number;
+    provisionRate: number;
+    crkRate: number;
+    penaltyRate: number;
+  };
 };
 
 export default function PinjamanWorkspace({
   loans,
   eligibleMembers,
+  defaultRates,
 }: PinjamanWorkspaceProps) {
   const [tab, setTab] = useState<"list" | "create" | "detail">("list");
   const [query, setQuery] = useState("");
@@ -79,7 +89,10 @@ export default function PinjamanWorkspace({
   const [formDataVal, setFormDataVal] = useState({
     memberId: "",
     amount: 10000000,
-    interestRate: 1.0,
+    interestRate: defaultRates.interestRate,
+    provisionRate: defaultRates.provisionRate,
+    crkRate: defaultRates.crkRate,
+    penaltyRate: defaultRates.penaltyRate,
     tenor: 10,
   });
 
@@ -119,7 +132,10 @@ export default function PinjamanWorkspace({
     setFormDataVal({
       memberId: "",
       amount: 10000000,
-      interestRate: 1.0,
+      interestRate: defaultRates.interestRate,
+      provisionRate: defaultRates.provisionRate,
+      crkRate: defaultRates.crkRate,
+      penaltyRate: defaultRates.penaltyRate,
       tenor: 10,
     });
   });
@@ -141,11 +157,13 @@ export default function PinjamanWorkspace({
   const liveCalc = useMemo(() => {
     const amount = Number(formDataVal.amount) || 0;
     const rate = Number(formDataVal.interestRate) || 0;
+    const provRate = Number(formDataVal.provisionRate) || 0;
+    const cRate = Number(formDataVal.crkRate) || 0;
     const tenor = Number(formDataVal.tenor) || 1;
 
     const monthlyInterest = amount * (rate / 100);
-    const provision = monthlyInterest; // 1x monthly interest
-    const crk = amount / tenor; // 1x monthly principal installment
+    const provision = monthlyInterest * (provRate / 100);
+    const crk = amount * (cRate / 100);
     const receivedAmount = amount - provision - crk;
     const installmentAmount = amount / tenor + monthlyInterest;
 
@@ -248,9 +266,10 @@ export default function PinjamanWorkspace({
   const payModalTotal = useMemo(() => {
     const base = payModal.principal + payModal.interest;
     if (payModal.addPenalty) {
-      // 5% of monthly principal installment
+      // Penalty based on penaltyRate (default 5%) of monthly principal installment
       const installmentAmount = payModal.principal;
-      const penaltyAmount = installmentAmount * 0.05;
+      const penaltyAmount =
+        installmentAmount * ((Number(payModal.loan?.penaltyRate) || 5.0) / 100);
       return {
         penalty: penaltyAmount,
         total: base + penaltyAmount,
@@ -397,13 +416,78 @@ export default function PinjamanWorkspace({
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
                   />
                   <p className="mt-1 text-xs text-gray-500">
-                    Persentase bunga tetap bulanan flat.
+                    Bunga pinjaman bulanan (%).
                   </p>
                   {createState.errors?.interestRate && (
                     <p className="mt-1 text-xs text-red-600">
                       {createState.errors.interestRate[0]}
                     </p>
                   )}
+                </div>
+
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
+                    Potongan Provisi (%)
+                  </label>
+                  <input
+                    type="number"
+                    name="provisionRate"
+                    step="0.01"
+                    required
+                    value={formDataVal.provisionRate}
+                    onChange={(e) =>
+                      setFormDataVal({
+                        ...formDataVal,
+                        provisionRate: Number(e.target.value),
+                      })
+                    }
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
+                  />
+                  <p className="mt-1 text-xs text-gray-500">% thd Bunga.</p>
+                </div>
+
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
+                    Potongan CRK (%)
+                  </label>
+                  <input
+                    type="number"
+                    name="crkRate"
+                    step="0.01"
+                    required
+                    value={formDataVal.crkRate}
+                    onChange={(e) =>
+                      setFormDataVal({
+                        ...formDataVal,
+                        crkRate: Number(e.target.value),
+                      })
+                    }
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
+                  />
+                  <p className="mt-1 text-xs text-gray-500">% thd Pokok.</p>
+                </div>
+
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
+                    Denda Terlambat (%)
+                  </label>
+                  <input
+                    type="number"
+                    name="penaltyRate"
+                    step="0.01"
+                    required
+                    value={formDataVal.penaltyRate}
+                    onChange={(e) =>
+                      setFormDataVal({
+                        ...formDataVal,
+                        penaltyRate: Number(e.target.value),
+                      })
+                    }
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
+                  />
+                  <p className="mt-1 text-xs text-gray-500">
+                    Denda per keterlambatan.
+                  </p>
                 </div>
 
                 <div>
@@ -466,7 +550,7 @@ export default function PinjamanWorkspace({
 
               <div className="flex justify-between">
                 <span className="flex items-center text-rose-700">
-                  Potongan Provisi (1x Bunga):
+                  Potongan Provisi ({formDataVal.provisionRate}% dari Bunga):
                 </span>
                 <span className="font-semibold text-rose-700">
                   - Rp {formatNumber(liveCalc.provision)}
@@ -474,7 +558,7 @@ export default function PinjamanWorkspace({
               </div>
               <div className="flex justify-between border-b border-red-100 pb-2">
                 <span className="flex items-center text-rose-700">
-                  Potongan CRK (1x Angsuran):
+                  Potongan CRK ({formDataVal.crkRate}% dari Pokok):
                 </span>
                 <span className="font-semibold text-rose-700">
                   - Rp {formatNumber(liveCalc.crk)}
@@ -1040,7 +1124,9 @@ export default function PinjamanWorkspace({
                   </span>
                 </div>
                 <div className="flex justify-between border-b border-gray-200 pb-2 text-sm text-gray-700">
-                  <span>Bunga (1% flat):</span>
+                  <span>
+                    Bunga ({Number(payModal.loan?.interestRate) || 0}% flat):
+                  </span>
                   <span className="font-medium">
                     Rp {formatNumber(payModal.interest)}
                   </span>
@@ -1060,7 +1146,8 @@ export default function PinjamanWorkspace({
                       className="rounded border-gray-300 text-red-600 focus:ring-red-500"
                     />
                     <span className="text-xs font-semibold uppercase tracking-wide text-rose-800">
-                      Kenakan Denda Keterlambatan (5%)
+                      Kenakan Denda Keterlambatan (
+                      {Number(payModal.loan?.penaltyRate) || 5}%)
                     </span>
                   </label>
                   <p className="mt-1 pl-5 text-xs text-gray-500">
@@ -1069,7 +1156,10 @@ export default function PinjamanWorkspace({
                   </p>
                   {payModal.addPenalty && (
                     <div className="mt-2 flex justify-between text-sm font-medium text-rose-700">
-                      <span>Denda (5% dari nominal angsuran):</span>
+                      <span>
+                        Denda ({Number(payModal.loan?.penaltyRate) || 5}% dari
+                        nominal angsuran):
+                      </span>
                       <span>Rp {formatNumber(payModalTotal.penalty)}</span>
                     </div>
                   )}

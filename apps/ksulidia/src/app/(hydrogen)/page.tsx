@@ -233,7 +233,7 @@ export default async function Home() {
               </span>
             </div>
 
-            <h1 className="text-2xl font-bold tracking-tight text-white md:text-3xl lg:text-4xl shadow-sm">
+            <h1 className="text-2xl font-bold tracking-tight text-white shadow-sm md:text-3xl lg:text-4xl">
               {greeting(now)}, {firstName ? firstName : "Rekan Kerja"}
             </h1>
 

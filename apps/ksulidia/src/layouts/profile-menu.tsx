@@ -154,7 +154,7 @@ function DropdownMenu() {
           className="w-full bg-red-700 text-white hover:bg-red-800"
           onClick={() => signOut({ callbackUrl: routes.signIn })}
         >
-          <PiSignOutBold className="mr-2 h-4.5 w-4.5" />
+          <PiSignOutBold className="h-4.5 w-4.5 mr-2" />
           Keluar
         </Button>
       </div>

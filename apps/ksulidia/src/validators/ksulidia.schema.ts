@@ -36,6 +36,13 @@ export const createLoanSchema = z.object({
   memberId: z.string().uuid("ID anggota tidak valid"),
   amount: z.coerce.number().positive("Jumlah pinjaman harus bernilai positif"),
   interestRate: z.coerce.number().nonnegative("Suku bunga tidak boleh negatif"),
+  provisionRate: z.coerce
+    .number()
+    .nonnegative("Persentase provisi tidak boleh negatif"),
+  crkRate: z.coerce.number().nonnegative("Persentase CRK tidak boleh negatif"),
+  penaltyRate: z.coerce
+    .number()
+    .nonnegative("Persentase denda tidak boleh negatif"),
   tenor: z.coerce.number().int().positive("Tenor harus minimal 1 bulan"),
 });
 

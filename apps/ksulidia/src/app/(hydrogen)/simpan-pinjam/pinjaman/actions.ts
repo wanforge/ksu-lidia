@@ -43,13 +43,19 @@ export async function createLoanAction(
 
   const memberId = formData.get("memberId");
   const amount = formData.get("amount");
-  const interestRate = formData.get("interestRate") ?? 1.0; // default 1% flat
+  const interestRate = formData.get("interestRate") ?? 1.5; // default 1.5% flat
+  const provisionRate = formData.get("provisionRate") ?? 100.0;
+  const crkRate = formData.get("crkRate") ?? 10.0;
+  const penaltyRate = formData.get("penaltyRate") ?? 5.0;
   const tenor = formData.get("tenor") ?? 10; // default 10 months
 
   const parsed = createLoanSchema.safeParse({
     memberId,
     amount,
     interestRate,
+    provisionRate,
+    crkRate,
+    penaltyRate,
     tenor,
   });
   if (!parsed.success) {
@@ -79,14 +85,15 @@ export async function createLoanAction(
     const rate = parsed.data.interestRate;
     const months = parsed.data.tenor;
 
-    // provision = 1x flat monthly interest
-    const provision = loanAmount * (rate / 100);
-    // crk = 1x monthly principal installment
-    const crk = loanAmount / months;
+    // provision = provRate% of flat monthly interest
+    const monthlyInterest = loanAmount * (rate / 100);
+    const provision = monthlyInterest * (parsed.data.provisionRate / 100);
+    // crk = crkRate% of loan amount
+    const crk = loanAmount * (parsed.data.crkRate / 100);
     // receivedAmount = loanAmount - provision - crk
     const receivedAmount = loanAmount - provision - crk;
     // monthly installment amount = monthly principal + monthly interest
-    const installmentAmount = loanAmount / months + loanAmount * (rate / 100);
+    const installmentAmount = loanAmount / months + monthlyInterest;
 
     await prisma.$transaction(async (tx) => {
       const loan = await tx.loan.create({
@@ -94,6 +101,9 @@ export async function createLoanAction(
           memberId: parsed.data.memberId,
           amount: loanAmount,
           interestRate: rate,
+          provisionRate: parsed.data.provisionRate,
+          crkRate: parsed.data.crkRate,
+          penaltyRate: parsed.data.penaltyRate,
           tenor: months,
           provision,
           crk,
@@ -131,7 +141,7 @@ export async function createLoanAction(
         entityType: "Loan",
         entityId: loan.id,
         summary: `Mencairkan pinjaman baru: Rp ${loanAmount.toLocaleString("id-ID")} untuk Anggota ID ${parsed.data.memberId} (Tenor: ${months} bulan)`,
-        source: AttachmentSource.SYSTEM,
+        source: AttachmentSource.BACK_OFFICE,
       });
     });
 
@@ -235,7 +245,7 @@ export async function payInstallmentAction(
         entityType: "LoanInstallment",
         entityId: inst.id,
         summary: `Mencatat pembayaran angsuran ke-${inst.monthNumber} untuk Pinjaman ID ${inst.loanId}: Total Rp ${totalPaid.toLocaleString("id-ID")}`,
-        source: AttachmentSource.SYSTEM,
+        source: AttachmentSource.BACK_OFFICE,
       });
     });
 

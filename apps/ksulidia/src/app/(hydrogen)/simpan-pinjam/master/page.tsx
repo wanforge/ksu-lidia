@@ -1,7 +1,6 @@
 import { getSession } from "@/lib/auth";
 import { UserRole } from "@prisma/client";
-import fs from "fs/promises";
-import path from "path";
+import { prisma } from "@/lib/prisma";
 import MasterWorkspace from "./master-workspace";
 
 export const dynamic = "force-dynamic";
@@ -19,11 +18,12 @@ export default async function MasterConfigPage() {
     );
   }
 
-  // Read config from file
-  const configPath = path.join(process.cwd(), "src/config/cooperative.json");
-  let config = {
-    interestRate: 1.0,
-    provisionRate: 1.0,
+  // Read config from DB
+  const settings = await prisma.appSetting.findMany();
+
+  let config: Record<string, any> = {
+    interestRate: 1.5,
+    provisionRate: 100.0,
     crkRate: 10.0,
     penaltyRate: 5.0,
     minPokok: 100000,
@@ -33,11 +33,33 @@ export default async function MasterConfigPage() {
       "Jl. Adi Sucipto No. 12, Manahan, Surakarta, Jawa Tengah",
   };
 
-  try {
-    const raw = await fs.readFile(configPath, "utf-8");
-    config = JSON.parse(raw);
-  } catch (e) {
-    console.error("Gagal membaca file konfigurasi master:", e);
+  for (const s of settings) {
+    switch (s.key) {
+      case "DEFAULT_INTEREST_RATE":
+        config.interestRate = parseFloat(s.value) || 1.5;
+        break;
+      case "DEFAULT_PENALTY_RATE":
+        config.penaltyRate = parseFloat(s.value) || 5.0;
+        break;
+      case "PROVISION_RATE":
+        config.provisionRate = parseFloat(s.value) || 100.0;
+        break;
+      case "CRK_RATE":
+        config.crkRate = parseFloat(s.value) || 10.0;
+        break;
+      case "MIN_POKOK":
+        config.minPokok = parseInt(s.value) || 100000;
+        break;
+      case "WAJIB_MONTHLY":
+        config.wajibMonthly = parseInt(s.value) || 10000;
+        break;
+      case "COOP_NAME":
+        config.cooperativeName = s.value;
+        break;
+      case "COOP_ADDRESS":
+        config.cooperativeAddress = s.value;
+        break;
+    }
   }
 
   return (
@@ -58,7 +80,7 @@ export default async function MasterConfigPage() {
         </div>
       </section>
 
-      <MasterWorkspace config={config} />
+      <MasterWorkspace config={config as any} />
     </div>
   );
 }

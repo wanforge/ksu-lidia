@@ -7,6 +7,8 @@ import {
   PiBookOpenDuotone,
   PiArrowDownRightDuotone,
   PiArrowUpLeftDuotone,
+  PiArrowDownRightBold,
+  PiArrowUpLeftBold,
   PiUserCirclePlusDuotone,
   PiClockCounterClockwiseDuotone,
   PiXBold,
@@ -156,16 +158,39 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
     }));
   }, [members]);
 
-  const memberFilterConfig: ColumnFilterConfig[] = useMemo(() => [
-    { key: 'no', label: 'Nomor Rapat Anggota Tahunan', type: 'text', placeholder: 'Cari nomor...' },
-    { key: 'name', label: 'Nama Anggota', type: 'text', placeholder: 'Cari nama...' },
-    { key: 'phone', label: 'Nomor Telepon', type: 'text', placeholder: 'Cari telepon...' },
-    { key: 'address', label: 'Alamat', type: 'text', placeholder: 'Cari alamat...' },
-    { key: 'isDeceased', label: 'Status Wafat', type: 'boolean' },
-    { key: 'pokok', label: 'Simpanan Pokok', type: 'numberRange' },
-    { key: 'wajib', label: 'Simpanan Wajib', type: 'numberRange' },
-    { key: 'sukarela', label: 'Simpanan Sukarela', type: 'numberRange' },
-  ], []);
+  const memberFilterConfig: ColumnFilterConfig[] = useMemo(
+    () => [
+      {
+        key: "no",
+        label: "Nomor Rapat Anggota Tahunan",
+        type: "text",
+        placeholder: "Cari nomor...",
+      },
+      {
+        key: "name",
+        label: "Nama Anggota",
+        type: "text",
+        placeholder: "Cari nama...",
+      },
+      {
+        key: "phone",
+        label: "Nomor Telepon",
+        type: "text",
+        placeholder: "Cari telepon...",
+      },
+      {
+        key: "address",
+        label: "Alamat",
+        type: "text",
+        placeholder: "Cari alamat...",
+      },
+      { key: "isDeceased", label: "Status Wafat", type: "boolean" },
+      { key: "pokok", label: "Simpanan Pokok", type: "numberRange" },
+      { key: "wajib", label: "Simpanan Wajib", type: "numberRange" },
+      { key: "sukarela", label: "Simpanan Sukarela", type: "numberRange" },
+    ],
+    []
+  );
 
   const table = useCustomTable({
     items: mappedMembers,
@@ -188,18 +213,36 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
     }));
   }, [memberDetail]);
 
-  const transactionFilterConfig: ColumnFilterConfig[] = useMemo(() => [
-    { key: 'type', label: 'Jenis Mutasi', type: 'select', options: [
-      { label: 'Setoran', value: 'DEPOSIT' },
-      { label: 'Penarikan', value: 'WITHDRAWAL' },
-    ]},
-    { key: 'savingsType', label: 'Jenis Simpanan', type: 'select', options: [
-      { label: 'Simpanan Wajib', value: 'WAJIB' },
-      { label: 'Simpanan Sukarela', value: 'SUKARELA' },
-      { label: 'Simpanan Pokok', value: 'POKOK' },
-    ]},
-    { key: 'description', label: 'Keterangan', type: 'text', placeholder: 'Cari keterangan...' },
-  ], []);
+  const transactionFilterConfig: ColumnFilterConfig[] = useMemo(
+    () => [
+      {
+        key: "type",
+        label: "Jenis Mutasi",
+        type: "select",
+        options: [
+          { label: "Setoran", value: "DEPOSIT" },
+          { label: "Penarikan", value: "WITHDRAWAL" },
+        ],
+      },
+      {
+        key: "savingsType",
+        label: "Jenis Simpanan",
+        type: "select",
+        options: [
+          { label: "Simpanan Wajib", value: "WAJIB" },
+          { label: "Simpanan Sukarela", value: "SUKARELA" },
+          { label: "Simpanan Pokok", value: "POKOK" },
+        ],
+      },
+      {
+        key: "description",
+        label: "Keterangan",
+        type: "text",
+        placeholder: "Cari keterangan...",
+      },
+    ],
+    []
+  );
 
   const txTable = useCustomTable({
     items: txItems,
@@ -859,7 +902,6 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                 defaultValue={new Date()} // Always defaults to today
                 required
               />
-
 
               <div>
                 <label className="mb-1 block text-sm font-medium text-gray-700">

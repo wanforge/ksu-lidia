@@ -130,7 +130,7 @@ export async function recordTransactionAction(
         entityType: "ProductTransaction",
         entityId: trans.id,
         summary: `Mencatat transaksi ${parsed.data.type === ProductTxType.SALE ? "Penjualan" : "Pembelian"} toko: Total Rp ${totalAmount.toLocaleString("id-ID")}`,
-        source: AttachmentSource.SYSTEM,
+        source: AttachmentSource.BACK_OFFICE,
       });
     });
 

@@ -12,12 +12,14 @@ export const routes = {
     anggota: "/simpan-pinjam/anggota",
     pinjaman: "/simpan-pinjam/pinjaman",
     master: "/simpan-pinjam/master",
+    kas: "/simpan-pinjam/buku-kas",
   },
   statistik: "/statistik",
   laporan: "/laporan",
   toko: {
     produk: "/toko/produk",
     transaksi: "/toko/transaksi",
+    kas: "/toko/buku-kas",
   },
   me: {
     dashboard: "/me",

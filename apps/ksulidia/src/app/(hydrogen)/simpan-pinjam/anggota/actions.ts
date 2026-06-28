@@ -114,7 +114,7 @@ export async function createMemberAction(
         entityType: "Member",
         entityId: member.id,
         summary: `Menambahkan anggota baru: No. ${member.no} - ${member.name}`,
-        source: AttachmentSource.SYSTEM,
+        source: AttachmentSource.BACK_OFFICE,
       });
     });
 
@@ -179,7 +179,7 @@ export async function updateMemberAction(
       entityType: "Member",
       entityId: member.id,
       summary: `Memperbarui data anggota: No. ${member.no} - ${member.name}`,
-      source: AttachmentSource.SYSTEM,
+      source: AttachmentSource.BACK_OFFICE,
     });
 
     revalidatePath(routes.simpanPinjam.anggota);
@@ -291,7 +291,7 @@ export async function postSavingsTransactionAction(
         entityType: "SavingsTransaction",
         entityId: txLog.id,
         summary: `${parsed.data.type === SavingsTxType.DEPOSIT ? "Setoran" : "Penarikan"} simpanan ${parsed.data.savingsType} sebesar Rp ${Number(parsed.data.amount).toLocaleString("id-ID")}`,
-        source: AttachmentSource.SYSTEM,
+        source: AttachmentSource.BACK_OFFICE,
       });
     });
 

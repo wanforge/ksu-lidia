@@ -60,7 +60,7 @@ export async function updateOwnPhotoAction(
       entityType: "User",
       entityId: userId,
       summary: "Memperbarui foto profil mandiri",
-      source: AttachmentSource.SYSTEM,
+      source: AttachmentSource.BACK_OFFICE,
     });
 
     return { success: true, message: "Foto profil diperbarui." };
@@ -110,7 +110,7 @@ export async function removeOwnPhotoAction(
         entityType: "User",
         entityId: userId,
         summary: "Menghapus foto profil mandiri",
-        source: AttachmentSource.SYSTEM,
+        source: AttachmentSource.BACK_OFFICE,
       });
     }
     return { success: true, message: "Foto profil dihapus." };

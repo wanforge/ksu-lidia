@@ -97,7 +97,8 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
           </h1>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-gray-600">
             Monitor perkembangan total tabungan anggota, saldo pinjaman aktif
-            perkreditan, penjualan toko kelontong, dan laba berjalan koperasi secara interaktif.
+            perkreditan, penjualan toko kelontong, dan laba berjalan koperasi
+            secara interaktif.
           </p>
         </div>
         <button
@@ -130,7 +131,8 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
               {formatNumber(metrics.totalMembers)}
             </h3>
             <p className="mt-2 flex items-center gap-1 text-sm font-medium text-red-100">
-              Lihat daftar anggota <PiCaretRightBold className="transition-transform group-hover:translate-x-1" />
+              Lihat daftar anggota{" "}
+              <PiCaretRightBold className="transition-transform group-hover:translate-x-1" />
             </p>
           </div>
         </Link>
@@ -154,7 +156,8 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
               {formatIDR(metrics.totalSavings)}
             </h3>
             <p className="mt-2 flex items-center gap-1 text-sm font-medium text-amber-50">
-              Rincian data simpanan <PiCaretRightBold className="transition-transform group-hover:translate-x-1" />
+              Rincian data simpanan{" "}
+              <PiCaretRightBold className="transition-transform group-hover:translate-x-1" />
             </p>
           </div>
         </Link>
@@ -178,7 +181,8 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
               {formatIDR(metrics.totalLoanRemaining)}
             </h3>
             <p className="mt-2 flex items-center gap-1 text-sm font-medium text-orange-50">
-              Kelola pinjaman aktif <PiCaretRightBold className="transition-transform group-hover:translate-x-1" />
+              Kelola pinjaman aktif{" "}
+              <PiCaretRightBold className="transition-transform group-hover:translate-x-1" />
             </p>
           </div>
         </Link>
@@ -202,7 +206,8 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
               {formatIDR(metrics.totalStoreSales)}
             </h3>
             <p className="mt-2 flex items-center gap-1 text-sm font-medium text-emerald-100">
-              Cek riwayat transaksi <PiCaretRightBold className="transition-transform group-hover:translate-x-1" />
+              Cek riwayat transaksi{" "}
+              <PiCaretRightBold className="transition-transform group-hover:translate-x-1" />
             </p>
           </div>
         </Link>
@@ -210,19 +215,20 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
 
       {/* Auxiliary profit card */}
       <Link href="/laporan" className="group block outline-none">
-        <div className="relative overflow-hidden flex flex-col justify-between gap-6 rounded-2xl border border-red-200 bg-gradient-to-br from-red-50 via-white to-red-50/50 p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-red-400 hover:shadow-xl hover:shadow-red-900/10 md:flex-row md:items-center">
+        <div className="relative flex flex-col justify-between gap-6 overflow-hidden rounded-2xl border border-red-200 bg-gradient-to-br from-red-50 via-white to-red-50/50 p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-red-400 hover:shadow-xl hover:shadow-red-900/10 md:flex-row md:items-center">
           <div className="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-red-100/30 to-transparent"></div>
           <div className="relative z-10 flex items-center gap-5">
-            <div className="rounded-2xl bg-red-800 p-3.5 text-white shadow-md transition-transform group-hover:scale-110 group-hover:rotate-3 group-hover:shadow-red-900/20">
+            <div className="rounded-2xl bg-red-800 p-3.5 text-white shadow-md transition-transform group-hover:rotate-3 group-hover:scale-110 group-hover:shadow-red-900/20">
               <PiTrendUpDuotone className="h-8 w-8" />
             </div>
             <div>
-              <h4 className="text-xl font-bold text-gray-900 group-hover:text-red-900 transition-colors">
+              <h4 className="text-xl font-bold text-gray-900 transition-colors group-hover:text-red-900">
                 Total Laba Simpan Pinjam
               </h4>
               <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-gray-600">
                 Akumulasi laba bruto simpan pinjam yang berasal dari pendapatan
-                Bunga, Provisi, dan Denda Anggota berjalan saat ini. Klik untuk melihat laporan komprehensif.
+                Bunga, Provisi, dan Denda Anggota berjalan saat ini. Klik untuk
+                melihat laporan komprehensif.
               </p>
             </div>
           </div>
@@ -231,7 +237,8 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
               {formatIDR(metrics.totalSpProfit)}
             </span>
             <p className="mt-2 flex items-center gap-1 text-sm font-semibold text-red-700 opacity-90 md:justify-end">
-              Lihat laporan laba rugi <PiCaretRightBold className="transition-transform group-hover:translate-x-1" />
+              Lihat laporan laba rugi{" "}
+              <PiCaretRightBold className="transition-transform group-hover:translate-x-1" />
             </p>
           </div>
         </div>
@@ -247,7 +254,8 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
                 Tren Penjualan & Pembelian Toko Lidia
               </h3>
               <p className="mt-1 text-sm text-gray-500">
-                Perbandingan grafik pendapatan kotor dengan pembelian suplai stok.
+                Perbandingan grafik pendapatan kotor dengan pembelian suplai
+                stok.
               </p>
             </div>
           </div>
@@ -296,11 +304,19 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
                     boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
                     fontWeight: 500,
                   }}
-                  cursor={{ stroke: '#fca5a5', strokeWidth: 2, strokeDasharray: '5 5' }}
+                  cursor={{
+                    stroke: "#fca5a5",
+                    strokeWidth: 2,
+                    strokeDasharray: "5 5",
+                  }}
                 />
                 <Legend
                   iconType="circle"
-                  wrapperStyle={{ fontSize: 13, fontWeight: 500, paddingTop: 15 }}
+                  wrapperStyle={{
+                    fontSize: 13,
+                    fontWeight: 500,
+                    paddingTop: 15,
+                  }}
                 />
                 <Area
                   type="monotone"
@@ -334,7 +350,8 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
               Komposisi Dana Simpanan
             </h3>
             <p className="mb-4 text-sm text-gray-500">
-              Rasio alokasi dana pokok, wajib, dan sukarela keseluruhan anggota koperasi.
+              Rasio alokasi dana pokok, wajib, dan sukarela keseluruhan anggota
+              koperasi.
             </p>
           </div>
           <div className="flex h-[260px] w-full items-center justify-center">
@@ -362,7 +379,7 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
                     boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
                     fontWeight: 500,
                   }}
-                  itemStyle={{ color: '#111827' }}
+                  itemStyle={{ color: "#111827" }}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -378,7 +395,9 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
                     className="h-3.5 w-3.5 rounded-full shadow-sm"
                     style={{ backgroundColor: d.color }}
                   ></span>
-                  <span className="text-sm font-medium text-gray-700">{d.name}</span>
+                  <span className="text-sm font-medium text-gray-700">
+                    {d.name}
+                  </span>
                 </div>
                 <span className="text-sm font-bold text-gray-900">
                   {formatIDR(d.value)}
@@ -402,8 +421,8 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
                 Likuiditas simpan pinjam berjalan.
               </p>
             </div>
-            <Link 
-              href="/simpan-pinjam" 
+            <Link
+              href="/simpan-pinjam"
               className="rounded-full bg-gray-50 p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 focus:outline-none"
               title="Lihat Detail"
             >
@@ -438,7 +457,7 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
                 />
                 <Tooltip
                   formatter={(value: any) => [formatIDR(Number(value)), ""]}
-                  cursor={{ fill: '#f3f4f6' }}
+                  cursor={{ fill: "#f3f4f6" }}
                   contentStyle={{
                     borderRadius: "12px",
                     border: "none",
@@ -446,9 +465,22 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
                     fontWeight: 500,
                   }}
                 />
-                <Legend iconType="square" wrapperStyle={{ fontSize: 13, paddingTop: 10 }} />
-                <Bar dataKey="Simpanan" fill="#d4af37" radius={[6, 6, 0, 0]} maxBarSize={60} />
-                <Bar dataKey="Pinjaman" fill="#991b1b" radius={[6, 6, 0, 0]} maxBarSize={60} />
+                <Legend
+                  iconType="square"
+                  wrapperStyle={{ fontSize: 13, paddingTop: 10 }}
+                />
+                <Bar
+                  dataKey="Simpanan"
+                  fill="#d4af37"
+                  radius={[6, 6, 0, 0]}
+                  maxBarSize={60}
+                />
+                <Bar
+                  dataKey="Pinjaman"
+                  fill="#991b1b"
+                  radius={[6, 6, 0, 0]}
+                  maxBarSize={60}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -461,7 +493,9 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
               <h3 className="text-lg font-bold text-gray-950">
                 Daftar Produk Terlaris & Stok Terkini
               </h3>
-              <p className="mt-1 text-sm text-gray-500">Klik baris produk untuk mengelola rincian stok.</p>
+              <p className="mt-1 text-sm text-gray-500">
+                Klik baris produk untuk mengelola rincian stok.
+              </p>
             </div>
             <Link
               href="/toko/produk"
@@ -484,24 +518,36 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
                   <th scope="col" className="px-5 py-4 font-semibold">
                     Kategori
                   </th>
-                  <th scope="col" className="px-5 py-4 text-right font-semibold">
+                  <th
+                    scope="col"
+                    className="px-5 py-4 text-right font-semibold"
+                  >
                     Stok
                   </th>
-                  <th scope="col" className="px-5 py-4 text-right font-semibold">
+                  <th
+                    scope="col"
+                    className="px-5 py-4 text-right font-semibold"
+                  >
                     Harga Jual
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                <tr 
-                  onClick={() => router.push('/toko/produk')}
+                <tr
+                  onClick={() => router.push("/toko/produk")}
                   className="group cursor-pointer bg-white transition-colors hover:bg-red-50/50"
                 >
                   <td className="px-5 py-3.5 font-semibold text-gray-950 transition-colors group-hover:text-red-800">
                     IND-01
                   </td>
-                  <td className="px-5 py-3.5 font-medium text-gray-800">Indomie Goreng (Dus)</td>
-                  <td className="px-5 py-3.5"><span className="rounded-md bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">Sembako</span></td>
+                  <td className="px-5 py-3.5 font-medium text-gray-800">
+                    Indomie Goreng (Dus)
+                  </td>
+                  <td className="px-5 py-3.5">
+                    <span className="rounded-md bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">
+                      Sembako
+                    </span>
+                  </td>
                   <td className="px-5 py-3.5 text-right font-bold text-gray-900">
                     45
                   </td>
@@ -509,15 +555,21 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
                     {formatIDR(115000)}
                   </td>
                 </tr>
-                <tr 
-                  onClick={() => router.push('/toko/produk')}
+                <tr
+                  onClick={() => router.push("/toko/produk")}
                   className="group cursor-pointer bg-white transition-colors hover:bg-red-50/50"
                 >
                   <td className="px-5 py-3.5 font-semibold text-gray-950 transition-colors group-hover:text-red-800">
                     BRS-01
                   </td>
-                  <td className="px-5 py-3.5 font-medium text-gray-800">Beras Ramos Premium 5kg</td>
-                  <td className="px-5 py-3.5"><span className="rounded-md bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">Sembako</span></td>
+                  <td className="px-5 py-3.5 font-medium text-gray-800">
+                    Beras Ramos Premium 5kg
+                  </td>
+                  <td className="px-5 py-3.5">
+                    <span className="rounded-md bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">
+                      Sembako
+                    </span>
+                  </td>
                   <td className="px-5 py-3.5 text-right font-bold text-gray-900">
                     120
                   </td>
@@ -525,15 +577,21 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
                     {formatIDR(72000)}
                   </td>
                 </tr>
-                <tr 
-                  onClick={() => router.push('/toko/produk')}
+                <tr
+                  onClick={() => router.push("/toko/produk")}
                   className="group cursor-pointer bg-white transition-colors hover:bg-red-50/50"
                 >
                   <td className="px-5 py-3.5 font-semibold text-gray-950 transition-colors group-hover:text-red-800">
                     GLA-01
                   </td>
-                  <td className="px-5 py-3.5 font-medium text-gray-800">Gula Pasir Gulaku 1kg</td>
-                  <td className="px-5 py-3.5"><span className="rounded-md bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">Sembako</span></td>
+                  <td className="px-5 py-3.5 font-medium text-gray-800">
+                    Gula Pasir Gulaku 1kg
+                  </td>
+                  <td className="px-5 py-3.5">
+                    <span className="rounded-md bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">
+                      Sembako
+                    </span>
+                  </td>
                   <td className="px-5 py-3.5 text-right font-bold text-gray-900">
                     150
                   </td>
@@ -541,15 +599,21 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
                     {formatIDR(17500)}
                   </td>
                 </tr>
-                <tr 
-                  onClick={() => router.push('/toko/produk')}
+                <tr
+                  onClick={() => router.push("/toko/produk")}
                   className="group cursor-pointer bg-white transition-colors hover:bg-red-50/50"
                 >
                   <td className="px-5 py-3.5 font-semibold text-gray-950 transition-colors group-hover:text-red-800">
                     MYK-01
                   </td>
-                  <td className="px-5 py-3.5 font-medium text-gray-800">Minyak Goreng Bimoli 2L</td>
-                  <td className="px-5 py-3.5"><span className="rounded-md bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">Sembako</span></td>
+                  <td className="px-5 py-3.5 font-medium text-gray-800">
+                    Minyak Goreng Bimoli 2L
+                  </td>
+                  <td className="px-5 py-3.5">
+                    <span className="rounded-md bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">
+                      Sembako
+                    </span>
+                  </td>
                   <td className="px-5 py-3.5 text-right font-bold text-gray-900">
                     85
                   </td>
@@ -557,15 +621,21 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
                     {formatIDR(36000)}
                   </td>
                 </tr>
-                <tr 
-                  onClick={() => router.push('/toko/produk')}
+                <tr
+                  onClick={() => router.push("/toko/produk")}
                   className="group cursor-pointer bg-white transition-colors hover:bg-red-50/50"
                 >
                   <td className="px-5 py-3.5 font-semibold text-gray-950 transition-colors group-hover:text-red-800">
                     TEH-01
                   </td>
-                  <td className="px-5 py-3.5 font-medium text-gray-800">Teh Celup Sariwangi 25s</td>
-                  <td className="px-5 py-3.5"><span className="rounded-md bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">Minuman</span></td>
+                  <td className="px-5 py-3.5 font-medium text-gray-800">
+                    Teh Celup Sariwangi 25s
+                  </td>
+                  <td className="px-5 py-3.5">
+                    <span className="rounded-md bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">
+                      Minuman
+                    </span>
+                  </td>
                   <td className="px-5 py-3.5 text-right font-bold text-gray-900">
                     200
                   </td>
@@ -581,4 +651,3 @@ export default function StatistikDashboard({ metrics, chartData }: Props) {
     </div>
   );
 }
-

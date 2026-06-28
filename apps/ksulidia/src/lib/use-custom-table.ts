@@ -2,7 +2,12 @@ import { useState, useMemo } from "react";
 
 // NEW: Advanced filter config type, assuming it will be defined elsewhere
 // and imported here. For now, defining it inline.
-export type FilterType = 'text' | 'numberRange' | 'select' | 'boolean' | 'dateRange';
+export type FilterType =
+  | "text"
+  | "numberRange"
+  | "select"
+  | "boolean"
+  | "dateRange";
 export interface ColumnFilterConfig {
   key: string;
   label: string;
@@ -30,19 +35,19 @@ export function useCustomTable<T extends Record<string, any>>({
   advancedFilterConfig?: ColumnFilterConfig[]; // NEW
 }) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [advancedFilters, setAdvancedFilters] = useState<Record<string, any>>({}); // NEW
+  const [advancedFilters, setAdvancedFilters] = useState<Record<string, any>>(
+    {}
+  ); // NEW
   const [sortConfig, setSortConfig] = useState<SortConfig<T>>(initialSort);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(initialPageSize);
 
   const getFieldValue = (obj: any, path: string): any => {
-    return path
-      .split(".")
-      .reduce((acc, part) => {
-        if (acc && acc[part] !== undefined && acc[part] !== null)
-          return acc[part];
-        return "";
-      }, obj);
+    return path.split(".").reduce((acc, part) => {
+      if (acc && acc[part] !== undefined && acc[part] !== null)
+        return acc[part];
+      return "";
+    }, obj);
   };
 
   const filteredItems = useMemo(() => {
@@ -62,35 +67,44 @@ export function useCustomTable<T extends Record<string, any>>({
     // 2. New advanced filtering
     Object.keys(advancedFilters).forEach((filterKey) => {
       const filterValue = advancedFilters[filterKey];
-      if (filterValue === null || filterValue === undefined || filterValue === '') return;
+      if (
+        filterValue === null ||
+        filterValue === undefined ||
+        filterValue === ""
+      )
+        return;
 
-      const config = advancedFilterConfig.find(c => c.key === filterKey);
+      const config = advancedFilterConfig.find((c) => c.key === filterKey);
       if (!config) return;
 
       result = result.filter((item) => {
         const itemValue = getFieldValue(item, filterKey);
 
         switch (config.type) {
-          case 'text':
-            return String(itemValue).toLowerCase().includes(String(filterValue).toLowerCase());
-          case 'numberRange':
+          case "text":
+            return String(itemValue)
+              .toLowerCase()
+              .includes(String(filterValue).toLowerCase());
+          case "numberRange":
             const min = parseFloat(filterValue.min);
             const max = parseFloat(filterValue.max);
             const numItemValue = parseFloat(itemValue);
             if (!isNaN(min) && numItemValue < min) return false;
             if (!isNaN(max) && numItemValue > max) return false;
             return true;
-          case 'select':
-             // Handle boolean values from 'select' options
+          case "select":
+            // Handle boolean values from 'select' options
             const filterValStr = String(filterValue);
-            if (filterValStr === 'true' || filterValStr === 'false') {
+            if (filterValStr === "true" || filterValStr === "false") {
               return String(itemValue) === filterValStr;
             }
             return String(itemValue) === filterValStr;
-          case 'boolean':
+          case "boolean":
             return Boolean(itemValue) === Boolean(filterValue);
-          case 'dateRange':
-            const startDate = filterValue.start ? new Date(filterValue.start) : null;
+          case "dateRange":
+            const startDate = filterValue.start
+              ? new Date(filterValue.start)
+              : null;
             const endDate = filterValue.end ? new Date(filterValue.end) : null;
             const itemDate = itemValue ? new Date(itemValue) : null;
             if (itemDate && startDate && itemDate < startDate) return false;

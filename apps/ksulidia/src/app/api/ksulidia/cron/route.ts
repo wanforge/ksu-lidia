@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   try {
     const today = new Date();
-    
+
     // 1. Check for Late Loan Installments
     const lateInstallments = await prisma.loanInstallment.findMany({
       where: {
@@ -29,7 +29,7 @@ export async function GET() {
       // Avoid duplicate notifications for the same installment on the same day
       // (a real system would have a more robust mechanism)
       const title = `Angsuran Telat: ${installment.loan.member.name}`;
-      
+
       const existing = await prisma.notification.findFirst({
         where: { title, isRead: false },
       });
@@ -55,7 +55,7 @@ export async function GET() {
 
     for (const product of lowStockProducts) {
       const title = `Stok Menipis: ${product.name}`;
-      
+
       const existing = await prisma.notification.findFirst({
         where: { title, isRead: false },
       });
@@ -73,6 +73,9 @@ export async function GET() {
     return Response.json({ success: true, message: "Cron checks completed" });
   } catch (error) {
     console.error("Cron Error:", error);
-    return Response.json({ success: false, error: String(error) }, { status: 500 });
+    return Response.json(
+      { success: false, error: String(error) },
+      { status: 500 }
+    );
   }
 }

@@ -16,6 +16,7 @@ import {
   PiFileTextDuotone,
   PiGearDuotone,
   PiCubeDuotone,
+  PiVaultDuotone,
 } from "react-icons/pi";
 
 type MenuItem = {
@@ -59,6 +60,12 @@ export const menuItems: MenuItem[] = [
     permission: PERMISSIONS.SIMPAN_PINJAM_VIEW,
   },
   {
+    name: "Buku Kas Koperasi",
+    href: routes.simpanPinjam.kas,
+    icon: <PiVaultDuotone />,
+    permission: PERMISSIONS.SIMPAN_PINJAM_VIEW,
+  },
+  {
     name: "Statistik Koperasi",
     href: routes.statistik,
     icon: <PiPresentationChartDuotone />,
@@ -89,6 +96,12 @@ export const menuItems: MenuItem[] = [
     name: "Transaksi & Stok",
     href: routes.toko.transaksi,
     icon: <PiShoppingCartDuotone />,
+    permission: PERMISSIONS.TOKO_VIEW,
+  },
+  {
+    name: "Buku Kas Toko",
+    href: routes.toko.kas,
+    icon: <PiStorefrontDuotone />,
     permission: PERMISSIONS.TOKO_VIEW,
   },
   {

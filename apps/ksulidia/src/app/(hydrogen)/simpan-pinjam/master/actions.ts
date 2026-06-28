@@ -1,7 +1,5 @@
 "use server";
 
-import fs from "fs/promises";
-import path from "path";
 import { revalidatePath } from "next/cache";
 import { getSession } from "@/lib/auth";
 import { ensureAuditContext } from "@/lib/audit-context";
@@ -9,23 +7,21 @@ import { recordAuditLog } from "@/lib/audit";
 import { prisma } from "@/lib/prisma";
 import { AuditAction, AttachmentSource } from "@prisma/client";
 
-const configPath = path.join(process.cwd(), "src/config/cooperative.json");
-
-export type MasterConfig = {
-  interestRate: number;
-  provisionRate: number;
-  crkRate: number;
-  penaltyRate: number;
-  minPokok: number;
-  wajibMonthly: number;
-  cooperativeName: string;
-  cooperativeAddress: string;
-};
-
 export type MasterActionState = {
   success: boolean;
   message: string;
   errors?: Record<string, string[]>;
+};
+
+export type MasterConfig = {
+  cooperativeName: string;
+  cooperativeAddress: string;
+  minPokok: number;
+  wajibMonthly: number;
+  interestRate: number;
+  provisionRate: number;
+  crkRate: number;
+  penaltyRate: number;
 };
 
 export async function updateMasterConfigAction(
@@ -47,47 +43,77 @@ export async function updateMasterConfigAction(
   }
 
   try {
-    const interestRate =
-      parseFloat(formData.get("interestRate") as string) || 0;
-    const provisionRate =
-      parseFloat(formData.get("provisionRate") as string) || 0;
-    const crkRate = parseFloat(formData.get("crkRate") as string) || 0;
-    const penaltyRate = parseFloat(formData.get("penaltyRate") as string) || 0;
-    const minPokok = parseInt(formData.get("minPokok") as string, 10) || 0;
-    const wajibMonthly =
-      parseInt(formData.get("wajibMonthly") as string, 10) || 0;
+    const interestRate = (formData.get("interestRate") as string) || "1.50";
+    const provisionRate = (formData.get("provisionRate") as string) || "100.00";
+    const crkRate = (formData.get("crkRate") as string) || "10.00";
+    const penaltyRate = (formData.get("penaltyRate") as string) || "5.00";
+    const minPokok = (formData.get("minPokok") as string) || "100000";
+    const wajibMonthly = (formData.get("wajibMonthly") as string) || "10000";
     const cooperativeName = (formData.get("cooperativeName") as string) || "";
     const cooperativeAddress =
       (formData.get("cooperativeAddress") as string) || "";
 
-    const updatedConfig: MasterConfig = {
-      interestRate,
-      provisionRate,
-      crkRate,
-      penaltyRate,
-      minPokok,
-      wajibMonthly,
-      cooperativeName,
-      cooperativeAddress,
-    };
+    const entries = [
+      {
+        key: "DEFAULT_INTEREST_RATE",
+        value: interestRate,
+        desc: "Bunga Pinjaman Default (%)",
+      },
+      {
+        key: "DEFAULT_PENALTY_RATE",
+        value: penaltyRate,
+        desc: "Denda Keterlambatan Default (%)",
+      },
+      {
+        key: "PROVISION_RATE",
+        value: provisionRate,
+        desc: "Provisi (Persentase thd nominal Bunga)",
+      },
+      {
+        key: "CRK_RATE",
+        value: crkRate,
+        desc: "Cadangan Risiko Kredit (Persentase thd total pinjaman)",
+      },
+      { key: "MIN_POKOK", value: minPokok, desc: "Simpanan Pokok Minimum" },
+      {
+        key: "WAJIB_MONTHLY",
+        value: wajibMonthly,
+        desc: "Simpanan Wajib Bulanan",
+      },
+      { key: "COOP_NAME", value: cooperativeName, desc: "Nama Koperasi" },
+      {
+        key: "COOP_ADDRESS",
+        value: cooperativeAddress,
+        desc: "Alamat Koperasi",
+      },
+    ];
 
-    await fs.writeFile(
-      configPath,
-      JSON.stringify(updatedConfig, null, 2),
-      "utf-8"
+    await prisma.$transaction(
+      entries.map((entry) =>
+        prisma.appSetting.upsert({
+          where: { key: entry.key },
+          update: { value: entry.value, description: entry.desc },
+          create: {
+            key: entry.key,
+            value: entry.value,
+            description: entry.desc,
+          },
+        })
+      )
     );
 
     await recordAuditLog(prisma, {
       actorId: session.user.id,
       actorRole: session.user.role as any,
       action: AuditAction.UPDATE,
-      entityType: "CooperativeConfig",
-      entityId: "cooperative.json",
-      summary: `Memperbarui konfigurasi master koperasi: ${cooperativeName}`,
-      source: AttachmentSource.SYSTEM,
+      entityType: "AppSetting",
+      entityId: "cooperative-config",
+      summary: `Memperbarui parameter koperasi: ${cooperativeName}`,
+      source: AttachmentSource.BACK_OFFICE,
     });
 
     revalidatePath("/simpan-pinjam/master");
+    revalidatePath("/simpan-pinjam/pinjaman");
     revalidatePath("/statistik");
     revalidatePath("/laporan");
     revalidatePath("/");

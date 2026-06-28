@@ -64,11 +64,7 @@ export default function UserCreateForm() {
             text="Nama"
             hint="Nama lengkap pemilik akun untuk identifikasi di sistem."
           />
-          <input
-            name="name"
-            className={inputClass}
-            required
-          />
+          <input name="name" className={inputClass} required />
           <FieldError messages={state.errors?.name} />
         </label>
 
@@ -77,12 +73,7 @@ export default function UserCreateForm() {
             text="Email"
             hint="Email dinas; digunakan sebagai nama pengguna saat masuk ke sistem."
           />
-          <input
-            name="email"
-            type="email"
-            className={inputClass}
-            required
-          />
+          <input name="email" type="email" className={inputClass} required />
           <FieldError messages={state.errors?.email} />
         </label>
 

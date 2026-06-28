@@ -1,12 +1,17 @@
 // apps/ksulidia/src/components/ui/table/DataTableFilters.tsx
-import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { PiFunnelDuotone, PiXBold } from 'react-icons/pi';
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { PiFunnelDuotone, PiXBold } from "react-icons/pi";
 
-import { DateInput } from '@/components/ui/form/DateInput';
-import { SwitchField } from '@/components/ui/form/SwitchField';
+import { DateInput } from "@/components/ui/form/DateInput";
+import { SwitchField } from "@/components/ui/form/SwitchField";
 
-export type FilterType = 'text' | 'numberRange' | 'select' | 'boolean' | 'dateRange';
+export type FilterType =
+  | "text"
+  | "numberRange"
+  | "select"
+  | "boolean"
+  | "dateRange";
 
 export interface ColumnFilterConfig {
   key: string;
@@ -27,7 +32,8 @@ export const DataTableFilters: React.FC<DataTableFiltersProps> = ({
   onFilterChange,
   currentFilters,
 }) => {
-  const [localFilters, setLocalFilters] = useState<Record<string, any>>(currentFilters);
+  const [localFilters, setLocalFilters] =
+    useState<Record<string, any>>(currentFilters);
 
   // Sync state with parent's active filters
   useEffect(() => {
@@ -48,33 +54,43 @@ export const DataTableFilters: React.FC<DataTableFiltersProps> = ({
   };
 
   return (
-    <div className="flex flex-wrap items-end gap-3 p-4 border-b border-gray-200 bg-gray-50/20">
+    <div className="flex flex-wrap items-end gap-3 border-b border-gray-200 bg-gray-50/20 p-4">
       {filterConfig.map((config) => (
-        <div key={config.key} className="flex flex-col gap-1 min-w-[160px] max-w-xs flex-1">
-          {config.type !== 'boolean' && (
-            <label htmlFor={config.key} className="text-xs font-semibold text-gray-500">
+        <div
+          key={config.key}
+          className="flex min-w-[160px] max-w-xs flex-1 flex-col gap-1"
+        >
+          {config.type !== "boolean" && (
+            <label
+              htmlFor={config.key}
+              className="text-xs font-semibold text-gray-500"
+            >
               {config.label}
             </label>
           )}
 
-          {config.type === 'text' && (
+          {config.type === "text" && (
             <input
               id={config.key}
               type="text"
-              placeholder={config.placeholder || `Cari ${config.label.toLowerCase()}...`}
-              value={localFilters[config.key] || ''}
-              onChange={(e) => handleFilterInputChange(config.key, e.target.value)}
+              placeholder={
+                config.placeholder || `Cari ${config.label.toLowerCase()}...`
+              }
+              value={localFilters[config.key] || ""}
+              onChange={(e) =>
+                handleFilterInputChange(config.key, e.target.value)
+              }
               className="h-10 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-red-700"
             />
           )}
 
-          {config.type === 'numberRange' && (
+          {config.type === "numberRange" && (
             <div className="flex gap-2">
               <input
                 id={`${config.key}-min`}
                 type="number"
                 placeholder="Min"
-                value={localFilters[config.key]?.min || ''}
+                value={localFilters[config.key]?.min || ""}
                 onChange={(e) =>
                   handleFilterInputChange(config.key, {
                     ...localFilters[config.key],
@@ -87,7 +103,7 @@ export const DataTableFilters: React.FC<DataTableFiltersProps> = ({
                 id={`${config.key}-max`}
                 type="number"
                 placeholder="Max"
-                value={localFilters[config.key]?.max || ''}
+                value={localFilters[config.key]?.max || ""}
                 onChange={(e) =>
                   handleFilterInputChange(config.key, {
                     ...localFilters[config.key],
@@ -99,12 +115,14 @@ export const DataTableFilters: React.FC<DataTableFiltersProps> = ({
             </div>
           )}
 
-          {config.type === 'select' && (
+          {config.type === "select" && (
             <select
               id={config.key}
               aria-label={config.label}
-              value={localFilters[config.key] || ''}
-              onChange={(e) => handleFilterInputChange(config.key, e.target.value)}
+              value={localFilters[config.key] || ""}
+              onChange={(e) =>
+                handleFilterInputChange(config.key, e.target.value)
+              }
               className="h-10 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-red-700"
             >
               <option value="">Semua</option>
@@ -116,16 +134,18 @@ export const DataTableFilters: React.FC<DataTableFiltersProps> = ({
             </select>
           )}
 
-          {config.type === 'boolean' && (
+          {config.type === "boolean" && (
             <SwitchField
               name={config.key}
               label={config.label}
               checked={localFilters[config.key] || false}
-              onChange={(checked) => handleFilterInputChange(config.key, checked)}
+              onChange={(checked) =>
+                handleFilterInputChange(config.key, checked)
+              }
             />
           )}
 
-          {config.type === 'dateRange' && (
+          {config.type === "dateRange" && (
             <div className="flex gap-2">
               <DateInput
                 name={`${config.key}-start`}
@@ -155,7 +175,7 @@ export const DataTableFilters: React.FC<DataTableFiltersProps> = ({
           )}
         </div>
       ))}
-      <div className="flex gap-2 self-end h-10">
+      <div className="flex h-10 gap-2 self-end">
         <Button onClick={handleApplyFilters} size="md">
           <PiFunnelDuotone className="mr-1.5 h-4 w-4" />
           Filter

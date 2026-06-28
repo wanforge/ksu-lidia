@@ -133,7 +133,7 @@ export function FloatingOrbs() {
   return (
     <>
       <motion.div
-        className="pointer-events-none absolute -right-10 -top-10 h-72 w-72 rounded-full bg-primary-default/10 blur-3xl"
+        className="bg-primary-default/10 pointer-events-none absolute -right-10 -top-10 h-72 w-72 rounded-full blur-3xl"
         animate={{
           scale: [1, 1.15, 1],
           x: [0, 10, 0],
@@ -142,7 +142,7 @@ export function FloatingOrbs() {
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="pointer-events-none absolute -bottom-16 left-1/3 h-48 w-48 rounded-full bg-secondary-default/10 blur-3xl"
+        className="bg-secondary-default/10 pointer-events-none absolute -bottom-16 left-1/3 h-48 w-48 rounded-full blur-3xl"
         animate={{
           scale: [1, 1.2, 1],
           x: [0, -12, 0],

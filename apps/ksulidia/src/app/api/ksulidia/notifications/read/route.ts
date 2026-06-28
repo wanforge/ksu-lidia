@@ -23,6 +23,9 @@ export async function POST(req: Request) {
 
     return Response.json({ success: true, count: result.count });
   } catch (error) {
-    return Response.json({ success: false, error: String(error) }, { status: 500 });
+    return Response.json(
+      { success: false, error: String(error) },
+      { status: 500 }
+    );
   }
 }

@@ -1,11 +1,11 @@
 // apps/ksulidia/src/components/ui/form/DateInput.tsx
-import React, { useState } from 'react';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import dayjs from 'dayjs';
-import { PiCalendarDuotone } from 'react-icons/pi';
+import React, { useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import dayjs from "dayjs";
+import { PiCalendarDuotone } from "react-icons/pi";
 
-import { FormHint } from './FormHint'; // Assume FormHint is in the same directory
+import { FormHint } from "./FormHint"; // Assume FormHint is in the same directory
 
 interface DateInputProps {
   name: string;
@@ -39,7 +39,10 @@ export const DateInput: React.FC<DateInputProps> = ({
 
   return (
     <div className={className}>
-      <label htmlFor={name} className="mb-1 block text-sm font-semibold text-gray-800">
+      <label
+        htmlFor={name}
+        className="mb-1 block text-sm font-semibold text-gray-800"
+      >
         {label}
       </label>
       <div className="relative">
@@ -50,10 +53,10 @@ export const DateInput: React.FC<DateInputProps> = ({
           onChange={handleDateChange}
           dateFormat="MM/dd/yyyy" // Consistent format for react-datepicker
           required={required}
-          className="h-10 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-red-700 cursor-pointer"
+          className="h-10 w-full cursor-pointer rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-red-700"
           wrapperClassName="w-full"
         />
-        <PiCalendarDuotone className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 pointer-events-none" />
+        <PiCalendarDuotone className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
       </div>
       {(helperText || tooltipContent) && (
         <FormHint helperText={helperText} tooltipContent={tooltipContent} />

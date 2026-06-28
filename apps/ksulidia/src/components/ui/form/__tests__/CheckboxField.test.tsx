@@ -1,10 +1,10 @@
 // apps/ksulidia/src/components/ui/form/__tests__/CheckboxField.test.tsx
-import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
-import { CheckboxField } from '../CheckboxField';
+import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
+import { CheckboxField } from "../CheckboxField";
 
-describe('CheckboxField', () => {
-  it('should render label and description', () => {
+describe("CheckboxField", () => {
+  it("should render label and description", () => {
     render(
       <CheckboxField
         name="agree"
@@ -13,11 +13,13 @@ describe('CheckboxField', () => {
       />
     );
 
-    expect(screen.getByText('Agree to terms')).toBeInTheDocument();
-    expect(screen.getByText('Must accept before proceeding')).toBeInTheDocument();
+    expect(screen.getByText("Agree to terms")).toBeInTheDocument();
+    expect(
+      screen.getByText("Must accept before proceeding")
+    ).toBeInTheDocument();
   });
 
-  it('should toggle when clicking anywhere on the label container', () => {
+  it("should toggle when clicking anywhere on the label container", () => {
     const handleChange = vi.fn();
     render(
       <CheckboxField
@@ -27,7 +29,7 @@ describe('CheckboxField', () => {
       />
     );
 
-    const labelContainer = screen.getByText('Agree to terms').closest('label');
+    const labelContainer = screen.getByText("Agree to terms").closest("label");
     expect(labelContainer).not.toBeNull();
 
     fireEvent.click(labelContainer!);

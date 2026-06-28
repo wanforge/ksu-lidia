@@ -44,6 +44,26 @@ export default async function PinjamanPage() {
     orderBy: { no: "asc" },
   });
 
+  // Fetch AppSettings for defaults
+  const settings = await prisma.appSetting.findMany();
+  let defaultRates = {
+    interestRate: 1.5,
+    provisionRate: 100.0,
+    crkRate: 10.0,
+    penaltyRate: 5.0,
+  };
+
+  for (const s of settings) {
+    if (s.key === "DEFAULT_INTEREST_RATE")
+      defaultRates.interestRate = parseFloat(s.value) || 1.5;
+    if (s.key === "DEFAULT_PENALTY_RATE")
+      defaultRates.penaltyRate = parseFloat(s.value) || 5.0;
+    if (s.key === "PROVISION_RATE")
+      defaultRates.provisionRate = parseFloat(s.value) || 100.0;
+    if (s.key === "CRK_RATE")
+      defaultRates.crkRate = parseFloat(s.value) || 10.0;
+  }
+
   return (
     <div className="flex w-full flex-col gap-6">
       <section className="flex flex-col gap-4 border-b border-gray-200 pb-5">
@@ -55,10 +75,9 @@ export default async function PinjamanPage() {
             Pinjaman & Kredit
           </h1>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-gray-600">
-            Kelola pencairan pinjaman baru beserta potongan provisi (1% flat
-            dari total bunga) dan Cadangan Resiko Kredit (CRK - 1x angsuran
-            pokok). Catat pembayaran angsuran bulanan, dan hitung denda
-            keterlambatan (5% dari nominal angsuran) secara otomatis.
+            Kelola pencairan pinjaman baru. Nilai bunga, denda, provisi, dan CRK
+            dapat diatur berdasarkan nilai default atau di-override per
+            pinjaman.
           </p>
         </div>
       </section>
@@ -66,6 +85,7 @@ export default async function PinjamanPage() {
       <PinjamanWorkspace
         loans={serializePrisma(loans)}
         eligibleMembers={serializePrisma(eligibleMembers)}
+        defaultRates={defaultRates}
       />
     </div>
   );

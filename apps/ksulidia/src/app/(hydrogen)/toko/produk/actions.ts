@@ -114,7 +114,7 @@ export async function createProductAction(
         entityType: "Product",
         entityId: product.id,
         summary: `Menambahkan produk baru ke katalog: ${product.code} - ${product.name} (Stok awal: ${product.stock})`,
-        source: AttachmentSource.SYSTEM,
+        source: AttachmentSource.BACK_OFFICE,
       });
     });
 
@@ -202,7 +202,7 @@ export async function updateProductAction(
       entityType: "Product",
       entityId: product.id,
       summary: `Memperbarui katalog produk: ${product.code} - ${product.name}`,
-      source: AttachmentSource.SYSTEM,
+      source: AttachmentSource.BACK_OFFICE,
     });
 
     revalidatePath(routes.toko.produk);
@@ -303,7 +303,7 @@ export async function adjustProductStockAction(
         entityType: "Product",
         entityId: product.id,
         summary: `Menyesuaikan stok produk ${product.code} - ${product.name}: ${parsed.data.quantity >= 0 ? "+" : ""}${parsed.data.quantity} (Stok baru: ${newStock})`,
-        source: AttachmentSource.SYSTEM,
+        source: AttachmentSource.BACK_OFFICE,
       });
     });
 

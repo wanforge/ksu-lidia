@@ -1,6 +1,6 @@
 // apps/ksulidia/src/components/ui/form/SwitchField.tsx
-import React from 'react';
-import { FormHint } from './FormHint';
+import React from "react";
+import { FormHint } from "./FormHint";
 
 interface SwitchFieldProps {
   name: string;
@@ -23,7 +23,7 @@ export const SwitchField: React.FC<SwitchFieldProps> = ({
   onChange,
   helperText,
   tooltipContent,
-  className = '',
+  className = "",
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange) {
@@ -33,19 +33,19 @@ export const SwitchField: React.FC<SwitchFieldProps> = ({
 
   return (
     <div className={`flex flex-col ${className}`}>
-      <div className="flex items-start gap-3 rounded-lg border border-gray-200 p-3 hover:bg-gray-50/50 transition cursor-pointer">
+      <div className="flex cursor-pointer items-start gap-3 rounded-lg border border-gray-200 p-3 transition hover:bg-gray-50/50">
         <label
           htmlFor={name}
-          className="flex w-full cursor-pointer items-center justify-between gap-3 select-none"
+          className="flex w-full cursor-pointer select-none items-center justify-between gap-3"
         >
-          <div className="flex flex-col flex-1">
+          <div className="flex flex-1 flex-col">
             <span className="text-sm font-medium text-gray-900">{label}</span>
             {description && (
               <span className="text-xs text-gray-500">{description}</span>
             )}
           </div>
           {/* Custom styled switch using tailwind peer classes */}
-          <div className="relative inline-flex items-center cursor-pointer">
+          <div className="relative inline-flex cursor-pointer items-center">
             <input
               type="checkbox"
               id={name}
@@ -54,9 +54,9 @@ export const SwitchField: React.FC<SwitchFieldProps> = ({
               checked={checked}
               defaultChecked={defaultChecked}
               onChange={handleChange}
-              className="sr-only peer"
+              className="peer sr-only"
             />
-            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-red-700/50 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-red-700"></div>
+            <div className="peer h-5 w-9 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-red-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-red-700/50 dark:border-gray-600 dark:bg-gray-700"></div>
           </div>
         </label>
       </div>
