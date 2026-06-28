@@ -8,6 +8,7 @@ import {
   PiBookOpenDuotone,
   PiStorefrontDuotone,
   PiMagnifyingGlassBold,
+  PiMicrosoftExcelLogoDuotone,
 } from "react-icons/pi";
 import { formatNumber } from "@/lib/format";
 import {
@@ -16,6 +17,7 @@ import {
   SAVINGS_TX_TYPES,
 } from "@/lib/constants";
 import { Table } from "rizzui";
+import * as XLSX from "xlsx";
 
 type Member = {
   id: string;
@@ -271,6 +273,59 @@ export default function LaporanWorkspace({
     };
   }, []);
 
+  const handleExportExcel = () => {
+    // We will export all data in multiple sheets
+    const wb = XLSX.utils.book_new();
+
+    // 1. Rekap Simpanan
+    const wsSavings = XLSX.utils.json_to_sheet(
+      savingsData.map((s) => ({
+        "No. Anggota": s.no,
+        "Nama": s.name,
+        "Simpanan Pokok": s.pokok,
+        "Simpanan Wajib": s.wajib,
+        "Simpanan Sukarela": s.sukarela,
+        "Total Saldo": s.total,
+      }))
+    );
+    XLSX.utils.book_append_sheet(wb, wsSavings, "Rekap_Simpanan");
+
+    // 2. Daftar Pinjaman
+    const wsLoans = XLSX.utils.json_to_sheet(
+      loansData.map((l) => ({
+        "No. Anggota": l.memberNo,
+        "Nama": l.memberName,
+        "Tgl Cair": l.dateDisbursedFormatted,
+        "Pinjaman Awal": l.amount,
+        "Total Bayar Pokok": l.totalPrincipalPaid,
+        "Total Bayar Bunga": l.totalInterestPaid,
+        "Sisa Saldo Pinjaman": l.remainingBalance,
+        "Laba Jasa (Total)": l.expectedProfit,
+      }))
+    );
+    XLSX.utils.book_append_sheet(wb, wsLoans, "Daftar_Pinjaman");
+
+    // 3. Mutasi Kas
+    const wsCashBook = XLSX.utils.json_to_sheet(
+      cashBookTxs.map((t) => ({
+        "Tanggal": new Intl.DateTimeFormat("id-ID", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }).format(new Date(t.date)),
+        "Tipe": t.type,
+        "Jenis Simpanan": t.savingsType,
+        "Nominal": t.amount,
+        "Keterangan": t.description || "-",
+        "Anggota": t.member.name,
+      }))
+    );
+    XLSX.utils.book_append_sheet(wb, wsCashBook, "Buku_Kas");
+
+    // Generate and download
+    XLSX.writeFile(wb, "Laporan_Keuangan_KSU_LIDIA.xlsx");
+  };
+
   return (
     <div className="flex w-full flex-col gap-6">
       {/* Page Header */}
@@ -287,13 +342,22 @@ export default function LaporanWorkspace({
             berjalan, mutasi kas simpan pinjam, serta laporan rugi/laba toko.
           </p>
         </div>
-        <button
-          onClick={() => window.print()}
-          className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-600"
-        >
-          <PiPrinterDuotone className="h-4.5 w-4.5" />
-          Cetak Laporan
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={handleExportExcel}
+            className="inline-flex items-center gap-2 rounded-lg border border-green-300 bg-green-50 px-4 py-2.5 text-sm font-medium text-green-800 shadow-sm transition hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-600"
+          >
+            <PiMicrosoftExcelLogoDuotone className="h-4.5 w-4.5" />
+            Ekspor Excel
+          </button>
+          <button
+            onClick={() => window.print()}
+            className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-600"
+          >
+            <PiPrinterDuotone className="h-4.5 w-4.5" />
+            Cetak Laporan
+          </button>
+        </div>
       </section>
 
       {/* Tabs Menu */}

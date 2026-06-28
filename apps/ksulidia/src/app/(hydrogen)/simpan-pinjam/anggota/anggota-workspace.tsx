@@ -16,6 +16,7 @@ import {
   PiPencilDuotone,
   PiIdentificationCardDuotone,
   PiPrinterDuotone,
+  PiDownloadSimpleDuotone,
 } from "react-icons/pi";
 import EmptyState from "@/app/(hydrogen)/_components/empty-state";
 import { formatNumber } from "@/lib/format";
@@ -40,6 +41,7 @@ import { DateInput } from "@/components/ui/form/DateInput";
 import { SAVINGS_TYPES } from "@/lib/constants";
 import { PrintIdCardModal } from "./print-id-card-modal";
 import { PrintKwitansiModal } from "./print-kwitansi-modal";
+import { ImportAnggotaForm } from "./import-anggota-form";
 
 type SavingsAccount = {
   id: string;
@@ -86,7 +88,7 @@ function getTotalSavings(member: MemberWithAccounts): number {
 }
 
 export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
-  const [tab, setTab] = useState<"list" | "create" | "detail">("list");
+  const [tab, setTab] = useState<"list" | "create" | "detail" | "import">("list");
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
   // Member details loaded dynamically
   const [memberDetail, setMemberDetail] = useState<any>(null);
@@ -347,6 +349,19 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
           <PiPlusBold className="h-4 w-4" />
           Tambah Anggota
         </button>
+
+        <button
+          type="button"
+          className={`inline-flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
+            tab === "import"
+              ? "border-red-700 text-red-700"
+              : "border-transparent text-gray-500 hover:text-gray-800"
+          }`}
+          onClick={() => setTab("import")}
+        >
+          <PiDownloadSimpleDuotone className="h-4 w-4" />
+          Impor Data
+        </button>
       </div>
 
       {/* Tab Contents */}
@@ -451,6 +466,10 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
               </Button>
             </div>
           </form>
+        </div>
+      ) : tab === "import" ? (
+        <div className="p-4 sm:p-6">
+          <ImportAnggotaForm onSuccess={() => setTab("list")} />
         </div>
       ) : tab === "detail" ? (
         <div className="space-y-6 p-6">

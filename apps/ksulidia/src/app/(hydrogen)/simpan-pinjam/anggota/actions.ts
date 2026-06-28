@@ -304,3 +304,88 @@ export async function postSavingsTransactionAction(
     };
   }
 }
+
+export async function importMembersAction(
+  _prevState: MemberActionState,
+  formData: FormData
+): Promise<MemberActionState> {
+  const session = await getSession();
+  ensureAuditContext(
+    session?.user
+      ? { actorId: session.user.id, actorRole: session.user.role }
+      : undefined
+  );
+
+  if (!session?.user) {
+    return {
+      success: false,
+      message: "Sesi Anda telah kedaluwarsa. Silakan sign in kembali.",
+    };
+  }
+
+  const membersJson = formData.get("membersJson") as string;
+  if (!membersJson) {
+    return { success: false, message: "Data tidak valid." };
+  }
+
+  try {
+    const parsedData = JSON.parse(membersJson);
+    if (!Array.isArray(parsedData) || parsedData.length === 0) {
+      return { success: false, message: "Data anggota kosong." };
+    }
+
+    let successCount = 0;
+    
+    // We import members sequentially or in a single transaction if needed.
+    // Sequential to easily skip existing without failing others
+    for (const data of parsedData) {
+      if (!data.no || !data.name) continue;
+
+      const existing = await prisma.member.findUnique({
+        where: { no: data.no },
+      });
+
+      if (!existing) {
+        await prisma.$transaction(async (tx) => {
+          const member = await tx.member.create({
+            data: {
+              no: data.no,
+              name: data.name,
+              phone: data.phone || null,
+              address: data.address || null,
+            },
+          });
+
+          // Create default savings accounts
+          await tx.savingsAccount.createMany({
+            data: [
+              { memberId: member.id, type: SavingsType.POKOK, balance: 100000 },
+              { memberId: member.id, type: SavingsType.WAJIB, balance: 0 },
+              { memberId: member.id, type: SavingsType.SUKARELA, balance: 0 },
+            ],
+          });
+
+          await recordAuditLog(tx, {
+            action: AuditAction.CREATE,
+            entityType: "Member",
+            entityId: member.id,
+            summary: `Import Anggota: ${member.name} (${member.no})`,
+            source: AttachmentSource.BACK_OFFICE,
+          });
+        });
+        successCount++;
+      }
+    }
+
+    revalidatePath(routes.simpanPinjam.anggota);
+    return {
+      success: true,
+      message: `Berhasil mengimpor ${successCount} anggota baru.`,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message || "Gagal mengimpor anggota.",
+    };
+  }
+}
