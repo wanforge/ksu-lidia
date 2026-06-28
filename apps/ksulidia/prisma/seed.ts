@@ -2,7 +2,10 @@ import { PrismaClient, UserRole } from "@prisma/client";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import bcrypt from "bcryptjs";
 import { seedDemoUser } from "./data/demo";
-import { seedKsuLidiaData } from "./data/ksulidia-seeder";
+import { seedLaporanBulanan } from "./data/seeder-laporan-bulanan";
+import { seedLaporanToko } from "./data/seeder-laporan-toko";
+import { seedLaporanRat } from "./data/seeder-laporan-rat";
+import { seedLaporanKonsolidasi } from "./data/seeder-laporan-konsolidasi";
 
 const adapter = new PrismaMariaDb(process.env.DATABASE_URL ?? "");
 const prisma = new PrismaClient({ adapter });
@@ -63,8 +66,11 @@ async function main() {
   // Seed demo user account
   await seedDemoUser(prisma, emailDomain);
 
-  // Seed KSU Lidia member data
-  await seedKsuLidiaData(prisma);
+  // Seed KSU Lidia data from Excel files
+  await seedLaporanBulanan(prisma);
+  await seedLaporanToko(prisma);
+  await seedLaporanRat(prisma);
+  await seedLaporanKonsolidasi(prisma);
 
   console.log("✅  Seeding complete!");
 }

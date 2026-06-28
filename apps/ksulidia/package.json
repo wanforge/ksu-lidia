@@ -153,6 +153,7 @@
     "tailwind-config": "workspace:*",
     "tailwindcss": "^3.4.17",
     "tsx": "^4.21.0",
-    "typescript-config": "workspace:*"
+    "typescript-config": "workspace:*",
+    "xlsx": "^0.18.5"
   }
 }
