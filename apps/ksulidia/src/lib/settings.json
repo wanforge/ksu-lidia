@@ -1,0 +1,12 @@
+{
+  "profile": {
+    "name": "KSU LIDIA",
+    "address": "Jl. Contoh Alamat No. 123",
+    "phone": "(021) 1234567"
+  },
+  "financial": {
+    "defaultInterestRate": 1.5,
+    "defaultPenaltyRate": 5.0,
+    "adminFee": 10000
+  }
+}

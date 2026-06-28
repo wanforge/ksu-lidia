@@ -140,6 +140,12 @@ export const menuItems: MenuItem[] = [
     icon: <PiPulseDuotone />,
     permission: PERMISSIONS.SYSTEM_VIEW,
   },
+  {
+    name: "Pengaturan Sistem",
+    href: routes.pengaturan,
+    icon: <PiGearDuotone />,
+    permission: PERMISSIONS.SYSTEM_VIEW,
+  },
 ];
 
 export type { MenuItem };

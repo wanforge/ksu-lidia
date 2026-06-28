@@ -83,7 +83,6 @@ export default function SignInForm() {
               label="Email"
               className="[&>label>span]:font-medium"
               inputClassName="text-sm"
-              placeholder=""
               {...register("email")}
               error={errors.email?.message}
             />
@@ -93,7 +92,6 @@ export default function SignInForm() {
               size="lg"
               className="[&>label>span]:font-medium"
               inputClassName="text-sm"
-              placeholder=""
               {...register("password")}
               error={errors.password?.message}
             />
@@ -105,7 +103,7 @@ export default function SignInForm() {
                 id="rememberMe"
                 {...register("rememberMe")}
                 label="Ingat saya"
-                className="[&>label>span]:font-medium [&_svg]:hidden"
+                className="[&>label>span]:font-medium"
               />
             </div>
             <Button

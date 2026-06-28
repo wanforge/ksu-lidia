@@ -8,6 +8,7 @@ export const routes = {
     list: "/audit",
   },
   system: "/sistem",
+  pengaturan: "/pengaturan",
   simpanPinjam: {
     anggota: "/simpan-pinjam/anggota",
     pinjaman: "/simpan-pinjam/pinjaman",

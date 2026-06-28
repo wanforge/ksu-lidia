@@ -221,6 +221,15 @@
     @apply bg-none;
   }
 
+  /* Hilangkan ikon check pada semua checkbox, jadikan blok warna */
+  input[type="checkbox"] + span > svg,
+  input[type="checkbox"] ~ span > svg,
+  input[type="checkbox"]:checked + span > svg,
+  input[type="checkbox"]:checked ~ span > svg,
+  .rizzui-checkbox svg {
+    @apply hidden !important;
+  }
+
   /* typography style for the Text component */
   h1,
   h2,
