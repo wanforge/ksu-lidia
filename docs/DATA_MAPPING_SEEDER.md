@@ -1,40 +1,51 @@
 # Pemetaan Data Seeder KSU Lidia
 
-Dokumen ini menjelaskan rincian pemetaan data yang digunakan oleh masing-masing seeder berdasarkan file Excel yang diberikan oleh pengguna.
+Dokumen ini menjelaskan rincian pemetaan data yang digunakan oleh 6 seeder terpisah berdasarkan 6 file Excel sumber data dari koperasi.
 
-## 1. Seeder Laporan Bulanan (`seeder-laporan-bulanan.ts`)
+## 1. Laporan Bulanan Simpan Pinjam (`01-seeder-bulanan-simpan-pinjam.ts`)
 
-Seeder ini adalah seeder utama yang mengambil data riil dari Excel dan memasukkannya ke database secara terstruktur.
+Seeder ini merupakan seeder utama yang membangun data historis anggota, tabungan, dan pinjaman.
 *   **Sumber File:** `docs/DATA_DARI_USER/DATA DARI USER UNTUK BUAT SISTEM/LAPORAN BULANAN SIMPAN PINJAM.xlsx`
-*   **Sheet yang Digunakan:** `MEI 2026`
-*   **Kolom yang Diambil (Mulai Baris ke-4):**
-    *   **Kolom A (No):** Nomor Induk Anggota.
-    *   **Kolom B (Nama):** Nama Anggota. (Di sini seeder memfilter teks `(meninggal)` untuk melakukan set flag `isDeceased: true` di database, dan membersihkan teks tersebut dari nama asli).
-    *   **Kolom C (S. Awal Hutang):** Saldo Awal Hutang / Pinjaman berjalan.
-    *   **Kolom D (Angsuran):** Jumlah bayar pokok pinjaman bulan tersebut.
-    *   **Kolom E (Bunga):** Jumlah bayar bunga bulan tersebut.
-    *   **Kolom F (Denda):** Jumlah bayar denda bulan tersebut.
-    *   **Kolom G (Tab. Pokok):** Setoran Simpanan Pokok baru.
-    *   **Kolom H (Tab. Wajib):** Setoran Simpanan Wajib baru.
-    *   **Kolom I (Tab. Sukarela):** Setoran Simpanan Sukarela baru.
-    *   **Kolom K, L, M:** Saldo Awal Wajib, Pengambilan Wajib (WD), dan Saldo Akhir Wajib.
-    *   **Kolom N, O, P:** Saldo Awal Sukarela, Pengambilan Sukarela (WD), dan Saldo Akhir Sukarela.
-    *   **Kolom Q, R, S:** Pinjaman Baru, Provisi, dan Cadangan Risiko Kredit (CRK).
+*   **Sheet yang Digunakan:** **Seluruh 89 Sheets** (Mulai dari `JAN 2019` hingga `MEI 2026`).
+*   **Logika Data:**
+    *   **Anggota:** Kolom "No" dan "Nama". String `(meninggal)` akan ditandai flag khusus.
+    *   **Pinjaman:** Kolom S. Awal Hutang, Angsuran, Bunga, Denda, Pinjaman Baru. 
+        * *Note:* Seeder akan menyimpan snapshot persentase (Bunga/Denda/Provisi/CRK) di tabel `Loan` saat `Pinjaman Baru` muncul.
+    *   **Tabungan:** Simpanan Pokok, Wajib, Sukarela dan penarikannya dipetakan ke `SavingsTransaction`.
+    *   **Catatan Audit:** Kami telah melakukan proses audit secara komputasional terhadap seluruh 89 sheet dan seluruh 6 file excel yang ada. Mayoritas data berkesinambungan dan sesuai rumus matematis (Bunga 1-5% dinamis tiap anggota, penambahan saldo bulan ke bulan konsisten). Satu-satunya anomali matematis yang tidak dapat dijelaskan secara rumus ditemukan di sheet Mei 2026 (saldo Ani Widiyana), namun sistem *seed* mengimpornya apa adanya sebagai *truth* historis.
 
-## 2. Seeder Laporan Toko (`seeder-laporan-toko.ts`)
+## 2. Buku Kas Koperasi 2019 (`02-seeder-buku-kas-koperasi.ts`)
+
+*   **Sumber File:** `docs/DATA_DARI_USER/DATA DARI USER UNTUK BUAT SISTEM/LAPORAN KAS/KAS KSU LIDIA 2019 new dok.xlsx`
+*   **Tujuan:** Mengisi data historis `CashTransaction` (Buku Kas).
+*   **Sheet Utama:** 
+    * `KAS 2022`: Data buku kas dengan format Penerimaan, Pengeluaran, Saldo. Entitas = `KOPERASI`.
+    * `Laporan SRI`: Rekapan buku kas untuk program spesifik. Entitas = `SRI_NETHERLAND`.
+
+## 3. Buku Kas Toko (`03-seeder-buku-kas-toko.ts`)
+
+*   **Sumber File:** `docs/DATA_DARI_USER/DATA DARI USER UNTUK BUAT SISTEM/LAPORAN KAS/TOKO LIDIA STM.xlsx`
+*   **Tujuan:** Mengisi data historis `CashTransaction` (Buku Kas Toko).
+*   **Sheet Utama:** `KAS`. Mencatat setiap penerimaan (penjualan) dan pengeluaran (kulakan) Toko Lidia STM. Entitas = `TOKO`.
+
+## 4. Laporan Triwulan Toko (`04-seeder-triwulan-toko.ts`)
 
 *   **Sumber File:** `docs/DATA_DARI_USER/DATA DARI USER UNTUK BUAT SISTEM/Lap Rugi laba 1 Jan sd 31 Maret 2026 (LAPORAN TRIWULAN TOKO).xlsx`
-*   **Status Implementasi:** File Excel Laba/Rugi (P&L) milik user hanya berisi rekapan akumulasi bulanan, **bukan** detail transaksi per item produk.
-*   **Penyesuaian:** Oleh sebab itu, seeder membaca file tersebut namun mengisi tabel database (Tabel `Product`, `ProductTransaction`, dan `ProductTransactionItem`) menggunakan **data rekaan/dummy** yang nilainya dimanipulasi agar persis menghasilkan total laba-rugi sesuai dengan Excel pada bulan Januari - Maret 2026.
+*   **Tujuan:** Mengisi data `FinancialReport` (Buku Besar/Laba Rugi Agregat Toko).
+*   **Sheet Utama:** `Sheet1`.
+*   **Penyesuaian:** Membaca item laba-rugi triwulan (Penjualan, Harga Pokok, dll) dan menyimpannya sebagai agregat `FinancialReportEntity.TOKO`.
 
-## 3. Seeder Laporan RAT (`seeder-laporan-rat.ts`)
+## 5. Laporan RAT 2025 (`05-seeder-rat-2025.ts`)
 
 *   **Sumber File:** `docs/DATA_DARI_USER/DATA DARI USER UNTUK BUAT SISTEM/LAPORAN RAT 2025.xlsx`
-*   **Status Implementasi:** File divalidasi dan dibaca via script (memiliki total 7 *sheets*).
-*   **Penyesuaian:** Saat ini sistem / aplikasi (skema database Prisma) belum memiliki tabel khusus untuk menampung agregasi RAT secara spesifik. Data dibiarkan sebagai referensi placeholder hingga tabel agregasi terkait (jika dibutuhkan) dibuat.
+*   **Tujuan:** Mengisi Laporan Keuangan Tahunan dan Rincian SHU per anggota.
+*   **Sheet Utama:**
+    *   `Neraca`, `Rugi Laba`, `NERACA PAJAK`, `RUGI LABA PAJAK`: Dimasukkan ke dalam `FinancialReport` dengan tipe yang bersesuaian.
+    *   `SHU Simpanan` & `SHU Pinjaman`: Di-_join_ berdasar Nama Anggota dan dimasukkan ke tabel `ShuDistribution` (Tahun 2025).
 
-## 4. Seeder Laporan Konsolidasi (`seeder-laporan-konsolidasi.ts`)
+## 6. Laporan Konsolidasi 2026 (`06-seeder-konsolidasi-2026.ts`)
 
 *   **Sumber File:** `docs/DATA_DARI_USER/DATA DARI USER UNTUK BUAT SISTEM/LK Konsolidasi 2026 (LAPORAN KONSOLIDASI PER TRI WULAN).xlsx`
-*   **Status Implementasi:** Sama seperti RAT, file dibaca (terdeteksi 2 *sheets*) sebagai referensi placeholder.
-*   **Penyesuaian:** Akan diimplementasikan lebih jauh ke tabel jika aplikasi membutuhkan menu *dashboard* pembukuan konsolidasi KSU di masa mendatang.
+*   **Tujuan:** Menyimpan versi gabungan antara Keuangan Koperasi dan Toko.
+*   **Sheet Utama:** `NERACA`, `RUGI LABA`.
+*   **Penyesuaian:** Disimpan ke `FinancialReport` dengan entitas `FinancialReportEntity.KONSOLIDASI`.

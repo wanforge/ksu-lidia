@@ -2,10 +2,12 @@ import { PrismaClient, UserRole } from "@prisma/client";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import bcrypt from "bcryptjs";
 import { seedDemoUser } from "./data/demo";
-import { seedLaporanBulanan } from "./data/seeder-laporan-bulanan";
-import { seedLaporanToko } from "./data/seeder-laporan-toko";
-import { seedLaporanRat } from "./data/seeder-laporan-rat";
-import { seedLaporanKonsolidasi } from "./data/seeder-laporan-konsolidasi";
+import { seedBulananSimpanPinjam } from "./data/01-seeder-bulanan-simpan-pinjam";
+import { seedBukuKasKoperasi } from "./data/02-seeder-buku-kas-koperasi";
+import { seedBukuKasToko } from "./data/03-seeder-buku-kas-toko";
+import { seedLaporanTriwulanToko } from "./data/04-seeder-triwulan-toko";
+import { seedLaporanRat } from "./data/05-seeder-rat-2025";
+import { seedLaporanKonsolidasi } from "./data/06-seeder-konsolidasi-2026";
 
 const adapter = new PrismaMariaDb(process.env.DATABASE_URL ?? "");
 const prisma = new PrismaClient({ adapter });
@@ -66,9 +68,11 @@ async function main() {
   // Seed demo user account
   await seedDemoUser(prisma, emailDomain);
 
-  // Seed KSU Lidia data from Excel files
-  await seedLaporanBulanan(prisma);
-  await seedLaporanToko(prisma);
+  // Run the 6 seeders sequentially
+  await seedBulananSimpanPinjam(prisma);
+  await seedBukuKasKoperasi(prisma);
+  await seedBukuKasToko(prisma);
+  await seedLaporanTriwulanToko(prisma);
   await seedLaporanRat(prisma);
   await seedLaporanKonsolidasi(prisma);
 

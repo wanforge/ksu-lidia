@@ -172,6 +172,29 @@ enum ProductTxType {
   ADJUSTMENT
 }
 
+enum CashEntity {
+  KOPERASI
+  TOKO
+  SRI_NETHERLAND
+}
+
+enum CashTxType {
+  IN
+  OUT
+}
+
+enum FinancialReportEntity {
+  KSP
+  TOKO
+  KONSOLIDASI
+}
+
+enum FinancialReportType {
+  NERACA
+  RUGI_LABA
+  PAJAK
+}
+
 model Member {
   id         String    @id @default(uuid(7))
   no         Int       @unique
@@ -187,6 +210,7 @@ model Member {
   savingsAccounts     SavingsAccount[]
   savingsTransactions SavingsTransaction[]
   loans               Loan[]
+  shuDistributions    ShuDistribution[]
 
   @@map("members")
 }
@@ -228,6 +252,9 @@ model Loan {
   memberId          String
   amount            Decimal    @db.Decimal(15, 2)
   interestRate      Decimal    @db.Decimal(5, 2)
+  penaltyRate       Decimal    @default(5.00) @db.Decimal(5, 2)
+  provisionRate     Decimal    @default(100.00) @db.Decimal(5, 2) // 100% of interest amount usually
+  crkRate           Decimal    @default(10.00) @db.Decimal(5, 2) // Usually 1 month out of 10 months (10%)
   tenor             Int
   provision         Decimal    @db.Decimal(15, 2)
   crk               Decimal    @db.Decimal(15, 2)
@@ -323,4 +350,62 @@ model Notification {
   @@index([isRead])
   @@index([createdAt])
   @@map("notifications")
+}
+
+model AppSetting {
+  key         String   @id
+  value       String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("app_settings")
+}
+
+model CashTransaction {
+  id          String     @id @default(uuid(7))
+  date        DateTime
+  entity      CashEntity
+  type        CashTxType
+  amount      Decimal    @db.Decimal(15, 2)
+  description String?
+  referenceId String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([date])
+  @@index([entity])
+  @@map("cash_transactions")
+}
+
+model ShuDistribution {
+  id            String   @id @default(uuid(7))
+  memberId      String
+  year          Int
+  shuSimpanan   Decimal  @db.Decimal(15, 2)
+  shuPinjaman   Decimal  @db.Decimal(15, 2)
+  totalShu      Decimal  @db.Decimal(15, 2)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([memberId, year])
+  @@index([memberId])
+  @@map("shu_distributions")
+}
+
+model FinancialReport {
+  id          String                @id @default(uuid(7))
+  periodDate  DateTime
+  entity      FinancialReportEntity
+  reportType  FinancialReportType
+  category    String
+  amount      Decimal               @db.Decimal(15, 2)
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
+
+  @@index([periodDate])
+  @@index([entity])
+  @@map("financial_reports")
 }
