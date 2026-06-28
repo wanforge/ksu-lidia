@@ -10,7 +10,11 @@ import {
   PiMagnifyingGlassBold,
 } from "react-icons/pi";
 import { formatNumber } from "@/lib/format";
-import { SAVINGS_TYPES, INSTALLMENT_STATUS, SAVINGS_TX_TYPES } from "@/lib/constants";
+import {
+  SAVINGS_TYPES,
+  INSTALLMENT_STATUS,
+  SAVINGS_TX_TYPES,
+} from "@/lib/constants";
 import { Table } from "rizzui";
 
 type Member = {
@@ -373,7 +377,10 @@ export default function LaporanWorkspace({
         {/* Tab 1: Savings Table */}
         {tab === "savings" && (
           <div className="overflow-x-auto">
-            <Table variant="modern" className="w-full text-left text-sm text-gray-500">
+            <Table
+              variant="modern"
+              className="w-full text-left text-sm text-gray-500"
+            >
               <thead className="border-b border-gray-200 bg-gray-50 text-xs uppercase text-gray-700">
                 <tr>
                   <th scope="col" className="px-6 py-4">
@@ -461,7 +468,10 @@ export default function LaporanWorkspace({
         {/* Tab 2: Loans Table */}
         {tab === "loans" && (
           <div className="overflow-x-auto">
-            <Table variant="modern" className="w-full text-left text-sm text-gray-500">
+            <Table
+              variant="modern"
+              className="w-full text-left text-sm text-gray-500"
+            >
               <thead className="border-b border-gray-200 bg-gray-50 text-xs uppercase text-gray-700">
                 <tr>
                   <th scope="col" className="px-6 py-4">
@@ -550,7 +560,10 @@ export default function LaporanWorkspace({
         {/* Tab 3: Cash Book Ledger */}
         {tab === "cashbook" && (
           <div className="overflow-x-auto">
-            <Table variant="modern" className="w-full text-left text-sm text-gray-500">
+            <Table
+              variant="modern"
+              className="w-full text-left text-sm text-gray-500"
+            >
               <thead className="border-b border-gray-200 bg-gray-50 text-xs uppercase text-gray-700">
                 <tr>
                   <th scope="col" className="px-6 py-4">
@@ -616,7 +629,10 @@ export default function LaporanWorkspace({
         {tab === "store" && (
           <div className="overflow-x-auto p-6">
             <div className="mx-auto max-w-4xl overflow-hidden rounded-lg border border-gray-200">
-              <Table variant="modern" className="w-full text-left text-sm text-gray-950">
+              <Table
+                variant="modern"
+                className="w-full text-left text-sm text-gray-950"
+              >
                 <thead className="bg-red-800 text-xs font-bold uppercase text-white">
                   <tr>
                     <th scope="col" className="px-6 py-3.5">

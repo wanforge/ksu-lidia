@@ -301,7 +301,10 @@ export default async function DataChangeLogPage({
           />
         ) : (
           <div className="overflow-x-auto">
-            <Table variant="modern" className="min-w-full divide-y divide-gray-200 text-sm">
+            <Table
+              variant="modern"
+              className="min-w-full divide-y divide-gray-200 text-sm"
+            >
               <thead className="bg-gray-50">
                 <tr>
                   <SortableHeader

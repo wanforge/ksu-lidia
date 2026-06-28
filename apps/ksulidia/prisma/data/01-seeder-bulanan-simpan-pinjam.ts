@@ -16,10 +16,30 @@ function parseMonthYear(sheetName: string): Date {
   const yearStr = parts[parts.length - 1];
   const year = parseInt(yearStr);
   const months: { [key: string]: number } = {
-    JAN: 0, JANUARI: 0, PEB: 1, PEBRUARI: 1, MAR: 2, MARET: 2,
-    APR: 3, APRIL: 3, MEI: 4, JUN: 5, JUNI: 5, JUL: 6, JULI: 6,
-    AGU: 7, AGUSTUS: 7, SEP: 8, SEPT: 8, SEPTEMBER: 8,
-    OKT: 9, OKTOBER: 9, NOP: 10, NOPEMBER: 10, DES: 11, DESEMBER: 11,
+    JAN: 0,
+    JANUARI: 0,
+    PEB: 1,
+    PEBRUARI: 1,
+    MAR: 2,
+    MARET: 2,
+    APR: 3,
+    APRIL: 3,
+    MEI: 4,
+    JUN: 5,
+    JUNI: 5,
+    JUL: 6,
+    JULI: 6,
+    AGU: 7,
+    AGUSTUS: 7,
+    SEP: 8,
+    SEPT: 8,
+    SEPTEMBER: 8,
+    OKT: 9,
+    OKTOBER: 9,
+    NOP: 10,
+    NOPEMBER: 10,
+    DES: 11,
+    DESEMBER: 11,
   };
   const m = monthStr.toUpperCase();
   const monthIdx = months[m] !== undefined ? months[m] : 0;
@@ -50,24 +70,61 @@ export async function seedBulananSimpanPinjam(prisma: PrismaClient) {
   const workbook = xlsx.readFile(filePath);
 
   // Settings
-  await prisma.appSetting.upsert({ where: { key: APP_SETTING_KEYS.DEFAULT_INTEREST_RATE }, update: {}, create: { key: APP_SETTING_KEYS.DEFAULT_INTEREST_RATE, value: "1.50", description: "Bunga Pinjaman Default (%)" } });
-  await prisma.appSetting.upsert({ where: { key: APP_SETTING_KEYS.DEFAULT_PENALTY_RATE }, update: {}, create: { key: APP_SETTING_KEYS.DEFAULT_PENALTY_RATE, value: "5.00", description: "Denda Keterlambatan Default (%)" } });
-  await prisma.appSetting.upsert({ where: { key: APP_SETTING_KEYS.PROVISION_RATE }, update: {}, create: { key: APP_SETTING_KEYS.PROVISION_RATE, value: "100.00", description: "Provisi (Persentase thd nominal Bunga)" } });
-  await prisma.appSetting.upsert({ where: { key: APP_SETTING_KEYS.CRK_RATE }, update: {}, create: { key: APP_SETTING_KEYS.CRK_RATE, value: "10.00", description: "Cadangan Risiko Kredit (Persentase thd total pinjaman)" } });
+  await prisma.appSetting.upsert({
+    where: { key: APP_SETTING_KEYS.DEFAULT_INTEREST_RATE },
+    update: {},
+    create: {
+      key: APP_SETTING_KEYS.DEFAULT_INTEREST_RATE,
+      value: "1.50",
+      description: "Bunga Pinjaman Default (%)",
+    },
+  });
+  await prisma.appSetting.upsert({
+    where: { key: APP_SETTING_KEYS.DEFAULT_PENALTY_RATE },
+    update: {},
+    create: {
+      key: APP_SETTING_KEYS.DEFAULT_PENALTY_RATE,
+      value: "5.00",
+      description: "Denda Keterlambatan Default (%)",
+    },
+  });
+  await prisma.appSetting.upsert({
+    where: { key: APP_SETTING_KEYS.PROVISION_RATE },
+    update: {},
+    create: {
+      key: APP_SETTING_KEYS.PROVISION_RATE,
+      value: "100.00",
+      description: "Provisi (Persentase thd nominal Bunga)",
+    },
+  });
+  await prisma.appSetting.upsert({
+    where: { key: APP_SETTING_KEYS.CRK_RATE },
+    update: {},
+    create: {
+      key: APP_SETTING_KEYS.CRK_RATE,
+      value: "10.00",
+      description: "Cadangan Risiko Kredit (Persentase thd total pinjaman)",
+    },
+  });
 
   const memberMap = new Map<string, string>(); // name to UUID
-  
+
   // Track active loans in memory to process installments quickly
-  const activeLoans = new Map<string, {
-    loanId: string,
-    installments: { id: string, month: number, status: string }[],
-  }>();
+  const activeLoans = new Map<
+    string,
+    {
+      loanId: string;
+      installments: { id: string; month: number; status: string }[];
+    }
+  >();
 
   for (const sheetName of workbook.SheetNames) {
     if (sheetName.toLowerCase().includes("chart")) continue;
 
     const date = parseMonthYear(sheetName);
-    console.log(`Processing sheet: ${sheetName} -> ${date.toISOString().split("T")[0]}`);
+    console.log(
+      `Processing sheet: ${sheetName} -> ${date.toISOString().split("T")[0]}`
+    );
 
     const worksheet = workbook.Sheets[sheetName];
     const data = xlsx.utils.sheet_to_json<any[]>(worksheet, { header: 1 });
@@ -79,7 +136,13 @@ export async function seedBulananSimpanPinjam(prisma: PrismaClient) {
       const rawNo = row[0];
       const rawName = row[1];
 
-      if (!rawNo || !rawName || String(rawName).trim() === "" || String(rawName).toLowerCase().includes("jumlah") || String(rawName).toLowerCase().includes("total")) {
+      if (
+        !rawNo ||
+        !rawName ||
+        String(rawName).trim() === "" ||
+        String(rawName).toLowerCase().includes("jumlah") ||
+        String(rawName).toLowerCase().includes("total")
+      ) {
         continue;
       }
 
@@ -102,7 +165,11 @@ export async function seedBulananSimpanPinjam(prisma: PrismaClient) {
         memberId = member.id;
         memberMap.set(name, memberId);
 
-        for (const type of [SavingsType.POKOK, SavingsType.WAJIB, SavingsType.SUKARELA]) {
+        for (const type of [
+          SavingsType.POKOK,
+          SavingsType.WAJIB,
+          SavingsType.SUKARELA,
+        ]) {
           await prisma.savingsAccount.upsert({
             where: { memberId_type: { memberId, type } },
             update: {},
@@ -124,29 +191,77 @@ export async function seedBulananSimpanPinjam(prisma: PrismaClient) {
       const sAkhirHutang = num(row[19]);
 
       // 1. Process Savings (Tabungan)
-      if (tabPokok > 0) await createSavingsTx(prisma, memberId, SavingsType.POKOK, tabPokok, SavingsTxType.DEPOSIT, date, sheetName);
-      if (tabWajib > 0) await createSavingsTx(prisma, memberId, SavingsType.WAJIB, tabWajib, SavingsTxType.DEPOSIT, date, sheetName);
-      if (tabSukarela > 0) await createSavingsTx(prisma, memberId, SavingsType.SUKARELA, tabSukarela, SavingsTxType.DEPOSIT, date, sheetName);
-      if (wdWajib > 0) await createSavingsTx(prisma, memberId, SavingsType.WAJIB, wdWajib, SavingsTxType.WITHDRAWAL, date, sheetName);
-      if (wdSukarela > 0) await createSavingsTx(prisma, memberId, SavingsType.SUKARELA, wdSukarela, SavingsTxType.WITHDRAWAL, date, sheetName);
+      if (tabPokok > 0)
+        await createSavingsTx(
+          prisma,
+          memberId,
+          SavingsType.POKOK,
+          tabPokok,
+          SavingsTxType.DEPOSIT,
+          date,
+          sheetName
+        );
+      if (tabWajib > 0)
+        await createSavingsTx(
+          prisma,
+          memberId,
+          SavingsType.WAJIB,
+          tabWajib,
+          SavingsTxType.DEPOSIT,
+          date,
+          sheetName
+        );
+      if (tabSukarela > 0)
+        await createSavingsTx(
+          prisma,
+          memberId,
+          SavingsType.SUKARELA,
+          tabSukarela,
+          SavingsTxType.DEPOSIT,
+          date,
+          sheetName
+        );
+      if (wdWajib > 0)
+        await createSavingsTx(
+          prisma,
+          memberId,
+          SavingsType.WAJIB,
+          wdWajib,
+          SavingsTxType.WITHDRAWAL,
+          date,
+          sheetName
+        );
+      if (wdSukarela > 0)
+        await createSavingsTx(
+          prisma,
+          memberId,
+          SavingsType.SUKARELA,
+          wdSukarela,
+          SavingsTxType.WITHDRAWAL,
+          date,
+          sheetName
+        );
 
       // 2. Process Loans (Hutang)
       if (pinjamanBaru > 0) {
         // If there is an existing active loan, mark it as PAID (since they usually settle before taking a new one)
         const existingLoan = activeLoans.get(memberId);
         if (existingLoan) {
-           await prisma.loan.update({ where: { id: existingLoan.loanId }, data: { status: "PAID" }});
-           await prisma.loanInstallment.updateMany({
-             where: { loanId: existingLoan.loanId, status: "UNPAID" },
-             data: { status: "PAID" }
-           });
-           activeLoans.delete(memberId);
+          await prisma.loan.update({
+            where: { id: existingLoan.loanId },
+            data: { status: "PAID" },
+          });
+          await prisma.loanInstallment.updateMany({
+            where: { loanId: existingLoan.loanId, status: "UNPAID" },
+            data: { status: "PAID" },
+          });
+          activeLoans.delete(memberId);
         }
 
         // Calculate rates based on actual flat values applied in Excel
         let interestRateApplied = 1.5;
         if (bunga > 0) {
-            interestRateApplied = (bunga / pinjamanBaru) * 100;
+          interestRateApplied = (bunga / pinjamanBaru) * 100;
         }
 
         const provisi = num(row[17]) || 0;
@@ -172,20 +287,20 @@ export async function seedBulananSimpanPinjam(prisma: PrismaClient) {
 
         const installments = [];
         for (let m = 1; m <= 10; m++) {
-           const dueDate = new Date(date);
-           dueDate.setMonth(dueDate.getMonth() + m);
-           
-           const inst = await prisma.loanInstallment.create({
-             data: {
-               loanId: loan.id,
-               monthNumber: m,
-               dueDate: dueDate,
-               status: "UNPAID",
-             }
-           });
-           installments.push({ id: inst.id, month: m, status: "UNPAID" });
+          const dueDate = new Date(date);
+          dueDate.setMonth(dueDate.getMonth() + m);
+
+          const inst = await prisma.loanInstallment.create({
+            data: {
+              loanId: loan.id,
+              monthNumber: m,
+              dueDate: dueDate,
+              status: "UNPAID",
+            },
+          });
+          installments.push({ id: inst.id, month: m, status: "UNPAID" });
         }
-        
+
         activeLoans.set(memberId, { loanId: loan.id, installments });
       }
 
@@ -194,7 +309,9 @@ export async function seedBulananSimpanPinjam(prisma: PrismaClient) {
         const currentLoan = activeLoans.get(memberId);
         if (currentLoan) {
           // Find the earliest UNPAID installment
-          const unpaidIdx = currentLoan.installments.findIndex(i => i.status === "UNPAID");
+          const unpaidIdx = currentLoan.installments.findIndex(
+            (i) => i.status === "UNPAID"
+          );
           if (unpaidIdx !== -1) {
             const instToPay = currentLoan.installments[unpaidIdx];
             await prisma.loanInstallment.update({
@@ -205,8 +322,8 @@ export async function seedBulananSimpanPinjam(prisma: PrismaClient) {
                 interestPaid: pinjamanBaru > 0 ? 0 : bunga, // if pinjamanBaru > 0, bunga might be for the new loan deductibles or previous, usually previous. But if we want to be exact, we just record it.
                 penaltyPaid: denda,
                 totalPaid: angsuran + (pinjamanBaru > 0 ? 0 : bunga) + denda,
-                paidAt: date
-              }
+                paidAt: date,
+              },
             });
             currentLoan.installments[unpaidIdx].status = "PAID";
           }
@@ -214,20 +331,22 @@ export async function seedBulananSimpanPinjam(prisma: PrismaClient) {
       }
 
       // 4. Auto-Forgive Anomaly
-      // If Excel says the loan is 0 but we still have an active loan mapped, 
+      // If Excel says the loan is 0 but we still have an active loan mapped,
       // close it out to respect Excel's truth.
       if (sAkhirHutang === 0 && sAwalHutang > 0) {
         const currentLoan = activeLoans.get(memberId);
         if (currentLoan) {
-          await prisma.loan.update({ where: { id: currentLoan.loanId }, data: { status: "PAID" }});
+          await prisma.loan.update({
+            where: { id: currentLoan.loanId },
+            data: { status: "PAID" },
+          });
           await prisma.loanInstallment.updateMany({
             where: { loanId: currentLoan.loanId, status: "UNPAID" },
-            data: { status: "PAID" }
+            data: { status: "PAID" },
           });
           activeLoans.delete(memberId);
         }
       }
-
     } // end row
   } // end sheet
 }

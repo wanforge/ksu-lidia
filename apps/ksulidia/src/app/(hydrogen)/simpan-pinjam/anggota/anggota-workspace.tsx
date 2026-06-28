@@ -1012,8 +1012,12 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
             </h3>
 
             <form action={dispatchUpdate} className="space-y-4">
-              <input type="hidden" name="memberId" value={editModal.member.id} />
-              
+              <input
+                type="hidden"
+                name="memberId"
+                value={editModal.member.id}
+              />
+
               <div>
                 <label className="mb-1 block text-sm font-medium text-gray-700">
                   Nomor Anggota / RAT
@@ -1023,7 +1027,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                   name="no"
                   disabled
                   defaultValue={editModal.member.no}
-                  className="w-full rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-sm text-gray-500 cursor-not-allowed"
+                  className="w-full cursor-not-allowed rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-sm text-gray-500"
                 />
                 <p className="mt-1 text-xs text-gray-500">
                   Nomor anggota tidak dapat diubah.

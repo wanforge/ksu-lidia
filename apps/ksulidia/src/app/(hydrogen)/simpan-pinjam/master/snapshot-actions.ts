@@ -15,26 +15,33 @@ export async function createSnapshotAction() {
 
   try {
     // 1. Gather all financial states
-    
+
     // Simpanan balances
     const members = await prisma.member.findMany({
       include: { savingsAccounts: true, loans: true },
     });
-    
-    const memberBalances = members.map(m => ({
+
+    const memberBalances = members.map((m) => ({
       memberId: m.id,
       no: m.no,
       name: m.name,
-      savings: m.savingsAccounts.map(s => ({ type: s.type, balance: Number(s.balance) })),
-      loans: m.loans.map(l => ({ id: l.id, status: l.status, amount: Number(l.amount) }))
+      savings: m.savingsAccounts.map((s) => ({
+        type: s.type,
+        balance: Number(s.balance),
+      })),
+      loans: m.loans.map((l) => ({
+        id: l.id,
+        status: l.status,
+        amount: Number(l.amount),
+      })),
     }));
 
     // Kas Koperasi
     const kasTransactions = await prisma.cashTransaction.findMany({
-      where: { entity: CASH_ENTITIES.KOPERASI }
+      where: { entity: CASH_ENTITIES.KOPERASI },
     });
     let kasBalance = 0;
-    kasTransactions.forEach(tx => {
+    kasTransactions.forEach((tx) => {
       if (tx.type === CASH_TX_TYPES.IN) kasBalance += Number(tx.amount);
       else kasBalance -= Number(tx.amount);
     });
@@ -56,7 +63,7 @@ export async function createSnapshotAction() {
       data: {
         periodDate,
         snapshotType: "MONTHLY",
-        description: `Snapshot Bulanan - ${periodDate.toLocaleString('id-ID', { month: 'long', year: 'numeric' })}`,
+        description: `Snapshot Bulanan - ${periodDate.toLocaleString("id-ID", { month: "long", year: "numeric" })}`,
         data: snapshotData,
         createdBy: session.user.id,
       },
@@ -67,12 +74,12 @@ export async function createSnapshotAction() {
       action: AuditAction.CREATE,
       entityType: "SNAPSHOT",
       entityId: "MONTHLY",
-      summary: `Created monthly snapshot for ${periodDate.toLocaleString('id-ID', { month: 'long', year: 'numeric' })}`,
+      summary: `Created monthly snapshot for ${periodDate.toLocaleString("id-ID", { month: "long", year: "numeric" })}`,
       actorId: session.user.id,
     });
 
     revalidatePath("/simpan-pinjam/master");
-    
+
     return { success: true, message: "Snapshot berhasil dibuat." };
   } catch (error: any) {
     console.error("Failed to create snapshot:", error);

@@ -6,7 +6,12 @@ import { prisma } from "@/lib/prisma";
 import { ensureAuditContext } from "@/lib/audit-context";
 import { routes } from "@/config/routes";
 import { cashTransactionSchema } from "@/validators/ksulidia.schema";
-import { CashEntity, CashTxType, AuditAction, AttachmentSource } from "@prisma/client";
+import {
+  CashEntity,
+  CashTxType,
+  AuditAction,
+  AttachmentSource,
+} from "@prisma/client";
 import { recordAuditLog } from "@/lib/audit";
 
 export type CashActionState = {
@@ -74,7 +79,10 @@ export async function createCashTransactionAction(
       entityType: "CashTransaction",
       entityId: tx.id,
       summary: `Mencatat mutasi kas manual (${parsed.data.type}) untuk ${parsed.data.entity}: Rp ${Number(parsed.data.amount).toLocaleString("id-ID")}`,
-      source: parsed.data.entity === CashEntity.TOKO ? AttachmentSource.TOKO : AttachmentSource.BACK_OFFICE,
+      source:
+        parsed.data.entity === CashEntity.TOKO
+          ? AttachmentSource.TOKO
+          : AttachmentSource.BACK_OFFICE,
     });
 
     if (parsed.data.entity === CashEntity.KOPERASI) {

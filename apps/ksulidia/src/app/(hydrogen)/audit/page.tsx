@@ -430,7 +430,10 @@ export default async function AuditPage({
           />
         ) : (
           <div className="overflow-x-auto">
-            <Table variant="modern" className="min-w-full divide-y divide-gray-200 text-[13px]">
+            <Table
+              variant="modern"
+              className="min-w-full divide-y divide-gray-200 text-[13px]"
+            >
               <thead className="bg-gray-50">
                 <tr>
                   <SortableHeader

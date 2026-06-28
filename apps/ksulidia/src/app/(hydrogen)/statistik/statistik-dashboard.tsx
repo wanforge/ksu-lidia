@@ -713,7 +713,10 @@ export default function StatistikDashboard({
             </Link>
           </div>
           <div className="overflow-x-auto rounded-xl border border-gray-200">
-            <Table variant="modern" className="w-full text-left text-sm text-gray-500">
+            <Table
+              variant="modern"
+              className="w-full text-left text-sm text-gray-500"
+            >
               <thead className="bg-gray-50 text-xs uppercase text-gray-700">
                 <tr>
                   <th scope="col" className="px-5 py-4 font-semibold">
