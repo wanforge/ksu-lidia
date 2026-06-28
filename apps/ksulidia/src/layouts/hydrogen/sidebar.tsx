@@ -20,7 +20,7 @@ export default function Sidebar({ className }: { className?: string }) {
         </Link>
       </div>
 
-      <div className="custom-scrollbar h-[calc(100%-80px)] overflow-y-auto scroll-smooth">
+      <div className="custom-scrollbar h-[calc(100%-80px)] overflow-y-auto scroll-smooth pb-5">
         <SidebarMenu />
       </div>
     </aside>
