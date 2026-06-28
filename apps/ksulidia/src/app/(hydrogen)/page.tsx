@@ -26,6 +26,8 @@ import {
   PiHandshakeDuotone,
   PiChartLineUpDuotone,
   PiShieldCheckDuotone,
+  PiWarningDuotone,
+  PiBellRingingDuotone,
 } from "react-icons/pi";
 import { SAVINGS_TYPES, LOAN_STATUS, SAVINGS_TX_TYPES } from "@/lib/constants";
 import {
@@ -94,6 +96,7 @@ export default async function Home() {
     recentLoans,
     userCount,
     activeUserCount,
+    dueInstallments,
   ] = await Promise.all([
     // Total members
     prisma.member.count({ where: { deletedAt: null } }),
@@ -149,6 +152,21 @@ export default async function Home() {
     prisma.user.count({ where: { deletedAt: null } }),
     // Active users
     prisma.user.count({ where: { deletedAt: null, isActive: true } }),
+    // Due or Overdue installments (within next 3 days or past due)
+    prisma.loanInstallment.findMany({
+      where: {
+        status: "UNPAID",
+        dueDate: {
+          lte: new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000),
+        },
+      },
+      include: {
+        loan: {
+          include: { member: { select: { name: true, no: true } } },
+        },
+      },
+      orderBy: { dueDate: "asc" },
+    }),
   ]);
 
   // 2. Calculations
@@ -294,9 +312,48 @@ export default async function Home() {
         </StaggerContainer>
       )}
 
-      {/* ╔══════════════════════════════════════════════╗
-          ║          MAIN STATS GRID                     ║
-          ╚══════════════════════════════════════════════╝ */}
+      {/* Notifications Section */}
+      {dueInstallments.length > 0 && (
+        <section className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+          <div className="flex flex-col gap-3 rounded-xl border border-red-200 bg-red-50 p-5 shadow-sm">
+            <div className="flex items-center gap-2 text-red-800">
+              <PiBellRingingDuotone className="h-5 w-5 animate-pulse" />
+              <h2 className="font-bold">Peringatan Jatuh Tempo Pinjaman</h2>
+            </div>
+            <div className="flex flex-col gap-2">
+              {dueInstallments.slice(0, 5).map((inst) => {
+                const isOverdue = new Date(inst.dueDate) < now;
+                return (
+                  <div key={inst.id} className="flex items-center justify-between rounded-lg bg-white p-3 shadow-sm border border-red-100">
+                    <div className="flex items-center gap-3">
+                      <div className={`rounded-full p-2 ${isOverdue ? 'bg-red-100 text-red-600' : 'bg-orange-100 text-orange-600'}`}>
+                        {isOverdue ? <PiWarningDuotone className="h-4 w-4" /> : <PiClockCountdownDuotone className="h-4 w-4" />}
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-gray-900">{inst.loan.member.name} ({inst.loan.member.no})</p>
+                        <p className="text-xs text-gray-500">Angsuran ke-{inst.monthNumber} &bull; Jatuh tempo: {new Intl.DateTimeFormat("id-ID", { dateStyle: "medium" }).format(inst.dueDate)}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-bold text-gray-900">Rp {formatNumber(Number(inst.totalPaid) === 0 ? Number(inst.principalPaid) + Number(inst.interestPaid) : 0)}</p>
+                      <p className={`text-xs font-semibold ${isOverdue ? 'text-red-600' : 'text-orange-600'}`}>
+                        {isOverdue ? "TERLAMBAT" : "SEGERA JATUH TEMPO"}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+              {dueInstallments.length > 5 && (
+                <div className="text-center text-xs font-medium text-red-700 mt-1">
+                  + {dueInstallments.length - 5} angsuran lainnya mendekati jatuh tempo
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Highlights Overview */}
       <StaggerContainer className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4" delay={0.2}>
         {/* Metric Card 1: Total Simpanan */}
         <FadeUp>
