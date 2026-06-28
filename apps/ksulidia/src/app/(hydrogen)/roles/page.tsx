@@ -96,11 +96,14 @@ export default async function RolesPage() {
                     </td>
                   </tr>
                   {perms.map((p) => (
-                    <tr key={p.key} className="transition-colors hover:bg-gray-50/50">
+                    <tr
+                      key={p.key}
+                      className="transition-colors hover:bg-gray-50/50"
+                    >
                       <td className="px-6 py-3.5 font-medium text-gray-900">
                         {p.key.replace(/_/g, " ")}
                       </td>
-                      <td className="px-6 py-3.5 text-xs font-mono text-gray-500">
+                      <td className="px-6 py-3.5 font-mono text-xs text-gray-500">
                         {p.value}
                       </td>
                       {roles.map((role) => {

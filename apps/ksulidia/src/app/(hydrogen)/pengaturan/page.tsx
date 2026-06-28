@@ -28,7 +28,8 @@ export default async function PengaturanPage() {
           Pengaturan Sistem
         </h1>
         <p className="mt-2 max-w-3xl text-sm leading-6 text-gray-600">
-          Kelola profil koperasi, parameter finansial dasar, dan konfigurasi umum lainnya.
+          Kelola profil koperasi, parameter finansial dasar, dan konfigurasi
+          umum lainnya.
         </p>
       </section>
 

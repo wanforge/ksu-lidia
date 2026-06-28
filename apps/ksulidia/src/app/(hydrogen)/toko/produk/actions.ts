@@ -317,7 +317,9 @@ export async function adjustProductStockAction(
   }
 }
 
-export async function bulkDeleteProductsAction(productIds: string[]): Promise<ProductActionState> {
+export async function bulkDeleteProductsAction(
+  productIds: string[]
+): Promise<ProductActionState> {
   const session = await getSession();
   ensureAuditContext(
     session?.user
@@ -333,23 +335,33 @@ export async function bulkDeleteProductsAction(productIds: string[]): Promise<Pr
     // Check if any product is used in transactions
     const usedProducts = await prisma.productTransactionItem.findFirst({
       where: {
-        productId: { in: productIds }
-      }
+        productId: { in: productIds },
+      },
     });
 
     if (usedProducts) {
-      return { success: false, message: "Beberapa produk tidak bisa dihapus karena sudah dipakai dalam transaksi. Gunakan fitur nonaktifkan produk saja." };
+      return {
+        success: false,
+        message:
+          "Beberapa produk tidak bisa dihapus karena sudah dipakai dalam transaksi. Gunakan fitur nonaktifkan produk saja.",
+      };
     }
 
     await prisma.product.deleteMany({
       where: {
-        id: { in: productIds }
-      }
+        id: { in: productIds },
+      },
     });
 
     revalidatePath("/toko/produk");
-    return { success: true, message: `Berhasil menghapus ${productIds.length} produk.` };
+    return {
+      success: true,
+      message: `Berhasil menghapus ${productIds.length} produk.`,
+    };
   } catch (error: any) {
-    return { success: false, message: error.message || "Terjadi kesalahan sistem." };
+    return {
+      success: false,
+      message: error.message || "Terjadi kesalahan sistem.",
+    };
   }
 }

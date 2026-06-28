@@ -628,7 +628,10 @@ export default function SystemDashboard({ checks }: Props) {
                 value={`${snapshot.runtime.appName} v${snapshot.runtime.appVersion}`}
               />
               <Row label="Node.js" value={snapshot.runtime.nodeVersion} />
-              <Row label="Prisma" value={`v${snapshot.runtime.prismaVersion}`} />
+              <Row
+                label="Prisma"
+                value={`v${snapshot.runtime.prismaVersion}`}
+              />
               <Row label="NODE_ENV" value={snapshot.runtime.nodeEnv} />
               <Row
                 label="Platform"
@@ -867,9 +870,18 @@ export default function SystemDashboard({ checks }: Props) {
                   label="Selisih (app − DB)"
                   value={<DriftPill ms={snapshot.db.driftMs} />}
                 />
-                <Row label="Latency Query" value={`${snapshot.db.latencyMs} ms`} />
-                <Row label="Koneksi Aktif" value={fmt(snapshot.db.connections, "")} />
-                <Row label="Ukuran Data" value={fmtBytes(snapshot.db.sizeBytes)} />
+                <Row
+                  label="Latency Query"
+                  value={`${snapshot.db.latencyMs} ms`}
+                />
+                <Row
+                  label="Koneksi Aktif"
+                  value={fmt(snapshot.db.connections, "")}
+                />
+                <Row
+                  label="Ukuran Data"
+                  value={fmtBytes(snapshot.db.sizeBytes)}
+                />
               </>
             ) : (
               <p className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-medium text-amber-900">
@@ -1009,11 +1021,14 @@ export default function SystemDashboard({ checks }: Props) {
                 <tbody>
                   {Object.entries(snapshot.runtime.envVars).map(
                     ([key, value]) => (
-                      <tr key={key} className="border-b border-gray-100 last:border-0">
+                      <tr
+                        key={key}
+                        className="border-b border-gray-100 last:border-0"
+                      >
                         <td className="py-2 pe-3 font-mono text-xs font-semibold text-gray-800">
                           {key}
                         </td>
-                        <td className="py-2 font-mono text-xs text-gray-600 break-all">
+                        <td className="break-all py-2 font-mono text-xs text-gray-600">
                           {value}
                         </td>
                       </tr>

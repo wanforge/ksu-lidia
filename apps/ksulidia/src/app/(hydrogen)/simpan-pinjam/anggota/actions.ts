@@ -335,7 +335,7 @@ export async function importMembersAction(
     }
 
     let successCount = 0;
-    
+
     // We import members sequentially or in a single transaction if needed.
     // Sequential to easily skip existing without failing others
     for (const data of parsedData) {
@@ -390,7 +390,9 @@ export async function importMembersAction(
   }
 }
 
-export async function bulkDeleteMembersAction(memberIds: string[]): Promise<AnggotaActionState> {
+export async function bulkDeleteMembersAction(
+  memberIds: string[]
+): Promise<AnggotaActionState> {
   const session = await getSession();
   ensureAuditContext(
     session?.user
@@ -406,16 +408,22 @@ export async function bulkDeleteMembersAction(memberIds: string[]): Promise<Angg
     // Soft delete members
     await prisma.member.updateMany({
       where: {
-        id: { in: memberIds }
+        id: { in: memberIds },
       },
       data: {
-        deletedAt: new Date()
-      }
+        deletedAt: new Date(),
+      },
     });
 
     revalidatePath("/simpan-pinjam/anggota");
-    return { success: true, message: `Berhasil menghapus ${memberIds.length} anggota.` };
+    return {
+      success: true,
+      message: `Berhasil menghapus ${memberIds.length} anggota.`,
+    };
   } catch (error: any) {
-    return { success: false, message: error.message || "Terjadi kesalahan sistem." };
+    return {
+      success: false,
+      message: error.message || "Terjadi kesalahan sistem.",
+    };
   }
 }

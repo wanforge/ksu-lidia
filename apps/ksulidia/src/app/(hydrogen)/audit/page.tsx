@@ -36,8 +36,9 @@ export default async function AuditPage({
             Audit Log Terpadu
           </h1>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-gray-600">
-            Pantau aktivitas sistem (Login, Logout, Ekspor) dan lacak perubahan data
-            (Tambah, Ubah, Hapus) pada seluruh entitas di dalam satu tampilan.
+            Pantau aktivitas sistem (Login, Logout, Ekspor) dan lacak perubahan
+            data (Tambah, Ubah, Hapus) pada seluruh entitas di dalam satu
+            tampilan.
           </p>
         </div>
       </section>
@@ -46,20 +47,20 @@ export default async function AuditPage({
       <div className="flex items-center gap-1 border-b border-gray-200">
         <Link
           href={`${routes.audit.list}?tab=audit`}
-          className={`px-4 py-3 text-sm font-semibold border-b-2 transition ${
+          className={`border-b-2 px-4 py-3 text-sm font-semibold transition ${
             currentTab === "audit"
               ? "border-red-700 text-red-700"
-              : "border-transparent text-gray-500 hover:text-gray-800 hover:border-gray-300"
+              : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-800"
           }`}
         >
           Aktivitas Sistem
         </Link>
         <Link
           href={`${routes.audit.list}?tab=data`}
-          className={`px-4 py-3 text-sm font-semibold border-b-2 transition ${
+          className={`border-b-2 px-4 py-3 text-sm font-semibold transition ${
             currentTab === "data"
               ? "border-red-700 text-red-700"
-              : "border-transparent text-gray-500 hover:text-gray-800 hover:border-gray-300"
+              : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-800"
           }`}
         >
           Riwayat Perubahan Data

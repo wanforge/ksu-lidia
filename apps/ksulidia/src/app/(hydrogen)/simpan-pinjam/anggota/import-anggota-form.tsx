@@ -45,12 +45,14 @@ export function ImportAnggotaForm({ onSuccess }: { onSuccess: () => void }) {
         const ws = wb.Sheets[wsname];
         const data = XLSX.utils.sheet_to_json(ws);
 
-        const mapped: ParsedMember[] = data.map((row: any) => ({
-          no: String(row.no || row.No || row.Nomor || "").trim(),
-          name: String(row.name || row.Name || row.Nama || "").trim(),
-          phone: row.phone || row.Phone || row.Telepon || row.NoHP || "",
-          address: row.address || row.Address || row.Alamat || "",
-        })).filter(m => m.no && m.name);
+        const mapped: ParsedMember[] = data
+          .map((row: any) => ({
+            no: String(row.no || row.No || row.Nomor || "").trim(),
+            name: String(row.name || row.Name || row.Nama || "").trim(),
+            phone: row.phone || row.Phone || row.Telepon || row.NoHP || "",
+            address: row.address || row.Address || row.Alamat || "",
+          }))
+          .filter((m) => m.no && m.name);
 
         setParsedData(mapped);
       } catch (err) {
@@ -77,23 +79,29 @@ export function ImportAnggotaForm({ onSuccess }: { onSuccess: () => void }) {
           />
           <label
             htmlFor="file-upload"
-            className="cursor-pointer inline-flex flex-col items-center gap-2 text-gray-500 hover:text-red-700 transition"
+            className="inline-flex cursor-pointer flex-col items-center gap-2 text-gray-500 transition hover:text-red-700"
           >
             <PiUploadSimpleDuotone className="h-10 w-10 text-gray-400" />
             <span className="font-semibold text-gray-900">
               {isProcessing ? "Memproses..." : "Klik untuk Upload File"}
             </span>
-            <span className="text-sm">
-              Mendukung format .xlsx, .xls, .csv
-            </span>
+            <span className="text-sm">Mendukung format .xlsx, .xls, .csv</span>
           </label>
-          <div className="mt-4 text-xs text-gray-500 text-left bg-gray-50 p-4 rounded-md inline-block">
-            <p className="font-bold mb-1">Panduan Format Kolom:</p>
-            <ul className="list-disc pl-4 space-y-1">
-              <li><b>no</b> atau <b>Nomor</b> (wajib)</li>
-              <li><b>name</b> atau <b>Nama</b> (wajib)</li>
-              <li><b>phone</b> atau <b>Telepon</b> atau <b>NoHP</b> (opsional)</li>
-              <li><b>address</b> atau <b>Alamat</b> (opsional)</li>
+          <div className="mt-4 inline-block rounded-md bg-gray-50 p-4 text-left text-xs text-gray-500">
+            <p className="mb-1 font-bold">Panduan Format Kolom:</p>
+            <ul className="list-disc space-y-1 pl-4">
+              <li>
+                <b>no</b> atau <b>Nomor</b> (wajib)
+              </li>
+              <li>
+                <b>name</b> atau <b>Nama</b> (wajib)
+              </li>
+              <li>
+                <b>phone</b> atau <b>Telepon</b> atau <b>NoHP</b> (opsional)
+              </li>
+              <li>
+                <b>address</b> atau <b>Alamat</b> (opsional)
+              </li>
             </ul>
           </div>
         </div>
@@ -135,7 +143,8 @@ export function ImportAnggotaForm({ onSuccess }: { onSuccess: () => void }) {
               </table>
               {parsedData.length > 50 && (
                 <div className="mt-2 text-center text-xs text-gray-500">
-                  Menampilkan 50 baris pertama dari {parsedData.length} total baris.
+                  Menampilkan 50 baris pertama dari {parsedData.length} total
+                  baris.
                 </div>
               )}
             </div>
@@ -146,10 +155,17 @@ export function ImportAnggotaForm({ onSuccess }: { onSuccess: () => void }) {
                   name="membersJson"
                   value={JSON.stringify(parsedData)}
                 />
-                <Button variant="neutral" onClick={() => setParsedData([])} type="button">
+                <Button
+                  variant="neutral"
+                  onClick={() => setParsedData([])}
+                  type="button"
+                >
                   Batal
                 </Button>
-                <Button type="submit" className="bg-red-700 hover:bg-red-800 text-white">
+                <Button
+                  type="submit"
+                  className="bg-red-700 text-white hover:bg-red-800"
+                >
                   Impor {parsedData.length} Anggota
                 </Button>
               </form>

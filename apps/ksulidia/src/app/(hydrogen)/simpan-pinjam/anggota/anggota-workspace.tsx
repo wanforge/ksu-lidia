@@ -93,7 +93,9 @@ function getTotalSavings(member: MemberWithAccounts): number {
 }
 
 export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
-  const [tab, setTab] = useState<"list" | "create" | "detail" | "import">("list");
+  const [tab, setTab] = useState<"list" | "create" | "detail" | "import">(
+    "list"
+  );
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
   // Member details loaded dynamically
   const [memberDetail, setMemberDetail] = useState<any>(null);
@@ -744,7 +746,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
       ) : (
         <div>
           {/* Filters */}
-          <div className="flex flex-col gap-4 border-b border-gray-200 pb-4 sm:flex-row sm:items-center sm:justify-between mb-4">
+          <div className="mb-4 flex flex-col gap-4 border-b border-gray-200 pb-4 sm:flex-row sm:items-center sm:justify-between">
             <DataTableFilters
               filterConfig={memberFilterConfig}
               onFilterChange={table.setAdvancedFilters}
@@ -756,9 +758,15 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                 className="border-red-200 bg-red-50 text-red-700 hover:bg-red-100 hover:text-red-800"
                 disabled={isBulkDeleting}
                 onClick={async () => {
-                  if (confirm(`Yakin ingin menghapus ${selectedIds.size} anggota terpilih?`)) {
+                  if (
+                    confirm(
+                      `Yakin ingin menghapus ${selectedIds.size} anggota terpilih?`
+                    )
+                  ) {
                     setIsBulkDeleting(true);
-                    const res = await bulkDeleteMembersAction(Array.from(selectedIds));
+                    const res = await bulkDeleteMembersAction(
+                      Array.from(selectedIds)
+                    );
                     if (res.success) {
                       setSelectedIds(new Set());
                     } else {
@@ -792,14 +800,20 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                           type="checkbox"
                           checked={
                             table.paginatedItems.length > 0 &&
-                            table.paginatedItems.every((item) => selectedIds.has(item.id))
+                            table.paginatedItems.every((item) =>
+                              selectedIds.has(item.id)
+                            )
                           }
                           onChange={(e) => {
                             const newSet = new Set(selectedIds);
                             if (e.target.checked) {
-                              table.paginatedItems.forEach((item) => newSet.add(item.id));
+                              table.paginatedItems.forEach((item) =>
+                                newSet.add(item.id)
+                              );
                             } else {
-                              table.paginatedItems.forEach((item) => newSet.delete(item.id));
+                              table.paginatedItems.forEach((item) =>
+                                newSet.delete(item.id)
+                              );
                             }
                             setSelectedIds(newSet);
                           }}

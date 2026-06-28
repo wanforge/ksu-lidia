@@ -309,7 +309,6 @@ export default async function AuditLogView({
 
   return (
     <div className="flex w-full flex-col gap-6">
-
       {!data.databaseReady ? (
         <div className="rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
           Data belum bisa dimuat saat ini. Audit log akan tampil setelah
@@ -402,7 +401,10 @@ export default async function AuditLogView({
             <button type="submit" className={filterSubmitClass}>
               Filter
             </button>
-            <a href={`${routes.audit.list}?tab=aktivitas`} className={filterResetClass}>
+            <a
+              href={`${routes.audit.list}?tab=aktivitas`}
+              className={filterResetClass}
+            >
               Reset
             </a>
           </FilterActions>

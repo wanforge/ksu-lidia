@@ -47,13 +47,18 @@ export default function BukuKasView({
     return transactions.filter((tx) => {
       const txDate = dayjs(tx.date);
       if (startDate && endDate) {
-        return txDate.isBetween(startDate, dayjs(endDate).endOf('day'), 'day', '[]');
+        return txDate.isBetween(
+          startDate,
+          dayjs(endDate).endOf("day"),
+          "day",
+          "[]"
+        );
       }
       if (startDate) {
-        return txDate.isAfter(dayjs(startDate).subtract(1, 'day'), 'day');
+        return txDate.isAfter(dayjs(startDate).subtract(1, "day"), "day");
       }
       if (endDate) {
-        return txDate.isBefore(dayjs(endDate).add(1, 'day'), 'day');
+        return txDate.isBefore(dayjs(endDate).add(1, "day"), "day");
       }
       return true;
     });
@@ -90,7 +95,9 @@ export default function BukuKasView({
       {/* Filter Tanggal */}
       <div className="flex flex-col gap-2 rounded-xl border border-gray-200 bg-white p-4 shadow-sm sm:flex-row sm:items-end">
         <div>
-          <label className="mb-1 block text-xs font-semibold text-gray-700">Tanggal Mulai</label>
+          <label className="mb-1 block text-xs font-semibold text-gray-700">
+            Tanggal Mulai
+          </label>
           <input
             type="date"
             value={startDate}
@@ -99,7 +106,9 @@ export default function BukuKasView({
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-semibold text-gray-700">Tanggal Akhir</label>
+          <label className="mb-1 block text-xs font-semibold text-gray-700">
+            Tanggal Akhir
+          </label>
           <input
             type="date"
             value={endDate}
@@ -114,7 +123,7 @@ export default function BukuKasView({
               setStartDate("");
               setEndDate("");
             }}
-            className="text-gray-600 h-9"
+            className="h-9 text-gray-600"
           >
             Reset
           </Button>

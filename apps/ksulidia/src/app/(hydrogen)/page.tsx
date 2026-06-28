@@ -324,19 +324,45 @@ export default async function Home() {
               {dueInstallments.slice(0, 5).map((inst) => {
                 const isOverdue = new Date(inst.dueDate) < now;
                 return (
-                  <div key={inst.id} className="flex items-center justify-between rounded-lg bg-white p-3 shadow-sm border border-red-100">
+                  <div
+                    key={inst.id}
+                    className="flex items-center justify-between rounded-lg border border-red-100 bg-white p-3 shadow-sm"
+                  >
                     <div className="flex items-center gap-3">
-                      <div className={`rounded-full p-2 ${isOverdue ? 'bg-red-100 text-red-600' : 'bg-orange-100 text-orange-600'}`}>
-                        {isOverdue ? <PiWarningDuotone className="h-4 w-4" /> : <PiClockCountdownDuotone className="h-4 w-4" />}
+                      <div
+                        className={`rounded-full p-2 ${isOverdue ? "bg-red-100 text-red-600" : "bg-orange-100 text-orange-600"}`}
+                      >
+                        {isOverdue ? (
+                          <PiWarningDuotone className="h-4 w-4" />
+                        ) : (
+                          <PiClockCountdownDuotone className="h-4 w-4" />
+                        )}
                       </div>
                       <div>
-                        <p className="text-sm font-semibold text-gray-900">{inst.loan.member.name} ({inst.loan.member.no})</p>
-                        <p className="text-xs text-gray-500">Angsuran ke-{inst.monthNumber} &bull; Jatuh tempo: {new Intl.DateTimeFormat("id-ID", { dateStyle: "medium" }).format(inst.dueDate)}</p>
+                        <p className="text-sm font-semibold text-gray-900">
+                          {inst.loan.member.name} ({inst.loan.member.no})
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          Angsuran ke-{inst.monthNumber} &bull; Jatuh tempo:{" "}
+                          {new Intl.DateTimeFormat("id-ID", {
+                            dateStyle: "medium",
+                          }).format(inst.dueDate)}
+                        </p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-bold text-gray-900">Rp {formatNumber(Number(inst.totalPaid) === 0 ? Number(inst.principalPaid) + Number(inst.interestPaid) : 0)}</p>
-                      <p className={`text-xs font-semibold ${isOverdue ? 'text-red-600' : 'text-orange-600'}`}>
+                      <p className="text-sm font-bold text-gray-900">
+                        Rp{" "}
+                        {formatNumber(
+                          Number(inst.totalPaid) === 0
+                            ? Number(inst.principalPaid) +
+                                Number(inst.interestPaid)
+                            : 0
+                        )}
+                      </p>
+                      <p
+                        className={`text-xs font-semibold ${isOverdue ? "text-red-600" : "text-orange-600"}`}
+                      >
                         {isOverdue ? "TERLAMBAT" : "SEGERA JATUH TEMPO"}
                       </p>
                     </div>
@@ -344,8 +370,9 @@ export default async function Home() {
                 );
               })}
               {dueInstallments.length > 5 && (
-                <div className="text-center text-xs font-medium text-red-700 mt-1">
-                  + {dueInstallments.length - 5} angsuran lainnya mendekati jatuh tempo
+                <div className="mt-1 text-center text-xs font-medium text-red-700">
+                  + {dueInstallments.length - 5} angsuran lainnya mendekati
+                  jatuh tempo
                 </div>
               )}
             </div>
@@ -354,7 +381,10 @@ export default async function Home() {
       )}
 
       {/* Highlights Overview */}
-      <StaggerContainer className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4" delay={0.2}>
+      <StaggerContainer
+        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
+        delay={0.2}
+      >
         {/* Metric Card 1: Total Simpanan */}
         <FadeUp>
           <div className="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
@@ -377,7 +407,7 @@ export default async function Home() {
                 <span>Total seluruh rekening simpanan</span>
               </p>
             </div>
-            <div className="mt-4 -mb-2 -mx-2 opacity-50 transition-opacity group-hover:opacity-100">
+            <div className="-mx-2 -mb-2 mt-4 opacity-50 transition-opacity group-hover:opacity-100">
               <Sparkline data={[40, 50, 45, 60, 75, 80, 85]} color="#ef4444" />
             </div>
           </div>
@@ -404,7 +434,7 @@ export default async function Home() {
                 <span>Total pinjaman berjalan ({activeLoanCount} kontrak)</span>
               </p>
             </div>
-            <div className="mt-4 -mb-2 -mx-2 opacity-50 transition-opacity group-hover:opacity-100">
+            <div className="-mx-2 -mb-2 mt-4 opacity-50 transition-opacity group-hover:opacity-100">
               <Sparkline data={[80, 75, 70, 72, 60, 55, 50]} color="#f43f5e" />
             </div>
           </div>
@@ -431,7 +461,7 @@ export default async function Home() {
                 <span>Total seluruh transaksi penjualan</span>
               </p>
             </div>
-            <div className="mt-4 -mb-2 -mx-2 opacity-50 transition-opacity group-hover:opacity-100">
+            <div className="-mx-2 -mb-2 mt-4 opacity-50 transition-opacity group-hover:opacity-100">
               <Sparkline data={[20, 35, 30, 45, 40, 60, 70]} color="#3b82f6" />
             </div>
           </div>
@@ -458,8 +488,11 @@ export default async function Home() {
                 <span>Total anggota aktif terdaftar</span>
               </p>
             </div>
-            <div className="mt-4 -mb-2 -mx-2 opacity-50 transition-opacity group-hover:opacity-100">
-              <Sparkline data={[100, 102, 105, 110, 115, 118, 125]} color="#f59e0b" />
+            <div className="-mx-2 -mb-2 mt-4 opacity-50 transition-opacity group-hover:opacity-100">
+              <Sparkline
+                data={[100, 102, 105, 110, 115, 118, 125]}
+                color="#f59e0b"
+              />
             </div>
           </div>
         </FadeUp>
@@ -773,8 +806,6 @@ export default async function Home() {
           </div>
         </div>
       </section>
-
-
     </div>
   );
 }

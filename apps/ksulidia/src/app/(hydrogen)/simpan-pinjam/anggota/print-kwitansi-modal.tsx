@@ -50,7 +50,7 @@ export function PrintKwitansiModal({
             {/* Header Kwitansi */}
             <div className="mb-6 flex items-start justify-between border-b-2 border-gray-800 pb-4">
               <div>
-                <h1 className="text-2xl font-black tracking-tight text-gray-900 uppercase">
+                <h1 className="text-2xl font-black uppercase tracking-tight text-gray-900">
                   Koperasi Serba Usaha LIDIA
                 </h1>
                 <p className="mt-1 text-xs text-gray-600">
@@ -60,7 +60,7 @@ export function PrintKwitansiModal({
                 </p>
               </div>
               <div className="text-right">
-                <h2 className="text-3xl font-light text-gray-400 uppercase tracking-widest">
+                <h2 className="text-3xl font-light uppercase tracking-widest text-gray-400">
                   Kwitansi
                 </h2>
                 <p className="mt-2 text-sm font-semibold text-gray-700">
@@ -78,7 +78,7 @@ export function PrintKwitansiModal({
                 <div className="w-48 text-sm font-semibold text-gray-600">
                   Telah terima dari
                 </div>
-                <div className="flex-1 border-b border-dashed border-gray-400 font-bold text-gray-900 px-2">
+                <div className="flex-1 border-b border-dashed border-gray-400 px-2 font-bold text-gray-900">
                   {transaction.type === SavingsTxType.DEPOSIT
                     ? member.name
                     : "KSU LIDIA"}
@@ -98,7 +98,7 @@ export function PrintKwitansiModal({
                 <div className="w-48 text-sm font-semibold text-gray-600">
                   Untuk Pembayaran
                 </div>
-                <div className="flex-1 border-b border-dashed border-gray-400 font-medium text-gray-900 px-2">
+                <div className="flex-1 border-b border-dashed border-gray-400 px-2 font-medium text-gray-900">
                   {transaction.type === SavingsTxType.DEPOSIT
                     ? "Setoran"
                     : "Penarikan"}{" "}
@@ -113,7 +113,7 @@ export function PrintKwitansiModal({
             <div className="mt-12 flex justify-between">
               <div className="flex flex-col items-center">
                 <p className="text-sm text-gray-600">Penyetor / Penerima</p>
-                <div className="mt-16 border-b border-gray-400 w-40 text-center">
+                <div className="mt-16 w-40 border-b border-gray-400 text-center">
                   {transaction.type === SavingsTxType.DEPOSIT
                     ? member.name
                     : "......................."}
@@ -126,7 +126,7 @@ export function PrintKwitansiModal({
                   }).format(new Date(transaction.date))}
                 </p>
                 <p className="text-sm text-gray-600">Petugas Koperasi</p>
-                <div className="mt-12 border-b border-gray-400 w-40 text-center font-semibold text-gray-800">
+                <div className="mt-12 w-40 border-b border-gray-400 text-center font-semibold text-gray-800">
                   {transaction.processedBy?.name || "......................."}
                 </div>
               </div>

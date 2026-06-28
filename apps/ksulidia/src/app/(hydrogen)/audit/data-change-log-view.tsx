@@ -172,7 +172,6 @@ export default async function DataChangeLogView({
 
   return (
     <div className="flex w-full flex-col gap-6">
-
       {!databaseReady ? (
         <div className="rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
           Data belum bisa dimuat saat ini.
@@ -274,7 +273,10 @@ export default async function DataChangeLogView({
             <button type="submit" className={filterSubmitClass}>
               Filter
             </button>
-            <a href={`${routes.audit.list}?tab=perubahan`} className={filterResetClass}>
+            <a
+              href={`${routes.audit.list}?tab=perubahan`}
+              className={filterResetClass}
+            >
               Reset
             </a>
           </FilterActions>

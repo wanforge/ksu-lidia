@@ -346,14 +346,20 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                           type="checkbox"
                           checked={
                             table.paginatedItems.length > 0 &&
-                            table.paginatedItems.every((item) => selectedIds.has(item.id))
+                            table.paginatedItems.every((item) =>
+                              selectedIds.has(item.id)
+                            )
                           }
                           onChange={(e) => {
                             const newSet = new Set(selectedIds);
                             if (e.target.checked) {
-                              table.paginatedItems.forEach((item) => newSet.add(item.id));
+                              table.paginatedItems.forEach((item) =>
+                                newSet.add(item.id)
+                              );
                             } else {
-                              table.paginatedItems.forEach((item) => newSet.delete(item.id));
+                              table.paginatedItems.forEach((item) =>
+                                newSet.delete(item.id)
+                              );
                             }
                             setSelectedIds(newSet);
                           }}
@@ -520,9 +526,15 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                     className="border-red-200 bg-red-50 text-red-700 hover:bg-red-100 hover:text-red-800"
                     disabled={isBulkDeleting}
                     onClick={async () => {
-                      if (confirm(`Yakin ingin menghapus ${selectedIds.size} produk terpilih?`)) {
+                      if (
+                        confirm(
+                          `Yakin ingin menghapus ${selectedIds.size} produk terpilih?`
+                        )
+                      ) {
                         setIsBulkDeleting(true);
-                        const res = await bulkDeleteProductsAction(Array.from(selectedIds));
+                        const res = await bulkDeleteProductsAction(
+                          Array.from(selectedIds)
+                        );
                         if (res.success) {
                           setSelectedIds(new Set());
                         } else {

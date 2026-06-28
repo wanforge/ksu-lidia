@@ -192,14 +192,19 @@ export async function getSystemSnapshot(): Promise<SystemSnapshot> {
     }
   }
 
-  const rawPrisma = pkg.dependencies?.prisma || pkg.dependencies?.["@prisma/client"] || "unknown";
+  const rawPrisma =
+    pkg.dependencies?.prisma ||
+    pkg.dependencies?.["@prisma/client"] ||
+    "unknown";
   const prismaVersion = rawPrisma.replace(/[\^~]/g, "");
 
   // Mask sensitive env vars
   const safeEnvVars: Record<string, string> = {};
   for (const [key, value] of Object.entries(process.env)) {
     if (!value) continue;
-    const isSensitive = key.toLowerCase().match(/secret|token|key|password|url|uri|auth|cred/);
+    const isSensitive = key
+      .toLowerCase()
+      .match(/secret|token|key|password|url|uri|auth|cred/);
     safeEnvVars[key] = isSensitive ? `${value.substring(0, 3)}***` : value;
   }
 
