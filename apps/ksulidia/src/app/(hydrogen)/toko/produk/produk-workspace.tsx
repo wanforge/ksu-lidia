@@ -9,6 +9,7 @@ import {
   PiWrenchDuotone,
   PiPencilSimpleBold,
   PiXBold,
+  PiTrashDuotone,
 } from "react-icons/pi";
 import EmptyState from "@/app/(hydrogen)/_components/empty-state";
 import { formatNumber } from "@/lib/format";
@@ -17,6 +18,7 @@ import {
   createProductAction,
   updateProductAction,
   adjustProductStockAction,
+  bulkDeleteProductsAction,
   ProductActionState,
 } from "./actions";
 import { Button } from "@/components/ui/button";
@@ -45,6 +47,12 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
   const [tab, setTab] = useState<"list" | "create">("list");
   const [query, setQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [isBulkDeleting, setIsBulkDeleting] = useState(false);
+
+  useEffect(() => {
+    setSelectedIds(new Set());
+  }, [tab]);
 
   // Edit Product Modal State
   const [editModal, setEditModal] = useState<{
@@ -333,6 +341,25 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                 >
                   <thead className="bg-gray-50">
                     <tr>
+                      <th className="w-12 px-4 py-3 text-center">
+                        <input
+                          type="checkbox"
+                          checked={
+                            table.paginatedItems.length > 0 &&
+                            table.paginatedItems.every((item) => selectedIds.has(item.id))
+                          }
+                          onChange={(e) => {
+                            const newSet = new Set(selectedIds);
+                            if (e.target.checked) {
+                              table.paginatedItems.forEach((item) => newSet.add(item.id));
+                            } else {
+                              table.paginatedItems.forEach((item) => newSet.delete(item.id));
+                            }
+                            setSelectedIds(newSet);
+                          }}
+                          className="rounded border-gray-300 text-red-600 focus:ring-red-600"
+                        />
+                      </th>
                       <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                         <SortableHeader
                           label="Kode"
@@ -409,6 +436,19 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                     {table.paginatedItems.map((p) => {
                       return (
                         <tr key={p.id} className="hover:bg-gray-50/50">
+                          <td className="px-4 py-3 text-center">
+                            <input
+                              type="checkbox"
+                              checked={selectedIds.has(p.id)}
+                              onChange={(e) => {
+                                const newSet = new Set(selectedIds);
+                                if (e.target.checked) newSet.add(p.id);
+                                else newSet.delete(p.id);
+                                setSelectedIds(newSet);
+                              }}
+                              className="rounded border-gray-300 text-red-600 focus:ring-red-600"
+                            />
+                          </td>
                           <td className="px-4 py-3 font-semibold text-gray-950">
                             {p.code}
                           </td>
@@ -473,28 +513,52 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                   </tbody>
                 </Table>
               </div>
-              <TableControls
-                currentPage={table.currentPage}
-                totalPages={table.totalPages}
-                pageSize={table.pageSize}
-                totalItems={table.totalItems}
-                startIndex={table.startIndex}
-                endIndex={table.endIndex}
-                onPageChange={table.setCurrentPage}
-                onPageSizeChange={table.setPageSize}
-                onExport={() => {
-                  table.exportToCsv("Katalog_Produk_Toko", [
-                    { label: "Kode", key: "code" },
-                    { label: "Nama Produk", key: "name" },
-                    { label: "Kategori", key: "categoryText" },
-                    { label: "Stok Fisik", key: "stock" },
-                    { label: "Harga Beli", key: "purchasePriceVal" },
-                    { label: "Harga Jual", key: "sellingPriceVal" },
-                    { label: "Margin", key: "marginVal" },
-                  ]);
-                }}
-                exportLabel="Unduh Katalog"
-              />
+              <div className="flex flex-col gap-4 border-t border-gray-200 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+                {selectedIds.size > 0 && (
+                  <Button
+                    variant="outline"
+                    className="border-red-200 bg-red-50 text-red-700 hover:bg-red-100 hover:text-red-800"
+                    disabled={isBulkDeleting}
+                    onClick={async () => {
+                      if (confirm(`Yakin ingin menghapus ${selectedIds.size} produk terpilih?`)) {
+                        setIsBulkDeleting(true);
+                        const res = await bulkDeleteProductsAction(Array.from(selectedIds));
+                        if (res.success) {
+                          setSelectedIds(new Set());
+                        } else {
+                          alert(res.message);
+                        }
+                        setIsBulkDeleting(false);
+                      }
+                    }}
+                  >
+                    <PiTrashDuotone className="mr-2 h-4 w-4" />
+                    Hapus {selectedIds.size} Terpilih
+                  </Button>
+                )}
+                <TableControls
+                  currentPage={table.currentPage}
+                  totalPages={table.totalPages}
+                  pageSize={table.pageSize}
+                  totalItems={table.totalItems}
+                  startIndex={table.startIndex}
+                  endIndex={table.endIndex}
+                  onPageChange={table.setCurrentPage}
+                  onPageSizeChange={table.setPageSize}
+                  onExport={() => {
+                    table.exportToCsv("Katalog_Produk_Toko", [
+                      { label: "Kode", key: "code" },
+                      { label: "Nama Produk", key: "name" },
+                      { label: "Kategori", key: "categoryText" },
+                      { label: "Stok Fisik", key: "stock" },
+                      { label: "Harga Beli", key: "purchasePriceVal" },
+                      { label: "Harga Jual", key: "sellingPriceVal" },
+                      { label: "Margin", key: "marginVal" },
+                    ]);
+                  }}
+                  exportLabel="Unduh Katalog"
+                />
+              </div>
             </>
           )}
         </div>

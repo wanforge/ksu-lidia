@@ -42,6 +42,7 @@ export type RuntimeInfo = {
   nodeEnv: string;
   prismaVersion: string;
   envVars: Record<string, string>;
+  networkInterfaces: Record<string, string[]>;
 };
 
 export type DbStatsInfo =
@@ -202,6 +203,16 @@ export async function getSystemSnapshot(): Promise<SystemSnapshot> {
     safeEnvVars[key] = isSensitive ? `${value.substring(0, 3)}***` : value;
   }
 
+  // Gather network interfaces
+  const nets = os.networkInterfaces();
+  const networkInterfaces: Record<string, string[]> = {};
+  for (const name of Object.keys(nets)) {
+    const ifaces = nets[name];
+    if (ifaces) {
+      networkInterfaces[name] = ifaces.map((i) => i.address);
+    }
+  }
+
   return {
     snapshotAt,
     runtime: {
@@ -216,6 +227,7 @@ export async function getSystemSnapshot(): Promise<SystemSnapshot> {
       nodeEnv: env.NODE_ENV,
       prismaVersion,
       envVars: safeEnvVars,
+      networkInterfaces,
     },
     cpu: {
       model: os.cpus()[0]?.model ?? "unknown",

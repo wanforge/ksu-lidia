@@ -406,7 +406,7 @@ export default function StatistikDashboard({
               koperasi.
             </p>
           </div>
-          <div className="flex h-[260px] w-full items-center justify-center">
+          <div className="flex min-h-[400px] w-full items-center justify-center pt-4">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -548,8 +548,8 @@ export default function StatistikDashboard({
               Distribusi saldo berdasarkan kategori laporan keuangan.
             </p>
           </div>
-          <div className="flex h-[260px] w-full items-center justify-center">
-            {reportPieData.length === 0 ? (
+          <div className="flex min-h-[400px] w-full items-center justify-center pt-4">
+            {reportPieData.every((d) => d.value === 0) ? (
               <div className="text-gray-400">
                 Belum ada data laporan keuangan
               </div>

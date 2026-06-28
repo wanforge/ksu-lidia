@@ -16,8 +16,11 @@ import {
   INSTALLMENT_STATUS,
   SAVINGS_TX_TYPES,
 } from "@/lib/constants";
-import { Table } from "rizzui";
-import * as XLSX from "xlsx";
+import { Table, Button } from "rizzui";
+import { utils, writeFile } from "xlsx";
+import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween";
+dayjs.extend(isBetween);
 
 type Member = {
   id: string;
@@ -85,6 +88,8 @@ export default function LaporanWorkspace({
     "savings"
   );
   const [searchQuery, setSearchQuery] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   const formatIDR = (val: number) => {
     return new Intl.NumberFormat("id-ID", {
@@ -146,7 +151,24 @@ export default function LaporanWorkspace({
 
   // --- TAB 2: LOANS COMPUTATIONS ---
   const loansData = useMemo(() => {
-    return loans.map((l) => {
+    let filtered = loans;
+    if (startDate || endDate) {
+      filtered = loans.filter((l) => {
+        const txDate = dayjs(l.dateDisbursed);
+        if (startDate && endDate) {
+          return txDate.isBetween(startDate, dayjs(endDate).endOf('day'), 'day', '[]');
+        }
+        if (startDate) {
+          return txDate.isAfter(dayjs(startDate).subtract(1, 'day'), 'day');
+        }
+        if (endDate) {
+          return txDate.isBefore(dayjs(endDate).add(1, 'day'), 'day');
+        }
+        return true;
+      });
+    }
+
+    return filtered.map((l) => {
       const amount = Number(l.amount) || 0;
       const provision = Number(l.provision) || 0;
       const crk = Number(l.crk) || 0;
@@ -174,7 +196,7 @@ export default function LaporanWorkspace({
         date: new Date(l.dateDisbursed).toLocaleDateString("id-ID"),
       };
     });
-  }, [loans]);
+  }, [loans, startDate, endDate]);
 
   const filteredLoans = useMemo(() => {
     const q = searchQuery.toLowerCase().trim();
@@ -199,86 +221,60 @@ export default function LaporanWorkspace({
 
   // --- TAB 3: CASH BOOK LEDGER ---
   const filteredCashBook = useMemo(() => {
+    let filtered = cashBookTxs;
+    if (startDate || endDate) {
+      filtered = cashBookTxs.filter((tx) => {
+        const txDate = dayjs(tx.date);
+        if (startDate && endDate) {
+          return txDate.isBetween(startDate, dayjs(endDate).endOf('day'), 'day', '[]');
+        }
+        if (startDate) {
+          return txDate.isAfter(dayjs(startDate).subtract(1, 'day'), 'day');
+        }
+        if (endDate) {
+          return txDate.isBefore(dayjs(endDate).add(1, 'day'), 'day');
+        }
+        return true;
+      });
+    }
+
     const q = searchQuery.toLowerCase().trim();
-    if (!q) return cashBookTxs;
-    return cashBookTxs.filter(
+    if (!q) return filtered;
+    return filtered.filter(
       (t) =>
         t.member.name.toLowerCase().includes(q) ||
         t.type.toLowerCase().includes(q) ||
         (t.description && t.description.toLowerCase().includes(q))
     );
-  }, [cashBookTxs, searchQuery]);
+  }, [cashBookTxs, searchQuery, startDate, endDate]);
 
-  // --- TAB 4: STORE P&L SPREADSHEET (TRIANNUAL 2026) ---
-  // Display January, February, March side-by-side matching the excel exactly!
-  const storePlData = useMemo(() => {
-    // January
-    const janSales = 11052000;
-    const janConsignment = 515500;
-    const janPurchases = 10913741;
-    const initialInventory = 5011836;
-    // HPP for January is calculated to arrive at store operating P&L numbers.
-    // Based on user sheet: Persediaan Awal: 5011836 + Pembelian: 10913741 = 15925577.
-    // Assuming a standard Cost of Goods sold around 10M, leaving inventory.
-    const janHpp = 10123500;
-    const janInventoryEnd = initialInventory + janPurchases - janHpp;
-
-    // February
-    const febSales = 6399000;
-    const febConsignment = 0;
-    const febPurchases = 4365033;
-    const febInventoryStart = janInventoryEnd;
-    const febHpp = 5824000;
-    const febInventoryEnd = febInventoryStart + febPurchases - febHpp;
-
-    // March
-    const marSales = 10565000;
-    const marConsignment = 0;
-    const marPurchases = 0; // none recorded
-    const marInventoryStart = febInventoryEnd;
-    const marHpp = 9520000;
-    const marInventoryEnd = marInventoryStart + marPurchases - marHpp;
-
-    return {
-      jan: {
-        sales: janSales,
-        consignment: janConsignment,
-        totalReceipts: janSales + janConsignment,
-        invStart: initialInventory,
-        purchases: janPurchases,
-        invEnd: janInventoryEnd,
-        hpp: janHpp,
-        grossProfit: janSales + janConsignment - janHpp,
-      },
-      feb: {
-        sales: febSales,
-        consignment: febConsignment,
-        totalReceipts: febSales + febConsignment,
-        invStart: febInventoryStart,
-        purchases: febPurchases,
-        invEnd: febInventoryEnd,
-        hpp: febHpp,
-        grossProfit: febSales + febConsignment - febHpp,
-      },
-      mar: {
-        sales: marSales,
-        consignment: marConsignment,
-        totalReceipts: marSales + marConsignment,
-        invStart: marInventoryStart,
-        purchases: marPurchases,
-        invEnd: marInventoryEnd,
-        hpp: marHpp,
-        grossProfit: marSales + marConsignment - marHpp,
-      },
-    };
-  }, []);
+  // --- TAB 4: STORE P&L ---
+  const storeData = useMemo(() => {
+    let filtered = storeTxs;
+    if (startDate || endDate) {
+      filtered = storeTxs.filter((tx) => {
+        const txDate = dayjs(tx.date);
+        if (startDate && endDate) {
+          return txDate.isBetween(startDate, dayjs(endDate).endOf('day'), 'day', '[]');
+        }
+        if (startDate) {
+          return txDate.isAfter(dayjs(startDate).subtract(1, 'day'), 'day');
+        }
+        if (endDate) {
+          return txDate.isBefore(dayjs(endDate).add(1, 'day'), 'day');
+        }
+        return true;
+      });
+    }
+    return filtered;
+  }, [storeTxs, startDate, endDate]);
 
   const handleExportExcel = () => {
     // We will export all data in multiple sheets
-    const wb = XLSX.utils.book_new();
+    const wb = utils.book_new();
 
     // 1. Rekap Simpanan
-    const wsSavings = XLSX.utils.json_to_sheet(
+    const wsSavings = utils.json_to_sheet(
       savingsData.map((s) => ({
         "No. Anggota": s.no,
         "Nama": s.name,
@@ -288,10 +284,10 @@ export default function LaporanWorkspace({
         "Total Saldo": s.total,
       }))
     );
-    XLSX.utils.book_append_sheet(wb, wsSavings, "Rekap_Simpanan");
+    utils.book_append_sheet(wb, wsSavings, "Rekap_Simpanan");
 
     // 2. Daftar Pinjaman
-    const wsLoans = XLSX.utils.json_to_sheet(
+    const wsLoans = utils.json_to_sheet(
       loansData.map((l) => ({
         "No. Anggota": l.memberNo,
         "Nama": l.memberName,
@@ -303,10 +299,10 @@ export default function LaporanWorkspace({
         "Laba Jasa (Total)": l.expectedProfit,
       }))
     );
-    XLSX.utils.book_append_sheet(wb, wsLoans, "Daftar_Pinjaman");
+    utils.book_append_sheet(wb, wsLoans, "Daftar_Pinjaman");
 
     // 3. Mutasi Kas
-    const wsCashBook = XLSX.utils.json_to_sheet(
+    const wsCashBook = utils.json_to_sheet(
       cashBookTxs.map((t) => ({
         "Tanggal": new Intl.DateTimeFormat("id-ID", {
           day: "2-digit",
@@ -320,36 +316,32 @@ export default function LaporanWorkspace({
         "Anggota": t.member.name,
       }))
     );
-    XLSX.utils.book_append_sheet(wb, wsCashBook, "Buku_Kas");
+    utils.book_append_sheet(wb, wsCashBook, "Buku_Kas");
 
     // Generate and download
-    XLSX.writeFile(wb, "Laporan_Keuangan_KSU_LIDIA.xlsx");
+    writeFile(wb, "Laporan_Keuangan_KSU_LIDIA.xlsx");
   };
 
   return (
     <div className="flex w-full flex-col gap-6">
-      {/* Page Header */}
-      <section className="flex flex-col justify-between gap-4 border-b border-gray-200 pb-5 sm:flex-row sm:items-center">
+      <div className="flex flex-col gap-4 border-b border-gray-200 pb-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.14em] text-red-700">
-            Pelaporan & Buku Besar
-          </p>
-          <h1 className="mt-2 text-2xl font-bold text-gray-950 md:text-3xl">
-            Laporan Keuangan & Buku Besar
+          <h1 className="text-2xl font-bold text-gray-950 md:text-3xl">
+            Laporan Keuangan
           </h1>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-gray-600">
-            Akses rekapitulasi data simpanan anggota, rincian saldo pinjaman
-            berjalan, mutasi kas simpan pinjam, serta laporan rugi/laba toko.
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-gray-600">
+            Rekapitulasi Simpanan, Pinjaman, Buku Kas, dan Transaksi Toko Lidia.
           </p>
         </div>
-        <div className="flex gap-2">
-          <button
+        <div className="flex items-center gap-3">
+          <Button
+            variant="solid"
             onClick={handleExportExcel}
-            className="inline-flex items-center gap-2 rounded-lg border border-green-300 bg-green-50 px-4 py-2.5 text-sm font-medium text-green-800 shadow-sm transition hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-600"
+            className="bg-emerald-600 text-white hover:bg-emerald-700"
           >
-            <PiMicrosoftExcelLogoDuotone className="h-4.5 w-4.5" />
+            <PiDownloadSimpleBold className="mr-2 h-4 w-4" />
             Ekspor Excel
-          </button>
+          </Button>
           <button
             onClick={() => window.print()}
             className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-600"
@@ -358,7 +350,41 @@ export default function LaporanWorkspace({
             Cetak Laporan
           </button>
         </div>
-      </section>
+      </div>
+
+      {/* Filter Tanggal */}
+      <div className="flex flex-col gap-2 rounded-xl border border-gray-200 bg-white p-4 shadow-sm sm:flex-row sm:items-end">
+        <div>
+          <label className="mb-1 block text-xs font-semibold text-gray-700">Tanggal Mulai</label>
+          <input
+            type="date"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm outline-none transition focus:border-red-700"
+          />
+        </div>
+        <div>
+          <label className="mb-1 block text-xs font-semibold text-gray-700">Tanggal Akhir</label>
+          <input
+            type="date"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm outline-none transition focus:border-red-700"
+          />
+        </div>
+        {(startDate || endDate) && (
+          <Button
+            variant="outline"
+            onClick={() => {
+              setStartDate("");
+              setEndDate("");
+            }}
+            className="text-gray-600 h-9"
+          >
+            Reset Tanggal
+          </Button>
+        )}
+      </div>
 
       {/* Tabs Menu */}
       <div className="flex flex-wrap items-center gap-1 border-b border-gray-200">

@@ -389,3 +389,33 @@ export async function importMembersAction(
     };
   }
 }
+
+export async function bulkDeleteMembersAction(memberIds: string[]): Promise<AnggotaActionState> {
+  const session = await getSession();
+  ensureAuditContext(
+    session?.user
+      ? { actorId: session.user.id, actorRole: session.user.role }
+      : undefined
+  );
+
+  if (!session?.user) {
+    return { success: false, message: "Sesi Anda telah kedaluwarsa." };
+  }
+
+  try {
+    // Soft delete members
+    await prisma.member.updateMany({
+      where: {
+        id: { in: memberIds }
+      },
+      data: {
+        deletedAt: new Date()
+      }
+    });
+
+    revalidatePath("/simpan-pinjam/anggota");
+    return { success: true, message: `Berhasil menghapus ${memberIds.length} anggota.` };
+  } catch (error: any) {
+    return { success: false, message: error.message || "Terjadi kesalahan sistem." };
+  }
+}

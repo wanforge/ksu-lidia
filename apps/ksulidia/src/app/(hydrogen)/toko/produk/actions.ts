@@ -316,3 +316,40 @@ export async function adjustProductStockAction(
     };
   }
 }
+
+export async function bulkDeleteProductsAction(productIds: string[]): Promise<ProductActionState> {
+  const session = await getSession();
+  ensureAuditContext(
+    session?.user
+      ? { actorId: session.user.id, actorRole: session.user.role }
+      : undefined
+  );
+
+  if (!session?.user) {
+    return { success: false, message: "Sesi Anda telah kedaluwarsa." };
+  }
+
+  try {
+    // Check if any product is used in transactions
+    const usedProducts = await prisma.productTransactionItem.findFirst({
+      where: {
+        productId: { in: productIds }
+      }
+    });
+
+    if (usedProducts) {
+      return { success: false, message: "Beberapa produk tidak bisa dihapus karena sudah dipakai dalam transaksi. Gunakan fitur nonaktifkan produk saja." };
+    }
+
+    await prisma.product.deleteMany({
+      where: {
+        id: { in: productIds }
+      }
+    });
+
+    revalidatePath("/toko/produk");
+    return { success: true, message: `Berhasil menghapus ${productIds.length} produk.` };
+  } catch (error: any) {
+    return { success: false, message: error.message || "Terjadi kesalahan sistem." };
+  }
+}

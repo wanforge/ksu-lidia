@@ -17,6 +17,9 @@ import {
   PiIdentificationCardDuotone,
   PiPrinterDuotone,
   PiDownloadSimpleDuotone,
+  PiUserListDuotone,
+  PiUploadSimpleDuotone,
+  PiTrashDuotone,
 } from "react-icons/pi";
 import EmptyState from "@/app/(hydrogen)/_components/empty-state";
 import { formatNumber } from "@/lib/format";
@@ -24,6 +27,8 @@ import { useActionFeedback } from "@/app/shared/use-action-feedback";
 import {
   createMemberAction,
   updateMemberAction,
+  deleteMemberAction,
+  bulkDeleteMembersAction,
   postSavingsTransactionAction,
   MemberActionState,
 } from "./actions";
@@ -93,6 +98,16 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
   // Member details loaded dynamically
   const [memberDetail, setMemberDetail] = useState<any>(null);
   const [isLoadingDetail, setIsLoadingDetail] = useState(false);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+
+  // Bulk selection state
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [isBulkDeleting, setIsBulkDeleting] = useState(false);
+
+  // Reset selection when tab changes
+  useEffect(() => {
+    setSelectedIds(new Set());
+  }, [tab]);
 
   // Setoran / Penarikan Modal
   const [txModal, setTxModal] = useState<{
@@ -729,11 +744,35 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
       ) : (
         <div>
           {/* Filters */}
-          <DataTableFilters
-            filterConfig={memberFilterConfig}
-            onFilterChange={table.setAdvancedFilters}
-            currentFilters={table.advancedFilters}
-          />
+          <div className="flex flex-col gap-4 border-b border-gray-200 pb-4 sm:flex-row sm:items-center sm:justify-between mb-4">
+            <DataTableFilters
+              filterConfig={memberFilterConfig}
+              onFilterChange={table.setAdvancedFilters}
+              currentFilters={table.advancedFilters}
+            />
+            {selectedIds.size > 0 && (
+              <Button
+                variant="outline"
+                className="border-red-200 bg-red-50 text-red-700 hover:bg-red-100 hover:text-red-800"
+                disabled={isBulkDeleting}
+                onClick={async () => {
+                  if (confirm(`Yakin ingin menghapus ${selectedIds.size} anggota terpilih?`)) {
+                    setIsBulkDeleting(true);
+                    const res = await bulkDeleteMembersAction(Array.from(selectedIds));
+                    if (res.success) {
+                      setSelectedIds(new Set());
+                    } else {
+                      alert(res.message);
+                    }
+                    setIsBulkDeleting(false);
+                  }
+                }}
+              >
+                <PiTrashDuotone className="mr-2 h-4 w-4" />
+                Hapus {selectedIds.size} Terpilih
+              </Button>
+            )}
+          </div>
 
           {/* Member List Table */}
           {table.paginatedItems.length === 0 ? (
@@ -748,6 +787,25 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                 <Table className="min-w-full">
                   <Table.Header>
                     <Table.Row>
+                      <Table.Head className="w-12 text-center">
+                        <input
+                          type="checkbox"
+                          checked={
+                            table.paginatedItems.length > 0 &&
+                            table.paginatedItems.every((item) => selectedIds.has(item.id))
+                          }
+                          onChange={(e) => {
+                            const newSet = new Set(selectedIds);
+                            if (e.target.checked) {
+                              table.paginatedItems.forEach((item) => newSet.add(item.id));
+                            } else {
+                              table.paginatedItems.forEach((item) => newSet.delete(item.id));
+                            }
+                            setSelectedIds(newSet);
+                          }}
+                          className="rounded border-gray-300 text-red-600 focus:ring-red-600"
+                        />
+                      </Table.Head>
                       <Table.Head>
                         <SortableHeader
                           label="No. RAT"
@@ -815,6 +873,19 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                       const hasActiveLoan = m.loans.length > 0;
                       return (
                         <Table.Row key={m.id} className="hover:bg-gray-50/50">
+                          <Table.Cell className="text-center">
+                            <input
+                              type="checkbox"
+                              checked={selectedIds.has(m.id)}
+                              onChange={(e) => {
+                                const newSet = new Set(selectedIds);
+                                if (e.target.checked) newSet.add(m.id);
+                                else newSet.delete(m.id);
+                                setSelectedIds(newSet);
+                              }}
+                              className="rounded border-gray-300 text-red-600 focus:ring-red-600"
+                            />
+                          </Table.Cell>
                           <Table.Cell>{m.no}</Table.Cell>
                           <Table.Cell>
                             <div className="flex items-center gap-2">

@@ -640,6 +640,20 @@ export default function SystemDashboard({ checks }: Props) {
                 label="Uptime OS"
                 value={fmtUptime(snapshot.runtime.uptimeSeconds)}
               />
+              <Row
+                label="IP Address"
+                value={
+                  <div className="flex flex-col items-end gap-1">
+                    {Object.entries(snapshot.runtime.networkInterfaces).map(
+                      ([iface, ips]) => (
+                        <span key={iface} className="text-xs text-gray-600">
+                          {iface}: {ips.join(", ")}
+                        </span>
+                      )
+                    )}
+                  </div>
+                }
+              />
             </>
           </Card>
         ) : (

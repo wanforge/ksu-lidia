@@ -1,9 +1,11 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useState, useMemo } from "react";
 import { CashEntity, CashTxType } from "@prisma/client";
 import { formatNumber } from "@/lib/format";
 import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween";
+dayjs.extend(isBetween);
 import { Table } from "rizzui";
 import { Button } from "@/components/ui/button";
 import { PiPlusBold, PiXBold } from "react-icons/pi";
@@ -37,6 +39,26 @@ export default function BukuKasView({
     setIsModalOpen(false);
   });
 
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
+  const filteredTransactions = useMemo(() => {
+    if (!startDate && !endDate) return transactions;
+    return transactions.filter((tx) => {
+      const txDate = dayjs(tx.date);
+      if (startDate && endDate) {
+        return txDate.isBetween(startDate, dayjs(endDate).endOf('day'), 'day', '[]');
+      }
+      if (startDate) {
+        return txDate.isAfter(dayjs(startDate).subtract(1, 'day'), 'day');
+      }
+      if (endDate) {
+        return txDate.isBefore(dayjs(endDate).add(1, 'day'), 'day');
+      }
+      return true;
+    });
+  }, [transactions, startDate, endDate]);
+
   const title =
     entity === CashEntity.KOPERASI ? "Buku Kas Koperasi" : "Buku Kas Toko";
 
@@ -65,6 +87,40 @@ export default function BukuKasView({
         </div>
       </section>
 
+      {/* Filter Tanggal */}
+      <div className="flex flex-col gap-2 rounded-xl border border-gray-200 bg-white p-4 shadow-sm sm:flex-row sm:items-end">
+        <div>
+          <label className="mb-1 block text-xs font-semibold text-gray-700">Tanggal Mulai</label>
+          <input
+            type="date"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm outline-none transition focus:border-red-700"
+          />
+        </div>
+        <div>
+          <label className="mb-1 block text-xs font-semibold text-gray-700">Tanggal Akhir</label>
+          <input
+            type="date"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm outline-none transition focus:border-red-700"
+          />
+        </div>
+        {(startDate || endDate) && (
+          <Button
+            variant="outline"
+            onClick={() => {
+              setStartDate("");
+              setEndDate("");
+            }}
+            className="text-gray-600 h-9"
+          >
+            Reset
+          </Button>
+        )}
+      </div>
+
       <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
         <Table className="min-w-full">
           <Table.Header>
@@ -86,17 +142,17 @@ export default function BukuKasView({
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {transactions.length === 0 ? (
+            {filteredTransactions.length === 0 ? (
               <Table.Row>
                 <Table.Cell
                   colSpan={6}
                   className="py-8 text-center text-gray-500"
                 >
-                  Belum ada transaksi di Buku Kas ini.
+                  Belum ada transaksi di rentang tanggal ini.
                 </Table.Cell>
               </Table.Row>
             ) : (
-              transactions.map((tx) => (
+              filteredTransactions.map((tx) => (
                 <Table.Row key={tx.id}>
                   <Table.Cell className="whitespace-nowrap text-sm text-gray-700">
                     {dayjs(tx.date).format("DD MMM YYYY")}
