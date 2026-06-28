@@ -34,6 +34,7 @@ import {
 import { DataTableFilters } from "@/components/ui/table/DataTableFilters";
 import { TableActionButton } from "@/components/ui/table/TableActionButton";
 import { DateInput } from "@/components/ui/form/DateInput";
+import { SAVINGS_TYPES } from "@/lib/constants";
 
 type SavingsAccount = {
   id: string;
@@ -230,9 +231,9 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
         label: "Jenis Simpanan",
         type: "select",
         options: [
-          { label: "Simpanan Wajib", value: "WAJIB" },
-          { label: "Simpanan Sukarela", value: "SUKARELA" },
-          { label: "Simpanan Pokok", value: "POKOK" },
+          { label: "Simpanan Wajib", value: SAVINGS_TYPES.WAJIB },
+          { label: "Simpanan Sukarela", value: SAVINGS_TYPES.SUKARELA },
+          { label: "Simpanan Pokok", value: SAVINGS_TYPES.POKOK },
         ],
       },
       {

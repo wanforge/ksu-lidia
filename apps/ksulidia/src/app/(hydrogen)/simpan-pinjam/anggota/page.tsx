@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { PERMISSIONS, hasPermission } from "@/lib/rbac/permissions";
 import { serializePrisma } from "@/lib/serialize";
 import AnggotaWorkspace from "./anggota-workspace";
+import { LOAN_STATUS } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 
@@ -26,7 +27,7 @@ export default async function AnggotaPage() {
     include: {
       savingsAccounts: true,
       loans: {
-        where: { status: "ACTIVE" },
+        where: { status: LOAN_STATUS.ACTIVE },
         select: {
           id: true,
           amount: true,

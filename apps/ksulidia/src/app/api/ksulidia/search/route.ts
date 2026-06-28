@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { LOAN_STATUS, INSTALLMENT_STATUS } from "@/lib/constants";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -63,7 +64,7 @@ export async function GET(request: Request): Promise<Response> {
   });
 
   const memberHits: SearchHit[] = members.map((m) => {
-    const activeLoans = m.loans.filter((l) => l.status === "ACTIVE");
+    const activeLoans = m.loans.filter((l) => l.status === LOAN_STATUS.ACTIVE);
     const activeLoanAmount = activeLoans.reduce(
       (sum, l) => sum + Number(l.amount),
       0
@@ -71,7 +72,7 @@ export async function GET(request: Request): Promise<Response> {
 
     const penaltyAmount = activeLoans.reduce((sum, l) => {
       const lateCount = l.installments.filter((inst) => {
-        return inst.status === "UNPAID" && new Date(inst.dueDate) < new Date();
+        return inst.status === INSTALLMENT_STATUS.UNPAID && new Date(inst.dueDate) < new Date();
       }).length;
       const principalInstallment = Number(l.amount) / l.tenor;
       const latePenaltyTotal = lateCount * principalInstallment * 0.05;

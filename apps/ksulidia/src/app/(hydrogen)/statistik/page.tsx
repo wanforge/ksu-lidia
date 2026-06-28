@@ -1,3 +1,4 @@
+import { SAVINGS_TYPES, LOAN_STATUS, INSTALLMENT_STATUS } from "@/lib/constants";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { PERMISSIONS, hasPermission } from "@/lib/rbac/permissions";
@@ -33,16 +34,16 @@ export default async function StatistikPage() {
 
   savingsAccounts.forEach((acc) => {
     const bal = Number(acc.balance) || 0;
-    if (acc.type === "POKOK") totalPokok += bal;
-    else if (acc.type === "WAJIB") totalWajib += bal;
-    else if (acc.type === "SUKARELA") totalSukarela += bal;
+    if (acc.type === SAVINGS_TYPES.POKOK) totalPokok += bal;
+    else if (acc.type === SAVINGS_TYPES.WAJIB) totalWajib += bal;
+    else if (acc.type === SAVINGS_TYPES.SUKARELA) totalSukarela += bal;
   });
 
   const totalSavings = totalPokok + totalWajib + totalSukarela;
 
   // 3. Fetch active loans and remaining balances
   const loans = await prisma.loan.findMany({
-    where: { status: "ACTIVE" },
+    where: { status: LOAN_STATUS.ACTIVE },
     include: {
       installments: true,
     },
@@ -61,7 +62,7 @@ export default async function StatistikPage() {
 
     let principalPaid = 0;
     l.installments.forEach((inst) => {
-      if (inst.status === "PAID") {
+      if (inst.status === INSTALLMENT_STATUS.PAID) {
         principalPaid += Number(inst.principalPaid) || 0;
         totalInterestEarned += Number(inst.interestPaid) || 0;
         totalPenaltyEarned += Number(inst.penaltyPaid) || 0;

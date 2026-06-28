@@ -27,6 +27,7 @@ import {
   PiChartLineUpDuotone,
   PiShieldCheckDuotone,
 } from "react-icons/pi";
+import { SAVINGS_TYPES, LOAN_STATUS } from "@/lib/constants";
 import {
   StaggerContainer,
   FadeUp,
@@ -61,11 +62,11 @@ function getMotivation(now: Date) {
 
 function getSavingsTypeTone(type: string) {
   switch (type) {
-    case "POKOK":
+    case SAVINGS_TYPES.POKOK:
       return "bg-indigo-50 text-indigo-700 border-indigo-200/60";
-    case "WAJIB":
+    case SAVINGS_TYPES.WAJIB:
       return "bg-amber-50 text-amber-700 border-amber-200/60";
-    case "SUKARELA":
+    case SAVINGS_TYPES.SUKARELA:
       return "bg-emerald-50 text-emerald-700 border-emerald-200/60";
     default:
       return "bg-gray-50 text-gray-700 border-gray-200/60";
@@ -96,7 +97,7 @@ export default async function Home() {
     // Total members
     prisma.member.count({ where: { deletedAt: null } }),
     // Active loans count
-    prisma.loan.count({ where: { status: "ACTIVE" } }),
+    prisma.loan.count({ where: { status: LOAN_STATUS.ACTIVE } }),
     // Total products
     prisma.product.count({ where: { isActive: true } }),
     // Low stock products count
@@ -107,7 +108,7 @@ export default async function Home() {
     }),
     // Active loans balances
     prisma.loan.findMany({
-      where: { status: "ACTIVE" },
+      where: { status: LOAN_STATUS.ACTIVE },
       select: { amount: true },
     }),
     // Total store sales transactions

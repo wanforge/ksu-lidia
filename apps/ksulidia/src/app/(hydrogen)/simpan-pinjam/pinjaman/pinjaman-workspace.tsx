@@ -22,6 +22,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Table } from "rizzui";
 import { useCustomTable } from "@/lib/use-custom-table";
+import { LOAN_STATUS, INSTALLMENT_STATUS } from "@/lib/constants";
 import {
   TableControls,
   SortableHeader,
@@ -181,7 +182,7 @@ export default function PinjamanWorkspace({
   const mappedLoans = useMemo(() => {
     return loans.map((l) => {
       const paidCount = l.installments.filter(
-        (i) => i.status === "PAID"
+        (i) => i.status === INSTALLMENT_STATUS.PAID
       ).length;
       return {
         ...l,
@@ -615,12 +616,12 @@ export default function PinjamanWorkspace({
                   </p>
                   <span
                     className={`inline-flex rounded-md border px-3 py-1 text-sm font-bold ${
-                      selectedLoan.status === "ACTIVE"
+                      selectedLoan.status === LOAN_STATUS.ACTIVE
                         ? "border-rose-200 bg-rose-50 text-rose-800"
                         : "border-green-200 bg-green-50 text-green-800"
                     }`}
                   >
-                    {selectedLoan.status === "ACTIVE"
+                    {selectedLoan.status === LOAN_STATUS.ACTIVE
                       ? "AKTIF / BELUM LUNAS"
                       : "LUNAS"}
                   </span>
@@ -763,7 +764,7 @@ export default function PinjamanWorkspace({
                     </Table.Header>
                     <Table.Body>
                       {instTable.paginatedItems.map((inst) => {
-                        const isPaid = inst.status === "PAID";
+                        const isPaid = inst.status === INSTALLMENT_STATUS.PAID;
                         return (
                           <Table.Row key={inst.id} className="hover:bg-gray-50/50">
                             <Table.Cell>
@@ -799,7 +800,7 @@ export default function PinjamanWorkspace({
                               {inst.paidAtFormatted}
                             </Table.Cell>
                             <Table.Cell>
-                              {!isPaid && selectedLoan.status === "ACTIVE" ? (
+                              {!isPaid && selectedLoan.status === LOAN_STATUS.ACTIVE ? (
                                 <Button
                                   size="sm"
                                   className="bg-red-700 text-white hover:bg-red-800"
@@ -988,12 +989,12 @@ export default function PinjamanWorkspace({
                           <Table.Cell>
                             <span
                               className={`inline-flex rounded-md border px-2 py-0.5 text-xs font-semibold ${
-                                l.status === "ACTIVE"
+                                l.status === LOAN_STATUS.ACTIVE
                                   ? "border-rose-200 bg-rose-50 text-rose-800"
                                   : "border-green-200 bg-green-50 text-green-800"
                               }`}
                             >
-                              {l.status === "ACTIVE" ? "AKTIF" : "LUNAS"}
+                              {l.status === LOAN_STATUS.ACTIVE ? "AKTIF" : "LUNAS"}
                             </span>
                           </Table.Cell>
                           <Table.Cell>

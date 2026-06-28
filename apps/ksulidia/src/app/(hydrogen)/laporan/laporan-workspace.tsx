@@ -10,6 +10,7 @@ import {
   PiMagnifyingGlassBold,
 } from "react-icons/pi";
 import { formatNumber } from "@/lib/format";
+import { SAVINGS_TYPES, INSTALLMENT_STATUS } from "@/lib/constants";
 
 type Member = {
   id: string;
@@ -90,11 +91,11 @@ export default function LaporanWorkspace({
   const savingsData = useMemo(() => {
     return members.map((m) => {
       const pokok =
-        Number(m.savingsAccounts.find((a) => a.type === "POKOK")?.balance) || 0;
+        Number(m.savingsAccounts.find((a) => a.type === SAVINGS_TYPES.POKOK)?.balance) || 0;
       const wajib =
-        Number(m.savingsAccounts.find((a) => a.type === "WAJIB")?.balance) || 0;
+        Number(m.savingsAccounts.find((a) => a.type === SAVINGS_TYPES.WAJIB)?.balance) || 0;
       const sukarela =
-        Number(m.savingsAccounts.find((a) => a.type === "SUKARELA")?.balance) ||
+        Number(m.savingsAccounts.find((a) => a.type === SAVINGS_TYPES.SUKARELA)?.balance) ||
         0;
       const total = pokok + wajib + sukarela;
       return {
@@ -139,7 +140,7 @@ export default function LaporanWorkspace({
       const installmentAmount = Number(l.installmentAmount) || 0;
 
       const paidInstallments = l.installments.filter(
-        (i) => i.status === "PAID"
+        (i) => i.status === INSTALLMENT_STATUS.PAID
       );
       const totalPrincipalPaid = paidInstallments.reduce(
         (sum, i) => sum + (Number(i.principalPaid) || 0),

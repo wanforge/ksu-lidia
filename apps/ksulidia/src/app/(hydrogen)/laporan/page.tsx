@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { PERMISSIONS, hasPermission } from "@/lib/rbac/permissions";
 import { serializePrisma } from "@/lib/serialize";
 import LaporanWorkspace from "./laporan-workspace";
+import { LOAN_STATUS } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 
@@ -31,7 +32,7 @@ export default async function LaporanPage() {
 
   // 2. Fetch active loans with installments and member info
   const loans = await prisma.loan.findMany({
-    where: { status: "ACTIVE" },
+    where: { status: LOAN_STATUS.ACTIVE },
     include: {
       member: true,
       installments: true,

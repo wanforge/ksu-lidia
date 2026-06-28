@@ -224,7 +224,7 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
         <div className="flex items-center gap-4">
           <Button
             type="button"
-            variant="outline"
+            variant="neutral"
             className="border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
             onClick={() => alert("Fitur Snapshot UI sedang dalam pengembangan...")}
           >

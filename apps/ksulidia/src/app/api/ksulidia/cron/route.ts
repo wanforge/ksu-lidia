@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { createNotification } from "@/lib/notifications";
+import { INSTALLMENT_STATUS } from "@/lib/constants";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -11,7 +12,7 @@ export async function GET() {
     // 1. Check for Late Loan Installments
     const lateInstallments = await prisma.loanInstallment.findMany({
       where: {
-        status: "UNPAID",
+        status: INSTALLMENT_STATUS.UNPAID,
         dueDate: {
           lt: today,
         },

@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { PERMISSIONS, hasPermission } from "@/lib/rbac/permissions";
 import { serializePrisma } from "@/lib/serialize";
 import PinjamanWorkspace from "./pinjaman-workspace";
+import { LOAN_STATUS } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 
@@ -37,7 +38,7 @@ export default async function PinjamanPage() {
       isActive: true,
       loans: {
         none: {
-          status: "ACTIVE",
+          status: LOAN_STATUS.ACTIVE,
         },
       },
     },
