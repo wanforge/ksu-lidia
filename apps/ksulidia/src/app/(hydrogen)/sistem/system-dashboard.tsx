@@ -29,6 +29,7 @@ import {
 import type { SystemSnapshot } from "@/lib/diagnostics/system-info";
 import type { CheckStatus, ConfigCheck } from "@/lib/diagnostics/config-check";
 
+import { Table } from "rizzui";
 import {
   SkeletonCard,
   SkeletonProgressBar,
@@ -447,7 +448,7 @@ function TimeComparison({
       }
     >
       <div className="overflow-x-auto">
-        <table className="min-w-full text-sm">
+        <Table variant="modern" className="min-w-full text-sm">
           <thead>
             <tr className="border-b border-gray-200">
               <th className="py-2 pe-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-400">
@@ -496,7 +497,7 @@ function TimeComparison({
               </tr>
             ))}
           </tbody>
-        </table>
+        </Table>
       </div>
     </Card>
   );

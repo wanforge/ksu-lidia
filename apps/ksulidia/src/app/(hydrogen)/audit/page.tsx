@@ -23,6 +23,7 @@ import {
 } from "@/app/(hydrogen)/_components/filters";
 import DateField from "@/app/(hydrogen)/_components/date-field";
 import { formatNumber } from "@/lib/format";
+import { Table } from "rizzui";
 
 export const dynamic = "force-dynamic";
 
@@ -429,7 +430,7 @@ export default async function AuditPage({
           />
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200 text-[13px]">
+            <Table variant="modern" className="min-w-full divide-y divide-gray-200 text-[13px]">
               <thead className="bg-gray-50">
                 <tr>
                   <SortableHeader
@@ -499,7 +500,7 @@ export default async function AuditPage({
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </Table>
 
             <Pagination
               basePath={routes.audit.list}

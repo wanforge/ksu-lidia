@@ -21,6 +21,7 @@ import {
 } from "./actions";
 import { Button } from "@/components/ui/button";
 import { useCustomTable } from "@/lib/use-custom-table";
+import { Table } from "rizzui";
 import {
   TableControls,
   SortableHeader,
@@ -326,7 +327,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
           ) : (
             <>
               <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200 text-sm">
+                <Table variant="modern" className="min-w-full divide-y divide-gray-200 text-sm">
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
@@ -467,7 +468,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                       );
                     })}
                   </tbody>
-                </table>
+                </Table>
               </div>
               <TableControls
                 currentPage={table.currentPage}

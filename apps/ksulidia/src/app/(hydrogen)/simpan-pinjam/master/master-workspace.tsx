@@ -1,11 +1,13 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useTransition } from "react";
 import {
   updateMasterConfigAction,
   MasterConfig,
   MasterActionState,
 } from "./actions";
+import { createSnapshotAction } from "./snapshot-actions";
+import toast from "react-hot-toast";
 import {
   PiVaultDuotone,
   PiCoinsDuotone,
@@ -25,6 +27,19 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
     updateMasterConfigAction,
     { success: false, message: "" }
   );
+
+  const [isPending, startTransition] = useTransition();
+
+  const handleCreateSnapshot = () => {
+    startTransition(async () => {
+      const result = await createSnapshotAction();
+      if (result.success) {
+        toast.success(result.message);
+      } else {
+        toast.error(result.message);
+      }
+    });
+  };
 
   useActionFeedback(state);
 
@@ -235,9 +250,8 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
           <Button
             type="button"
             className="bg-indigo-600 font-semibold text-white hover:bg-indigo-700"
-            onClick={() =>
-              alert("Pembuatan Snapshot manual sedang disiapkan...")
-            }
+            isLoading={isPending}
+            onClick={handleCreateSnapshot}
           >
             Buat Snapshot Bulan Ini
           </Button>

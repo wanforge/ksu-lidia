@@ -18,6 +18,7 @@ import {
 } from "@/app/(hydrogen)/_components/client-sortable";
 import { formatNumber } from "@/lib/format";
 import { Button } from "@/components/ui/button";
+import { Table } from "rizzui";
 
 type WorkspaceUser = {
   id: string;
@@ -232,7 +233,7 @@ export default function UsersWorkspace({
             />
           ) : (
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200 text-sm">
+              <Table variant="modern" className="min-w-full divide-y divide-gray-200 text-sm">
                 <thead className="bg-gray-50">
                   <tr>
                     <ClientSortHeader
@@ -346,7 +347,7 @@ export default function UsersWorkspace({
                     );
                   })}
                 </tbody>
-              </table>
+              </Table>
             </div>
           )}
         </div>

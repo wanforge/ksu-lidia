@@ -21,6 +21,7 @@ import {
 import DateField from "@/app/(hydrogen)/_components/date-field";
 import { formatNumber } from "@/lib/format";
 import LogRow from "./log-row";
+import { Table } from "rizzui";
 
 export const dynamic = "force-dynamic";
 
@@ -300,7 +301,7 @@ export default async function DataChangeLogPage({
           />
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200 text-sm">
+            <Table variant="modern" className="min-w-full divide-y divide-gray-200 text-sm">
               <thead className="bg-gray-50">
                 <tr>
                   <SortableHeader
@@ -361,7 +362,7 @@ export default async function DataChangeLogPage({
                   />
                 ))}
               </tbody>
-            </table>
+            </Table>
             <Pagination
               basePath={routes.dataChangeLog}
               currentPage={result.page}

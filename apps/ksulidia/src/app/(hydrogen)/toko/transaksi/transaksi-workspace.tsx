@@ -18,6 +18,7 @@ import { recordTransactionAction, TxActionState } from "./actions";
 import { ProductTxType } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { useCustomTable } from "@/lib/use-custom-table";
+import { Table } from "rizzui";
 import {
   TableControls,
   SortableHeader,
@@ -385,7 +386,7 @@ export default function TransaksiWorkspace({
                 Keranjang Item
               </h3>
               <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200 text-sm">
+                <Table variant="modern" className="min-w-full divide-y divide-gray-200 text-sm">
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
@@ -463,7 +464,7 @@ export default function TransaksiWorkspace({
                       ))
                     )}
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>
@@ -565,7 +566,7 @@ export default function TransaksiWorkspace({
           ) : (
             <>
               <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200 text-sm">
+                <Table variant="modern" className="min-w-full divide-y divide-gray-200 text-sm">
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
@@ -673,7 +674,7 @@ export default function TransaksiWorkspace({
                       );
                     })}
                   </tbody>
-                </table>
+                </Table>
               </div>
 
               {expandedTxId &&

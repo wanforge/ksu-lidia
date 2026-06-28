@@ -11,6 +11,7 @@ import {
 } from "react-icons/pi";
 import { formatNumber } from "@/lib/format";
 import { SAVINGS_TYPES, INSTALLMENT_STATUS } from "@/lib/constants";
+import { Table } from "rizzui";
 
 type Member = {
   id: string;
@@ -372,7 +373,7 @@ export default function LaporanWorkspace({
         {/* Tab 1: Savings Table */}
         {tab === "savings" && (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-gray-500">
+            <Table variant="modern" className="w-full text-left text-sm text-gray-500">
               <thead className="border-b border-gray-200 bg-gray-50 text-xs uppercase text-gray-700">
                 <tr>
                   <th scope="col" className="px-6 py-4">
@@ -453,14 +454,14 @@ export default function LaporanWorkspace({
                   </tr>
                 </tfoot>
               )}
-            </table>
+            </Table>
           </div>
         )}
 
         {/* Tab 2: Loans Table */}
         {tab === "loans" && (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-gray-500">
+            <Table variant="modern" className="w-full text-left text-sm text-gray-500">
               <thead className="border-b border-gray-200 bg-gray-50 text-xs uppercase text-gray-700">
                 <tr>
                   <th scope="col" className="px-6 py-4">
@@ -542,14 +543,14 @@ export default function LaporanWorkspace({
                   </tr>
                 </tfoot>
               )}
-            </table>
+            </Table>
           </div>
         )}
 
         {/* Tab 3: Cash Book Ledger */}
         {tab === "cashbook" && (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-gray-500">
+            <Table variant="modern" className="w-full text-left text-sm text-gray-500">
               <thead className="border-b border-gray-200 bg-gray-50 text-xs uppercase text-gray-700">
                 <tr>
                   <th scope="col" className="px-6 py-4">
@@ -607,7 +608,7 @@ export default function LaporanWorkspace({
                   </tr>
                 )}
               </tbody>
-            </table>
+            </Table>
           </div>
         )}
 
@@ -615,7 +616,7 @@ export default function LaporanWorkspace({
         {tab === "store" && (
           <div className="overflow-x-auto p-6">
             <div className="mx-auto max-w-4xl overflow-hidden rounded-lg border border-gray-200">
-              <table className="w-full text-left text-sm text-gray-950">
+              <Table variant="modern" className="w-full text-left text-sm text-gray-950">
                 <thead className="bg-red-800 text-xs font-bold uppercase text-white">
                   <tr>
                     <th scope="col" className="px-6 py-3.5">
@@ -765,7 +766,7 @@ export default function LaporanWorkspace({
                     </td>
                   </tr>
                 </tbody>
-              </table>
+              </Table>
             </div>
           </div>
         )}
