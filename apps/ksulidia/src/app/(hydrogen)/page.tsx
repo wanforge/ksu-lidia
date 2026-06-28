@@ -209,7 +209,7 @@ export default async function Home() {
 
   return (
     <div className="flex w-full flex-col gap-7">
-      <section className="relative flex flex-col gap-4 overflow-hidden rounded-2xl border border-primary-dark bg-gradient-to-br from-primary-default via-rose-900 to-slate-900 p-7 text-white shadow-xl sm:p-8">
+      <section className="relative flex flex-col gap-4 overflow-hidden rounded-2xl border border-red-900 bg-gradient-to-br from-gray-900 via-red-950 to-red-900 p-7 text-white shadow-xl sm:p-8">
         <div className="absolute inset-0 z-0 overflow-hidden rounded-2xl">
           {/* Subtle Noise Texture for premium feel */}
           <div
