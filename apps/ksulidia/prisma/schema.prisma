@@ -362,6 +362,19 @@ model AppSetting {
   @@map("app_settings")
 }
 
+model Snapshot {
+  id           String   @id @default(uuid(7))
+  periodDate   DateTime
+  snapshotType String   @default("MONTHLY") // e.g. MONTHLY, YEARLY, ON_DEMAND
+  description  String?
+  data         Json     // Stores serialized states of balances, interest rates, etc.
+  createdAt    DateTime @default(now())
+  createdBy    String?
+
+  @@index([periodDate])
+  @@map("snapshots")
+}
+
 model CashTransaction {
   id          String     @id @default(uuid(7))
   date        DateTime

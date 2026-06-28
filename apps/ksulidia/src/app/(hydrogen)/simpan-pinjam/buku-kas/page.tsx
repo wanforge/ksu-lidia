@@ -2,6 +2,7 @@ import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import BukuKasView from "@/app/(hydrogen)/_components/buku-kas/buku-kas-view";
 import { CashEntity } from "@prisma/client";
+import { CASH_TX_TYPES } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 
@@ -19,7 +20,7 @@ export default async function BukuKasKoperasiPage() {
   const transactions = transactionsRaw
     .map((tx) => {
       const amt = Number(tx.amount);
-      if (tx.type === "IN") {
+      if (tx.type === CASH_TX_TYPES.IN) {
         currentBalance += amt;
       } else {
         currentBalance -= amt;
@@ -30,7 +31,7 @@ export default async function BukuKasKoperasiPage() {
         description: tx.description || "",
         amount: amt,
         transactionType:
-          tx.type === "IN" ? "DEBIT" : ("CREDIT" as "DEBIT" | "CREDIT"),
+          tx.type === CASH_TX_TYPES.IN ? "DEBIT" : ("CREDIT" as "DEBIT" | "CREDIT"),
         balance: currentBalance,
         referenceNo: tx.referenceId,
       };

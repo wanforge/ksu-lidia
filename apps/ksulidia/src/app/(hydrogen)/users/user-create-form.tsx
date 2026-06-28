@@ -4,6 +4,7 @@ import { useActionState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useActionFeedback } from "@/app/shared/use-action-feedback";
 import { createUserAction } from "./actions";
+import { ROLE_OPTIONS } from "@/lib/constants";
 import { initialUserActionState } from "./action-state";
 
 import { LabelWithHint } from "@/app/(hydrogen)/_components/field-hint";
@@ -97,8 +98,11 @@ export default function UserCreateForm() {
             hint="Hak akses: Administrator (mengelola sistem dan transaksi), Viewer (hanya melihat)."
           />
           <select name="role" className={inputClass} defaultValue="VIEWER">
-            <option value="ADMIN">Administrator</option>
-            <option value="VIEWER">Viewer</option>
+            {ROLE_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
           </select>
           <FieldError messages={state.errors?.role} />
         </label>

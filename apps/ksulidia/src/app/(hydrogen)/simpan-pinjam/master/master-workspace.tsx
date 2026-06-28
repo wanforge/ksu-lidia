@@ -11,6 +11,7 @@ import {
   PiCoinsDuotone,
   PiInfoDuotone,
   PiHouseDuotone,
+  PiCameraDuotone,
 } from "react-icons/pi";
 import { Button } from "@/components/ui/button";
 import { useActionFeedback } from "@/app/shared/use-action-feedback";
@@ -193,15 +194,50 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
           <span className="font-bold">Pemberitahuan Sistem:</span> Perubahan
           parameter di atas akan diterapkan pada perhitungan transaksi pinjaman
           baru dan pelaporan keuangan koperasi KSU Lidia GKJ Manahan di masa
-          mendatang.
+          mendatang. Pinjaman lama tidak akan terpengaruh.
         </div>
       </div>
 
       {/* Submit Button */}
-      <div className="flex justify-end gap-3">
-        <Button type="submit" size="md">
-          Simpan Konfigurasi Master
+      <div className="flex justify-end">
+        <Button
+          type="submit"
+          className="bg-red-700 font-semibold text-white hover:bg-red-800"
+        >
+          Simpan Konfigurasi Koperasi
         </Button>
+      </div>
+
+      <hr className="my-8 border-gray-200" />
+
+      {/* 4. Snapshot Settings Card */}
+      <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        <h2 className="mb-4 flex items-center gap-2 text-base font-bold text-gray-900">
+          <PiCameraDuotone className="h-5 w-5 text-indigo-500" />
+          Manajemen Snapshot Data
+        </h2>
+        <p className="mb-4 text-sm text-gray-600">
+          Fitur Snapshot digunakan untuk membekukan status keuangan (saldo
+          anggota, kas, dsb) pada bulan tertentu. Berguna untuk audit atau
+          rollback di kemudian hari.
+        </p>
+        <div className="flex items-center gap-4">
+          <Button
+            type="button"
+            variant="outline"
+            className="border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+            onClick={() => alert("Fitur Snapshot UI sedang dalam pengembangan...")}
+          >
+            Lihat Histori Snapshot
+          </Button>
+          <Button
+            type="button"
+            className="bg-indigo-600 font-semibold text-white hover:bg-indigo-700"
+            onClick={() => alert("Pembuatan Snapshot manual sedang disiapkan...")}
+          >
+            Buat Snapshot Bulan Ini
+          </Button>
+        </div>
       </div>
     </form>
   );

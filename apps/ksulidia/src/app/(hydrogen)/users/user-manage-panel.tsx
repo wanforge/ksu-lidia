@@ -8,7 +8,8 @@ import {
   resetUserPasswordAction,
   updateUserAction,
 } from "./actions";
-import { initialUserActionState } from "./action-state";
+import { UserActionState, initialUserActionState } from "./action-state";
+import { ROLE_OPTIONS } from "@/lib/constants";
 
 import ToggleSwitch from "@/app/(hydrogen)/_components/toggle-switch";
 import { LabelWithHint } from "@/app/(hydrogen)/_components/field-hint";
@@ -29,10 +30,7 @@ type UserManagePanelProps = {
   isSelf: boolean;
 };
 
-const ROLE_OPTIONS = [
-  { value: "ADMIN", label: "Administrator" },
-  { value: "VIEWER", label: "Viewer" },
-];
+const roleOptions = ROLE_OPTIONS;
 
 const inputClass =
   "mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-gray-700";

@@ -1,7 +1,8 @@
-import { PrismaClient, SavingsType, SavingsTxType } from "@prisma/client";
+import { PrismaClient, SavingsType, SavingsTxType, LoanStatus } from "@prisma/client";
 import * as xlsx from "xlsx";
 import path from "path";
 import fs from "fs";
+import { APP_SETTING_KEYS } from "../../src/lib/constants";
 
 // Helper to convert sheet names like "JAN 2019" to Date
 function parseMonthYear(sheetName: string): Date {
@@ -55,39 +56,39 @@ export async function seedBulananSimpanPinjam(prisma: PrismaClient) {
 
   const workbook = xlsx.readFile(filePath);
 
-  // Create AppSetting Defaults first if not exist
-  await prisma.appSetting.upsert({
-    where: { key: "DEFAULT_INTEREST_RATE" },
+  let globalInterestRate = 1.5;
+  const interestSetting = await prisma.appSetting.upsert({
+    where: { key: APP_SETTING_KEYS.DEFAULT_INTEREST_RATE },
     update: {},
     create: {
-      key: "DEFAULT_INTEREST_RATE",
+      key: APP_SETTING_KEYS.DEFAULT_INTEREST_RATE,
       value: "1.50",
       description: "Bunga Pinjaman Default (%)",
     },
   });
   await prisma.appSetting.upsert({
-    where: { key: "DEFAULT_PENALTY_RATE" },
+    where: { key: APP_SETTING_KEYS.DEFAULT_PENALTY_RATE },
     update: {},
     create: {
-      key: "DEFAULT_PENALTY_RATE",
+      key: APP_SETTING_KEYS.DEFAULT_PENALTY_RATE,
       value: "5.00",
       description: "Denda Keterlambatan Default (%)",
     },
   });
   await prisma.appSetting.upsert({
-    where: { key: "PROVISION_RATE" },
+    where: { key: APP_SETTING_KEYS.PROVISION_RATE },
     update: {},
     create: {
-      key: "PROVISION_RATE",
+      key: APP_SETTING_KEYS.PROVISION_RATE,
       value: "100.00",
       description: "Provisi (Persentase thd nominal Bunga)",
     },
   });
   await prisma.appSetting.upsert({
-    where: { key: "CRK_RATE" },
+    where: { key: APP_SETTING_KEYS.CRK_RATE },
     update: {},
     create: {
-      key: "CRK_RATE",
+      key: APP_SETTING_KEYS.CRK_RATE,
       value: "10.00",
       description: "Cadangan Risiko Kredit (Persentase thd total pinjaman)",
     },

@@ -6,6 +6,7 @@ import { ensureAuditContext } from "@/lib/audit-context";
 import { recordAuditLog } from "@/lib/audit";
 import { prisma } from "@/lib/prisma";
 import { AuditAction, AttachmentSource } from "@prisma/client";
+import { APP_SETTING_KEYS } from "@/lib/constants";
 
 export type MasterActionState = {
   success: boolean;
@@ -55,34 +56,34 @@ export async function updateMasterConfigAction(
 
     const entries = [
       {
-        key: "DEFAULT_INTEREST_RATE",
+        key: APP_SETTING_KEYS.DEFAULT_INTEREST_RATE,
         value: interestRate,
         desc: "Bunga Pinjaman Default (%)",
       },
       {
-        key: "DEFAULT_PENALTY_RATE",
+        key: APP_SETTING_KEYS.DEFAULT_PENALTY_RATE,
         value: penaltyRate,
         desc: "Denda Keterlambatan Default (%)",
       },
       {
-        key: "PROVISION_RATE",
+        key: APP_SETTING_KEYS.PROVISION_RATE,
         value: provisionRate,
         desc: "Provisi (Persentase thd nominal Bunga)",
       },
       {
-        key: "CRK_RATE",
+        key: APP_SETTING_KEYS.CRK_RATE,
         value: crkRate,
         desc: "Cadangan Risiko Kredit (Persentase thd total pinjaman)",
       },
-      { key: "MIN_POKOK", value: minPokok, desc: "Simpanan Pokok Minimum" },
+      { key: APP_SETTING_KEYS.MIN_POKOK, value: minPokok, desc: "Simpanan Pokok Minimum" },
       {
-        key: "WAJIB_MONTHLY",
+        key: APP_SETTING_KEYS.WAJIB_MONTHLY,
         value: wajibMonthly,
         desc: "Simpanan Wajib Bulanan",
       },
-      { key: "COOP_NAME", value: cooperativeName, desc: "Nama Koperasi" },
+      { key: APP_SETTING_KEYS.COOP_NAME, value: cooperativeName, desc: "Nama Koperasi" },
       {
-        key: "COOP_ADDRESS",
+        key: APP_SETTING_KEYS.COOP_ADDRESS,
         value: cooperativeAddress,
         desc: "Alamat Koperasi",
       },
