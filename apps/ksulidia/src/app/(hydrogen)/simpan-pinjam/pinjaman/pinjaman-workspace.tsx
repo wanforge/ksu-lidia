@@ -751,28 +751,21 @@ export default function PinjamanWorkspace({
                             className="w-full justify-end text-red-800"
                           />
                         </Table.Head>
-                        <Table.Head>
-                          Status
-                        </Table.Head>
-                        <Table.Head>
-                          Tanggal Bayar
-                        </Table.Head>
-                        <Table.Head>
-                          Aksi
-                        </Table.Head>
+                        <Table.Head>Status</Table.Head>
+                        <Table.Head>Tanggal Bayar</Table.Head>
+                        <Table.Head>Aksi</Table.Head>
                       </Table.Row>
                     </Table.Header>
                     <Table.Body>
                       {instTable.paginatedItems.map((inst) => {
                         const isPaid = inst.status === INSTALLMENT_STATUS.PAID;
                         return (
-                          <Table.Row key={inst.id} className="hover:bg-gray-50/50">
-                            <Table.Cell>
-                              {inst.monthNumber}
-                            </Table.Cell>
-                            <Table.Cell>
-                              {inst.dueDateFormatted}
-                            </Table.Cell>
+                          <Table.Row
+                            key={inst.id}
+                            className="hover:bg-gray-50/50"
+                          >
+                            <Table.Cell>{inst.monthNumber}</Table.Cell>
+                            <Table.Cell>{inst.dueDateFormatted}</Table.Cell>
                             <Table.Cell>
                               Rp {formatNumber(inst.principalVal)}
                             </Table.Cell>
@@ -796,11 +789,10 @@ export default function PinjamanWorkspace({
                                 </span>
                               )}
                             </Table.Cell>
+                            <Table.Cell>{inst.paidAtFormatted}</Table.Cell>
                             <Table.Cell>
-                              {inst.paidAtFormatted}
-                            </Table.Cell>
-                            <Table.Cell>
-                              {!isPaid && selectedLoan.status === LOAN_STATUS.ACTIVE ? (
+                              {!isPaid &&
+                              selectedLoan.status === LOAN_STATUS.ACTIVE ? (
                                 <Button
                                   size="sm"
                                   className="bg-red-700 text-white hover:bg-red-800"
@@ -959,9 +951,7 @@ export default function PinjamanWorkspace({
                           className="w-full justify-center"
                         />
                       </Table.Head>
-                      <Table.Head>
-                        Aksi
-                      </Table.Head>
+                      <Table.Head>Aksi</Table.Head>
                     </Table.Row>
                   </Table.Header>
                   <Table.Body>
@@ -980,9 +970,7 @@ export default function PinjamanWorkspace({
                           <Table.Cell>
                             Rp {formatNumber(l.amountVal)}
                           </Table.Cell>
-                          <Table.Cell>
-                            {l.tenor} bulan
-                          </Table.Cell>
+                          <Table.Cell>{l.tenor} bulan</Table.Cell>
                           <Table.Cell>
                             Rp {formatNumber(l.installmentAmountVal)}
                           </Table.Cell>
@@ -994,7 +982,9 @@ export default function PinjamanWorkspace({
                                   : "border-green-200 bg-green-50 text-green-800"
                               }`}
                             >
-                              {l.status === LOAN_STATUS.ACTIVE ? "AKTIF" : "LUNAS"}
+                              {l.status === LOAN_STATUS.ACTIVE
+                                ? "AKTIF"
+                                : "LUNAS"}
                             </span>
                           </Table.Cell>
                           <Table.Cell>

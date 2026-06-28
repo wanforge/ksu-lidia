@@ -1,4 +1,8 @@
-import { SAVINGS_TYPES, LOAN_STATUS, INSTALLMENT_STATUS } from "@/lib/constants";
+import {
+  SAVINGS_TYPES,
+  LOAN_STATUS,
+  INSTALLMENT_STATUS,
+} from "@/lib/constants";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { PERMISSIONS, hasPermission } from "@/lib/rbac/permissions";
@@ -119,7 +123,7 @@ export default async function StatistikPage() {
 
   // 5. Fetch Cash Transactions
   const cashTx = await prisma.cashTransaction.findMany();
-  
+
   // Calculate monthly cash in and cash out
   const cashMonthlyMap: Record<
     number,
@@ -153,18 +157,20 @@ export default async function StatistikPage() {
   });
 
   // Take only until current month to avoid flatlines for future months, but since seed has all year maybe it's fine.
-  const cashFlowData = Object.values(cashMonthlyMap).filter(m => m.cashIn > 0 || m.cashOut > 0 || m.monthName === "Jan");
+  const cashFlowData = Object.values(cashMonthlyMap).filter(
+    (m) => m.cashIn > 0 || m.cashOut > 0 || m.monthName === "Jan"
+  );
 
   // 6. Fetch Financial Reports
   const financialReports = await prisma.financialReport.findMany();
-  
-  const financialReportData = financialReports.map(fr => ({
+
+  const financialReportData = financialReports.map((fr) => ({
     id: fr.id,
     periodDate: fr.periodDate,
     entity: fr.entity,
     reportType: fr.reportType,
     category: fr.category,
-    amount: Number(fr.amount) || 0
+    amount: Number(fr.amount) || 0,
   }));
 
   return (

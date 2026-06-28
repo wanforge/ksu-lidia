@@ -31,7 +31,9 @@ export default async function BukuKasTokoPage() {
         description: tx.description || "",
         amount: amt,
         transactionType:
-          tx.type === CASH_TX_TYPES.IN ? "DEBIT" : ("CREDIT" as "DEBIT" | "CREDIT"),
+          tx.type === CASH_TX_TYPES.IN
+            ? "DEBIT"
+            : ("CREDIT" as "DEBIT" | "CREDIT"),
         balance: currentBalance,
         referenceNo: tx.referenceId,
       };

@@ -91,12 +91,18 @@ export default function LaporanWorkspace({
   const savingsData = useMemo(() => {
     return members.map((m) => {
       const pokok =
-        Number(m.savingsAccounts.find((a) => a.type === SAVINGS_TYPES.POKOK)?.balance) || 0;
+        Number(
+          m.savingsAccounts.find((a) => a.type === SAVINGS_TYPES.POKOK)?.balance
+        ) || 0;
       const wajib =
-        Number(m.savingsAccounts.find((a) => a.type === SAVINGS_TYPES.WAJIB)?.balance) || 0;
+        Number(
+          m.savingsAccounts.find((a) => a.type === SAVINGS_TYPES.WAJIB)?.balance
+        ) || 0;
       const sukarela =
-        Number(m.savingsAccounts.find((a) => a.type === SAVINGS_TYPES.SUKARELA)?.balance) ||
-        0;
+        Number(
+          m.savingsAccounts.find((a) => a.type === SAVINGS_TYPES.SUKARELA)
+            ?.balance
+        ) || 0;
       const total = pokok + wajib + sukarela;
       return {
         id: m.id,

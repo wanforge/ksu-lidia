@@ -587,7 +587,10 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                         </Table.Row>
                       ) : (
                         txTable.paginatedItems.map((tx: any) => (
-                          <Table.Row key={tx.id} className="hover:bg-gray-50/50">
+                          <Table.Row
+                            key={tx.id}
+                            className="hover:bg-gray-50/50"
+                          >
                             <Table.Cell>{tx.formattedDate}</Table.Cell>
                             <Table.Cell>
                               <span
@@ -602,9 +605,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                                   : "TARIK"}
                               </span>
                             </Table.Cell>
-                            <Table.Cell>
-                              {tx.savingsType}
-                            </Table.Cell>
+                            <Table.Cell>{tx.savingsType}</Table.Cell>
                             <Table.Cell
                               className={`px-4 py-3 text-right font-bold ${
                                 tx.type === SavingsTxType.DEPOSIT
@@ -615,9 +616,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                               {tx.type === SavingsTxType.DEPOSIT ? "+" : "-"} Rp{" "}
                               {formatNumber(Number(tx.amount))}
                             </Table.Cell>
-                            <Table.Cell>
-                              {tx.description || "-"}
-                            </Table.Cell>
+                            <Table.Cell>{tx.description || "-"}</Table.Cell>
                           </Table.Row>
                         ))
                       )}
@@ -730,12 +729,8 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                           className="w-full justify-end text-red-800"
                         />
                       </Table.Head>
-                      <Table.Head>
-                        Pinjaman Aktif
-                      </Table.Head>
-                      <Table.Head>
-                        Aksi
-                      </Table.Head>
+                      <Table.Head>Pinjaman Aktif</Table.Head>
+                      <Table.Head>Aksi</Table.Head>
                     </Table.Row>
                   </Table.Header>
                   <Table.Body>
@@ -743,9 +738,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                       const hasActiveLoan = m.loans.length > 0;
                       return (
                         <Table.Row key={m.id} className="hover:bg-gray-50/50">
-                          <Table.Cell>
-                            {m.no}
-                          </Table.Cell>
+                          <Table.Cell>{m.no}</Table.Cell>
                           <Table.Cell>
                             <div className="flex items-center gap-2">
                               <p className="font-medium text-gray-900">
@@ -761,15 +754,9 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                               <p className="text-xs text-gray-400">{m.phone}</p>
                             )}
                           </Table.Cell>
-                          <Table.Cell>
-                            Rp {formatNumber(m.pokok)}
-                          </Table.Cell>
-                          <Table.Cell>
-                            Rp {formatNumber(m.wajib)}
-                          </Table.Cell>
-                          <Table.Cell>
-                            Rp {formatNumber(m.sukarela)}
-                          </Table.Cell>
+                          <Table.Cell>Rp {formatNumber(m.pokok)}</Table.Cell>
+                          <Table.Cell>Rp {formatNumber(m.wajib)}</Table.Cell>
+                          <Table.Cell>Rp {formatNumber(m.sukarela)}</Table.Cell>
                           <Table.Cell>
                             Rp {formatNumber(m.totalSavings)}
                           </Table.Cell>

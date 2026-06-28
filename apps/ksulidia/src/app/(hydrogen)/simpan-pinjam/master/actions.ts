@@ -75,13 +75,21 @@ export async function updateMasterConfigAction(
         value: crkRate,
         desc: "Cadangan Risiko Kredit (Persentase thd total pinjaman)",
       },
-      { key: APP_SETTING_KEYS.MIN_POKOK, value: minPokok, desc: "Simpanan Pokok Minimum" },
+      {
+        key: APP_SETTING_KEYS.MIN_POKOK,
+        value: minPokok,
+        desc: "Simpanan Pokok Minimum",
+      },
       {
         key: APP_SETTING_KEYS.WAJIB_MONTHLY,
         value: wajibMonthly,
         desc: "Simpanan Wajib Bulanan",
       },
-      { key: APP_SETTING_KEYS.COOP_NAME, value: cooperativeName, desc: "Nama Koperasi" },
+      {
+        key: APP_SETTING_KEYS.COOP_NAME,
+        value: cooperativeName,
+        desc: "Nama Koperasi",
+      },
       {
         key: APP_SETTING_KEYS.COOP_ADDRESS,
         value: cooperativeAddress,

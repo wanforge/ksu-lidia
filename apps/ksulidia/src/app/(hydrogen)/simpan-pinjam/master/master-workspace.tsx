@@ -226,14 +226,18 @@ export default function MasterWorkspace({ config }: MasterWorkspaceProps) {
             type="button"
             variant="neutral"
             className="border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
-            onClick={() => alert("Fitur Snapshot UI sedang dalam pengembangan...")}
+            onClick={() =>
+              alert("Fitur Snapshot UI sedang dalam pengembangan...")
+            }
           >
             Lihat Histori Snapshot
           </Button>
           <Button
             type="button"
             className="bg-indigo-600 font-semibold text-white hover:bg-indigo-700"
-            onClick={() => alert("Pembuatan Snapshot manual sedang disiapkan...")}
+            onClick={() =>
+              alert("Pembuatan Snapshot manual sedang disiapkan...")
+            }
           >
             Buat Snapshot Bulan Ini
           </Button>

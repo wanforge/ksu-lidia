@@ -1,4 +1,9 @@
-import { PrismaClient, SavingsType, SavingsTxType, LoanStatus } from "@prisma/client";
+import {
+  PrismaClient,
+  SavingsType,
+  SavingsTxType,
+  LoanStatus,
+} from "@prisma/client";
 import * as xlsx from "xlsx";
 import path from "path";
 import fs from "fs";

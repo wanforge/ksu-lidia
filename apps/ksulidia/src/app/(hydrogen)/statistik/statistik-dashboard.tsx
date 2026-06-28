@@ -71,7 +71,12 @@ type Props = {
   financialReportData: FinancialReportDataPoint[];
 };
 
-export default function StatistikDashboard({ metrics, chartData, cashFlowData, financialReportData }: Props) {
+export default function StatistikDashboard({
+  metrics,
+  chartData,
+  cashFlowData,
+  financialReportData,
+}: Props) {
   const router = useRouter();
 
   // Format to IDR Rupiah currency format
@@ -104,18 +109,30 @@ export default function StatistikDashboard({ metrics, chartData, cashFlowData, f
   // Prepare Financial Report Pie Chart Data (e.g. Asset distribution)
   const reportPieData = React.useMemo(() => {
     // just a simple grouping by category for visualization
-    const grouped = financialReportData.reduce((acc, curr) => {
-      if (!acc[curr.category]) acc[curr.category] = 0;
-      acc[curr.category] += curr.amount;
-      return acc;
-    }, {} as Record<string, number>);
+    const grouped = financialReportData.reduce(
+      (acc, curr) => {
+        if (!acc[curr.category]) acc[curr.category] = 0;
+        acc[curr.category] += curr.amount;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-    const colors = ["#0284c7", "#059669", "#d97706", "#dc2626", "#7c3aed", "#4f46e5"];
-    return Object.entries(grouped).map(([name, value], i) => ({
-      name,
-      value,
-      color: colors[i % colors.length]
-    })).filter(x => x.value > 0);
+    const colors = [
+      "#0284c7",
+      "#059669",
+      "#d97706",
+      "#dc2626",
+      "#7c3aed",
+      "#4f46e5",
+    ];
+    return Object.entries(grouped)
+      .map(([name, value], i) => ({
+        name,
+        value,
+        color: colors[i % colors.length],
+      }))
+      .filter((x) => x.value > 0);
   }, [financialReportData]);
 
   return (
@@ -532,43 +549,45 @@ export default function StatistikDashboard({ metrics, chartData, cashFlowData, f
           </div>
           <div className="flex h-[260px] w-full items-center justify-center">
             {reportPieData.length === 0 ? (
-               <div className="text-gray-400">Belum ada data laporan keuangan</div>
+              <div className="text-gray-400">
+                Belum ada data laporan keuangan
+              </div>
             ) : (
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={reportPieData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={70}
-                  outerRadius={95}
-                  paddingAngle={5}
-                  dataKey="value"
-                  stroke="none"
-                >
-                  {reportPieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  formatter={(value: any) => [formatIDR(Number(value)), ""]}
-                  contentStyle={{
-                    borderRadius: "12px",
-                    border: "none",
-                    boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
-                    fontWeight: 500,
-                  }}
-                  itemStyle={{ color: "#111827" }}
-                />
-                <Legend
-                  iconType="circle"
-                  layout="vertical"
-                  verticalAlign="middle"
-                  align="right"
-                  wrapperStyle={{ fontSize: 12 }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={reportPieData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={70}
+                    outerRadius={95}
+                    paddingAngle={5}
+                    dataKey="value"
+                    stroke="none"
+                  >
+                    {reportPieData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    formatter={(value: any) => [formatIDR(Number(value)), ""]}
+                    contentStyle={{
+                      borderRadius: "12px",
+                      border: "none",
+                      boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
+                      fontWeight: 500,
+                    }}
+                    itemStyle={{ color: "#111827" }}
+                  />
+                  <Legend
+                    iconType="circle"
+                    layout="vertical"
+                    verticalAlign="middle"
+                    align="right"
+                    wrapperStyle={{ fontSize: 12 }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
             )}
           </div>
         </div>
