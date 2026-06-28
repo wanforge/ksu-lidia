@@ -1,0 +1,13 @@
+[
+  {
+    "no": 300.0,
+    "nama": "Ani Widiyana",
+    "type": "Tabungan Sukarela",
+    "awal": 0,
+    "setor": 200000.0,
+    "ambil": 0,
+    "akhir_tercatat": 0,
+    "akhir_dihitung": 200000.0,
+    "selisih": -200000.0
+  }
+]
