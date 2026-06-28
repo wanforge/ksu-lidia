@@ -123,16 +123,16 @@ export const menuItems: MenuItem[] = [
     permission: PERMISSIONS.USER_MANAGE,
   },
   {
+    name: "Roles & Permission",
+    href: routes.roles,
+    icon: <PiIdentificationCardDuotone />,
+    permission: PERMISSIONS.USER_MANAGE,
+  },
+  {
     name: "Audit Log",
     href: routes.audit.list,
     icon: <PiClockCountdownDuotone />,
     permission: PERMISSIONS.AUDIT_VIEW,
-  },
-  {
-    name: "Log Perubahan Data",
-    href: routes.dataChangeLog,
-    icon: <PiClockCounterClockwiseDuotone />,
-    permission: PERMISSIONS.DATA_CHANGE_LOG_VIEW,
   },
   {
     name: "Diagnostik Sistem",

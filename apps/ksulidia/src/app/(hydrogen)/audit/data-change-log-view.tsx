@@ -110,7 +110,7 @@ function semanticOperation(
   };
 }
 
-export default async function DataChangeLogPage({
+export default async function DataChangeLogView({
   searchParams,
 }: {
   searchParams?: Promise<SearchParams>;
@@ -172,19 +172,6 @@ export default async function DataChangeLogPage({
 
   return (
     <div className="flex w-full flex-col gap-6">
-      <section className="border-b border-gray-200 pb-5">
-        <p className="text-sm font-semibold uppercase tracking-[0.14em] text-red-700">
-          Keamanan &amp; Audit
-        </p>
-        <h1 className="mt-2 text-2xl font-bold text-gray-950 md:text-3xl">
-          Log Perubahan Data
-        </h1>
-        <p className="mt-2 max-w-3xl text-sm leading-6 text-gray-600">
-          Setiap operasi tulis (tambah/ubah/hapus) ke tabel apa pun melalui
-          aplikasi tercatat otomatis di sini. Field sensitif seperti password
-          disamarkan.
-        </p>
-      </section>
 
       {!databaseReady ? (
         <div className="rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
@@ -203,7 +190,7 @@ export default async function DataChangeLogPage({
               </span>
             </p>
             <a
-              href={routes.dataChangeLog}
+              href={`${routes.audit.list}?tab=perubahan`}
               className="text-xs font-semibold text-red-800 underline hover:text-red-950"
             >
               Hapus filter
@@ -287,7 +274,7 @@ export default async function DataChangeLogPage({
             <button type="submit" className={filterSubmitClass}>
               Filter
             </button>
-            <a href={routes.dataChangeLog} className={filterResetClass}>
+            <a href={`${routes.audit.list}?tab=perubahan`} className={filterResetClass}>
               Reset
             </a>
           </FilterActions>
@@ -359,7 +346,7 @@ export default async function DataChangeLogPage({
                       payload: row.payload,
                       correlationId: row.correlationId,
                       correlationHref: row.correlationId
-                        ? `${routes.dataChangeLog}?correlationId=${row.correlationId}`
+                        ? `${routes.audit.list}?tab=perubahan&correlationId=${row.correlationId}`
                         : null,
                     }}
                   />
@@ -367,12 +354,13 @@ export default async function DataChangeLogPage({
               </tbody>
             </Table>
             <Pagination
-              basePath={routes.dataChangeLog}
+              basePath={routes.audit.list}
               currentPage={result.page}
               pageCount={result.pageCount}
               total={result.total}
               pageSize={PAGE_SIZE}
               params={{
+                tab: "perubahan",
                 model: params.model,
                 operation: params.operation,
                 correlationId: params.correlationId,

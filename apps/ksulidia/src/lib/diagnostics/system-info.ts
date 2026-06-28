@@ -40,9 +40,11 @@ export type RuntimeInfo = {
   appVersion: string;
   appName: string;
   nodeEnv: string;
+  prismaVersion: string;
+  envVars: Record<string, string>;
 };
 
-export type DbTimeInfo =
+export type DbStatsInfo =
   | {
       ok: true;
       globalTz: string;
@@ -50,6 +52,9 @@ export type DbTimeInfo =
       systemTz: string;
       serverEpochMs: number;
       driftMs: number;
+      latencyMs: number;
+      sizeBytes: number;
+      connections: number;
     }
   | { ok: false; error: string };
 
@@ -69,7 +74,7 @@ export type SystemSnapshot = {
   cpu: CpuInfo;
   memory: MemoryInfo;
   disks: DiskInfo[];
-  db: DbTimeInfo;
+  db: DbStatsInfo;
   ntp: NtpInfo;
 };
 
@@ -92,7 +97,8 @@ function getDisk(diskPath: string): DiskInfo | null {
   }
 }
 
-async function getDbTime(appNowMs: number): Promise<DbTimeInfo> {
+async function getDbStats(appNowMs: number): Promise<DbStatsInfo> {
+  const start = Date.now();
   try {
     const rows = await prisma.$queryRaw<
       Array<{
@@ -102,6 +108,32 @@ async function getDbTime(appNowMs: number): Promise<DbTimeInfo> {
         dbEpoch: number | string | bigint;
       }>
     >`SELECT @@global.time_zone AS gtz, @@session.time_zone AS stz, @@system_time_zone AS systz, UNIX_TIMESTAMP() AS dbEpoch`;
+    const latencyMs = Date.now() - start;
+
+    let sizeBytes = 0;
+    try {
+      const sizeRows = await prisma.$queryRaw<
+        Array<{ size: number | string | bigint }>
+      >`SELECT SUM(data_length + index_length) AS size FROM information_schema.TABLES WHERE table_schema = DATABASE()`;
+      if (sizeRows[0]?.size) {
+        sizeBytes = Number(sizeRows[0].size);
+      }
+    } catch (e) {
+      // Ignore if no permission
+    }
+
+    let connections = 0;
+    try {
+      const connRows = await prisma.$queryRaw<
+        Array<{ Variable_name: string; Value: string }>
+      >`SHOW STATUS WHERE variable_name = 'Threads_connected'`;
+      if (connRows[0]?.Value) {
+        connections = parseInt(connRows[0].Value, 10);
+      }
+    } catch (e) {
+      // Ignore if no permission
+    }
+
     const row = rows[0];
     if (!row) return { ok: false, error: "No rows returned." };
     const dbEpochMs = Number(row.dbEpoch) * 1000;
@@ -112,9 +144,12 @@ async function getDbTime(appNowMs: number): Promise<DbTimeInfo> {
       systemTz: row.systz,
       serverEpochMs: dbEpochMs,
       driftMs: appNowMs - dbEpochMs,
+      latencyMs,
+      sizeBytes,
+      connections,
     };
   } catch {
-    return { ok: false, error: "Gagal membaca waktu database." };
+    return { ok: false, error: "Gagal membaca data database." };
   }
 }
 
@@ -123,7 +158,7 @@ export async function getSystemSnapshot(): Promise<SystemSnapshot> {
 
   // Run DB and NTP in parallel — both are network I/O
   const [db, ntpResult] = await Promise.all([
-    getDbTime(snapshotAt),
+    getDbStats(snapshotAt),
     queryNtp(),
   ]);
 
@@ -156,6 +191,17 @@ export async function getSystemSnapshot(): Promise<SystemSnapshot> {
     }
   }
 
+  const rawPrisma = pkg.dependencies?.prisma || pkg.dependencies?.["@prisma/client"] || "unknown";
+  const prismaVersion = rawPrisma.replace(/[\^~]/g, "");
+
+  // Mask sensitive env vars
+  const safeEnvVars: Record<string, string> = {};
+  for (const [key, value] of Object.entries(process.env)) {
+    if (!value) continue;
+    const isSensitive = key.toLowerCase().match(/secret|token|key|password|url|uri|auth|cred/);
+    safeEnvVars[key] = isSensitive ? `${value.substring(0, 3)}***` : value;
+  }
+
   return {
     snapshotAt,
     runtime: {
@@ -168,6 +214,8 @@ export async function getSystemSnapshot(): Promise<SystemSnapshot> {
       appVersion: pkg.version,
       appName: appConfig.name,
       nodeEnv: env.NODE_ENV,
+      prismaVersion,
+      envVars: safeEnvVars,
     },
     cpu: {
       model: os.cpus()[0]?.model ?? "unknown",

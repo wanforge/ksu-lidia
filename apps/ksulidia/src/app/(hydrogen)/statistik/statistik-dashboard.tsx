@@ -582,10 +582,10 @@ export default function StatistikDashboard({
                   />
                   <Legend
                     iconType="circle"
-                    layout="vertical"
-                    verticalAlign="middle"
-                    align="right"
-                    wrapperStyle={{ fontSize: 12 }}
+                    layout="horizontal"
+                    verticalAlign="bottom"
+                    align="center"
+                    wrapperStyle={{ fontSize: 12, paddingTop: 20 }}
                   />
                 </PieChart>
               </ResponsiveContainer>

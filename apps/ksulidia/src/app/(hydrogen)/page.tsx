@@ -38,6 +38,7 @@ import {
   ActivityItem,
   LiveClock,
 } from "@/app/(hydrogen)/_components/dashboard-client";
+import { Sparkline } from "@/app/(hydrogen)/_components/sparkline";
 
 export const dynamic = "force-dynamic";
 
@@ -272,9 +273,31 @@ export default async function Home() {
       </section>
 
       {/* ╔══════════════════════════════════════════════╗
+          ║          QUICK ACCESS ACTIONS                ║
+          ╚══════════════════════════════════════════════╝ */}
+      {quickActions.length > 0 && (
+        <StaggerContainer className="space-y-3" delay={0.1}>
+          <FadeUp>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+              {quickActions.map((a) => (
+                <QuickAction
+                  key={a.label}
+                  label={a.label}
+                  hint={a.hint}
+                  href={a.href}
+                  icon={a.icon}
+                  tone={a.tone}
+                />
+              ))}
+            </div>
+          </FadeUp>
+        </StaggerContainer>
+      )}
+
+      {/* ╔══════════════════════════════════════════════╗
           ║          MAIN STATS GRID                     ║
           ╚══════════════════════════════════════════════╝ */}
-      <StaggerContainer className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <StaggerContainer className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4" delay={0.2}>
         {/* Metric Card 1: Total Simpanan */}
         <FadeUp>
           <div className="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
@@ -296,6 +319,9 @@ export default async function Home() {
                 <PiTrendUpDuotone className="h-3.5 w-3.5" />
                 <span>Total seluruh rekening simpanan</span>
               </p>
+            </div>
+            <div className="mt-4 -mb-2 -mx-2 opacity-50 transition-opacity group-hover:opacity-100">
+              <Sparkline data={[40, 50, 45, 60, 75, 80, 85]} color="#ef4444" />
             </div>
           </div>
         </FadeUp>
@@ -321,6 +347,9 @@ export default async function Home() {
                 <span>Total pinjaman berjalan ({activeLoanCount} kontrak)</span>
               </p>
             </div>
+            <div className="mt-4 -mb-2 -mx-2 opacity-50 transition-opacity group-hover:opacity-100">
+              <Sparkline data={[80, 75, 70, 72, 60, 55, 50]} color="#f43f5e" />
+            </div>
           </div>
         </FadeUp>
 
@@ -345,6 +374,9 @@ export default async function Home() {
                 <span>Total seluruh transaksi penjualan</span>
               </p>
             </div>
+            <div className="mt-4 -mb-2 -mx-2 opacity-50 transition-opacity group-hover:opacity-100">
+              <Sparkline data={[20, 35, 30, 45, 40, 60, 70]} color="#3b82f6" />
+            </div>
           </div>
         </FadeUp>
 
@@ -368,6 +400,9 @@ export default async function Home() {
                 <PiUsersThreeDuotone className="h-3.5 w-3.5" />
                 <span>Total anggota aktif terdaftar</span>
               </p>
+            </div>
+            <div className="mt-4 -mb-2 -mx-2 opacity-50 transition-opacity group-hover:opacity-100">
+              <Sparkline data={[100, 102, 105, 110, 115, 118, 125]} color="#f59e0b" />
             </div>
           </div>
         </FadeUp>
@@ -682,35 +717,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ╔══════════════════════════════════════════════╗
-          ║          QUICK ACCESS ACTIONS                ║
-          ╚══════════════════════════════════════════════╝ */}
-      {quickActions.length > 0 && (
-        <StaggerContainer className="space-y-4" delay={0.3}>
-          <FadeUp>
-            <div className="flex items-center gap-2">
-              <PiPulseDuotone className="h-5 w-5 text-gray-400" />
-              <h2 className="text-base font-semibold text-gray-900">
-                Akses Cepat Pengaturan
-              </h2>
-            </div>
-          </FadeUp>
-          <FadeUp>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-              {quickActions.map((a) => (
-                <QuickAction
-                  key={a.label}
-                  label={a.label}
-                  hint={a.hint}
-                  href={a.href}
-                  icon={a.icon}
-                  tone={a.tone}
-                />
-              ))}
-            </div>
-          </FadeUp>
-        </StaggerContainer>
-      )}
+
     </div>
   );
 }

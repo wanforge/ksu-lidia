@@ -3,10 +3,10 @@ export const routes = {
   users: {
     list: "/users",
   },
+  roles: "/roles",
   audit: {
     list: "/audit",
   },
-  dataChangeLog: "/log-perubahan",
   system: "/sistem",
   simpanPinjam: {
     anggota: "/simpan-pinjam/anggota",

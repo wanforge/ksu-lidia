@@ -17,6 +17,8 @@ import {
   PiSpeakerHighDuotone,
   PiWarningCircleDuotone,
   PiXCircleDuotone,
+  PiTerminalWindowDuotone,
+  PiListDashesDuotone,
 } from "react-icons/pi";
 import { appConfig } from "@/config/app";
 import { Button } from "@/components/ui/button";
@@ -626,6 +628,7 @@ export default function SystemDashboard({ checks }: Props) {
                 value={`${snapshot.runtime.appName} v${snapshot.runtime.appVersion}`}
               />
               <Row label="Node.js" value={snapshot.runtime.nodeVersion} />
+              <Row label="Prisma" value={`v${snapshot.runtime.prismaVersion}`} />
               <Row label="NODE_ENV" value={snapshot.runtime.nodeEnv} />
               <Row
                 label="Platform"
@@ -850,6 +853,9 @@ export default function SystemDashboard({ checks }: Props) {
                   label="Selisih (app − DB)"
                   value={<DriftPill ms={snapshot.db.driftMs} />}
                 />
+                <Row label="Latency Query" value={`${snapshot.db.latencyMs} ms`} />
+                <Row label="Koneksi Aktif" value={fmt(snapshot.db.connections, "")} />
+                <Row label="Ukuran Data" value={fmtBytes(snapshot.db.sizeBytes)} />
               </>
             ) : (
               <p className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-medium text-amber-900">
@@ -976,6 +982,63 @@ export default function SystemDashboard({ checks }: Props) {
       ) : (
         <ConfigPanel checks={checks} />
       )}
+
+      {/* Env Vars and Logs */}
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+        {snapshot ? (
+          <Card
+            icon={<PiListDashesDuotone className="h-5 w-5" />}
+            title="Environment Variables"
+          >
+            <div className="max-h-[300px] overflow-y-auto pr-2">
+              <Table variant="modern" className="min-w-full text-sm">
+                <tbody>
+                  {Object.entries(snapshot.runtime.envVars).map(
+                    ([key, value]) => (
+                      <tr key={key} className="border-b border-gray-100 last:border-0">
+                        <td className="py-2 pe-3 font-mono text-xs font-semibold text-gray-800">
+                          {key}
+                        </td>
+                        <td className="py-2 font-mono text-xs text-gray-600 break-all">
+                          {value}
+                        </td>
+                      </tr>
+                    )
+                  )}
+                </tbody>
+              </Table>
+            </div>
+          </Card>
+        ) : (
+          <SkeletonCard
+            icon={<PiListDashesDuotone className="h-5 w-5" />}
+            title="Environment Variables"
+          >
+            <SkeletonRow />
+            <SkeletonRow />
+            <SkeletonRow />
+            <SkeletonRow />
+            <SkeletonRow />
+          </SkeletonCard>
+        )}
+
+        <Card
+          icon={<PiTerminalWindowDuotone className="h-5 w-5" />}
+          title="File Log Sistem"
+        >
+          <div className="flex h-[300px] flex-col items-center justify-center rounded-md border border-gray-200 bg-gray-50 p-6 text-center">
+            <PiTerminalWindowDuotone className="mb-2 h-8 w-8 text-gray-400" />
+            <p className="text-sm font-semibold text-gray-800">
+              Akses Log Tidak Dikonfigurasi
+            </p>
+            <p className="mt-1 max-w-sm text-xs text-gray-500">
+              Saat ini aplikasi berjalan tanpa adapter file log lokal. Jika Anda
+              menggunakan PM2, Anda dapat melihat log melalui terminal server
+              dengan menjalankan perintah <code>pm2 logs</code>.
+            </p>
+          </div>
+        </Card>
+      </div>
 
       <p className="flex items-center gap-2 text-xs text-gray-400">
         <PiCheckCircleDuotone className="h-3.5 w-3.5" />
