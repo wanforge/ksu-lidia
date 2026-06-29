@@ -27,7 +27,6 @@ import { useActionFeedback } from "@/app/shared/use-action-feedback";
 import {
   createMemberAction,
   updateMemberAction,
-  deleteMemberAction,
   bulkDeleteMembersAction,
   postSavingsTransactionAction,
   MemberActionState,
@@ -754,8 +753,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
             />
             {selectedIds.size > 0 && (
               <Button
-                variant="outline"
-                className="border-red-200 bg-red-50 text-red-700 hover:bg-red-100 hover:text-red-800"
+                variant="danger-soft"
                 disabled={isBulkDeleting}
                 onClick={async () => {
                   if (

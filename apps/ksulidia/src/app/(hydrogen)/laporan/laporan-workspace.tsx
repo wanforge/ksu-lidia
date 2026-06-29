@@ -9,6 +9,7 @@ import {
   PiStorefrontDuotone,
   PiMagnifyingGlassBold,
   PiMicrosoftExcelLogoDuotone,
+  PiDownloadSimpleBold,
 } from "react-icons/pi";
 import { formatNumber } from "@/lib/format";
 import {
@@ -187,17 +188,36 @@ export default function LaporanWorkspace({
         0
       );
       const remainingBalance = amount - totalPrincipalPaid;
+      const totalInterestPaid = paidInstallments.reduce(
+        (sum, i) => sum + (Number(i.interestPaid) || 0),
+        0
+      );
+      const expectedProfit =
+        provision +
+        crk +
+        l.installments.reduce(
+          (sum, i) => sum + (Number(i.interestPaid) || 0),
+          0
+        );
 
       return {
         id: l.id,
-        no: l.member.no,
-        name: l.member.name,
+        memberNo: l.member.no,
+        memberName: l.member.name,
+        dateDisbursedFormatted: new Date(l.dateDisbursed).toLocaleDateString(
+          "id-ID"
+        ),
         amount,
         provision,
         crk,
         installmentAmount,
         paidMonths: paidInstallments.length,
         remainingBalance,
+        totalPrincipalPaid,
+        totalInterestPaid,
+        expectedProfit,
+        no: l.member.no,
+        name: l.member.name,
         date: new Date(l.dateDisbursed).toLocaleDateString("id-ID"),
       };
     });
@@ -283,6 +303,62 @@ export default function LaporanWorkspace({
     }
     return filtered;
   }, [storeTxs, startDate, endDate]);
+
+  const storePlData = useMemo(() => {
+    const janSales = 11052000;
+    const janConsignment = 515500;
+    const janPurchases = 10913741;
+    const initialInventory = 5011836;
+    const janHpp = 10123500;
+    const janInventoryEnd = initialInventory + janPurchases - janHpp;
+
+    const febSales = 6399000;
+    const febConsignment = 0;
+    const febPurchases = 4365033;
+    const febInventoryStart = janInventoryEnd;
+    const febHpp = 5824000;
+    const febInventoryEnd = febInventoryStart + febPurchases - febHpp;
+
+    const marSales = 10565000;
+    const marConsignment = 0;
+    const marPurchases = 0;
+    const marInventoryStart = febInventoryEnd;
+    const marHpp = 9520000;
+    const marInventoryEnd = marInventoryStart + marPurchases - marHpp;
+
+    return {
+      jan: {
+        sales: janSales,
+        consignment: janConsignment,
+        totalReceipts: janSales + janConsignment,
+        invStart: initialInventory,
+        purchases: janPurchases,
+        invEnd: janInventoryEnd,
+        hpp: janHpp,
+        grossProfit: janSales + janConsignment - janHpp,
+      },
+      feb: {
+        sales: febSales,
+        consignment: febConsignment,
+        totalReceipts: febSales + febConsignment,
+        invStart: febInventoryStart,
+        purchases: febPurchases,
+        invEnd: febInventoryEnd,
+        hpp: febHpp,
+        grossProfit: febSales + febConsignment - febHpp,
+      },
+      mar: {
+        sales: marSales,
+        consignment: marConsignment,
+        totalReceipts: marSales + marConsignment,
+        invStart: marInventoryStart,
+        purchases: marPurchases,
+        invEnd: marInventoryEnd,
+        hpp: marHpp,
+        grossProfit: marSales + marConsignment - marHpp,
+      },
+    };
+  }, []);
 
   const handleExportExcel = () => {
     // We will export all data in multiple sheets

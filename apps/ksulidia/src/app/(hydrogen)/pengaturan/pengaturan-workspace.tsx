@@ -1,13 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   PiStorefrontDuotone,
   PiCoinsDuotone,
   PiFloppyDiskDuotone,
 } from "react-icons/pi";
-import { useActionState } from "react";
 import { useActionFeedback } from "@/app/shared/use-action-feedback";
 import { updateSettingsAction, closeBookAction } from "./actions";
 import { SystemSettings } from "@/lib/settings";
@@ -164,8 +163,8 @@ export default function PengaturanWorkspace({
         >
           <Button
             type="submit"
-            variant="outline"
-            className="border-red-700 text-red-700 hover:bg-red-50"
+            variant="danger-soft"
+            className="border border-red-700 text-red-700 hover:bg-red-50"
           >
             Jalankan Tutup Buku
           </Button>

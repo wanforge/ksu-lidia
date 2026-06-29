@@ -212,7 +212,7 @@ export default async function Home() {
     {
       label: "Log Perubahan Data",
       hint: "Pantau riwayat perubahan data",
-      href: routes.dataChangeLog,
+      href: routes.audit.dataChangeLog,
       icon: PiClockCounterClockwiseDuotone,
       tone: "amber" as const,
       show: can(role, PERMISSIONS.DATA_CHANGE_LOG_VIEW),

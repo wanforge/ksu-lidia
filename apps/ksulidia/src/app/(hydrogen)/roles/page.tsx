@@ -1,14 +1,17 @@
 import React from "react";
 import { getSession } from "@/lib/auth";
 import { UserRole } from "@prisma/client";
-import { PERMISSIONS, ROLE_PERMISSIONS } from "@/lib/rbac/permissions";
+import {
+  PERMISSIONS,
+  ROLE_PERMISSIONS,
+  type Permission,
+} from "@/lib/rbac/permissions";
 import {
   PiShieldCheckDuotone,
   PiCheckCircleDuotone,
   PiXCircleDuotone,
 } from "react-icons/pi";
 import { Table } from "rizzui";
-import type { Permission } from "@/lib/rbac/permissions";
 
 export const metadata = {
   title: "Roles & Permission",

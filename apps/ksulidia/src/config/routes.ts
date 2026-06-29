@@ -6,6 +6,7 @@ export const routes = {
   roles: "/roles",
   audit: {
     list: "/audit",
+    dataChangeLog: "/audit/data-change",
   },
   system: "/sistem",
   pengaturan: "/pengaturan",

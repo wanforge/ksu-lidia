@@ -118,7 +118,7 @@ export default function BukuKasView({
         </div>
         {(startDate || endDate) && (
           <Button
-            variant="outline"
+            variant="neutral"
             onClick={() => {
               setStartDate("");
               setEndDate("");

@@ -392,7 +392,7 @@ export async function importMembersAction(
 
 export async function bulkDeleteMembersAction(
   memberIds: string[]
-): Promise<AnggotaActionState> {
+): Promise<MemberActionState> {
   const session = await getSession();
   ensureAuditContext(
     session?.user

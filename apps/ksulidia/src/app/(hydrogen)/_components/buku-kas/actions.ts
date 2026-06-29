@@ -79,14 +79,11 @@ export async function createCashTransactionAction(
       entityType: "CashTransaction",
       entityId: tx.id,
       summary: `Mencatat mutasi kas manual (${parsed.data.type}) untuk ${parsed.data.entity}: Rp ${Number(parsed.data.amount).toLocaleString("id-ID")}`,
-      source:
-        parsed.data.entity === CashEntity.TOKO
-          ? AttachmentSource.TOKO
-          : AttachmentSource.BACK_OFFICE,
+      source: AttachmentSource.BACK_OFFICE,
     });
 
     if (parsed.data.entity === CashEntity.KOPERASI) {
-      revalidatePath(routes.simpanPinjam.bukuKas);
+      revalidatePath(routes.simpanPinjam.kas);
     } else {
       revalidatePath(routes.toko.kas);
     }
