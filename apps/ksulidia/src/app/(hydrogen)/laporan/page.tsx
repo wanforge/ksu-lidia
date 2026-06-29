@@ -4,6 +4,7 @@ import { PERMISSIONS, hasPermission } from "@/lib/rbac/permissions";
 import { serializePrisma } from "@/lib/serialize";
 import LaporanWorkspace from "./laporan-workspace";
 import { LOAN_STATUS } from "@/lib/constants";
+import { CashEntity } from "@prisma/client";
 
 export const dynamic = "force-dynamic";
 
@@ -57,12 +58,29 @@ export default async function LaporanPage() {
     orderBy: { date: "asc" },
   });
 
+  // 5. All loans (all statuses) + installments — for monthly report
+  const allLoans = await prisma.loan.findMany({
+    include: {
+      member: { select: { id: true, no: true, name: true } },
+      installments: true,
+    },
+    orderBy: { dateDisbursed: "asc" },
+  });
+
+  // 6. Cash transactions (KOPERASI) — for neraca kas on hand
+  const cashKoperasi = await prisma.cashTransaction.findMany({
+    where: { entity: CashEntity.KOPERASI },
+    orderBy: { date: "asc" },
+  });
+
   return (
     <LaporanWorkspace
       members={serializePrisma(members)}
       loans={serializePrisma(loans)}
       cashBookTxs={serializePrisma(cashBookTxs)}
       storeTxs={serializePrisma(storeTxs)}
+      allLoans={serializePrisma(allLoans)}
+      cashKoperasi={serializePrisma(cashKoperasi)}
     />
   );
 }

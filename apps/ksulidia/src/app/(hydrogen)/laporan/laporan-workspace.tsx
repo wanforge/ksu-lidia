@@ -10,6 +10,8 @@ import {
   PiMagnifyingGlassBold,
   PiMicrosoftExcelLogoDuotone,
   PiDownloadSimpleBold,
+  PiCalendarDuotone,
+  PiScalesDuotone,
 } from "react-icons/pi";
 import { formatNumber } from "@/lib/format";
 import {
@@ -72,11 +74,45 @@ type StoreTx = {
   date: any;
 };
 
+type AllLoan = {
+  id: string;
+  amount: any;
+  interestRate: any;
+  tenor: number;
+  provision: any;
+  crk: any;
+  installmentAmount: any;
+  status: string;
+  dateDisbursed: any;
+  member: { id: string; no: number; name: string };
+  installments: {
+    id: string;
+    monthNumber: number;
+    principalPaid: any;
+    interestPaid: any;
+    penaltyPaid: any;
+    totalPaid: any;
+    dueDate: any;
+    paidAt: any;
+    status: string;
+  }[];
+};
+
+type CashKop = {
+  id: string;
+  date: any;
+  type: string;
+  amount: any;
+  description: string | null;
+};
+
 type LaporanWorkspaceProps = {
   members: Member[];
   loans: Loan[];
   cashBookTxs: CashBookTx[];
   storeTxs: StoreTx[];
+  allLoans: AllLoan[];
+  cashKoperasi: CashKop[];
 };
 
 export default function LaporanWorkspace({
@@ -84,18 +120,29 @@ export default function LaporanWorkspace({
   loans,
   cashBookTxs,
   storeTxs,
+  allLoans,
+  cashKoperasi,
 }: LaporanWorkspaceProps) {
-  const [tab, setTab] = useState<"savings" | "loans" | "cashbook" | "store">(
-    "savings"
-  );
+  const [tab, setTab] = useState<
+    "savings" | "loans" | "cashbook" | "store" | "bulanan" | "neraca"
+  >("savings");
   const [searchQuery, setSearchQuery] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth() + 1;
   const [storeYear, setStoreYear] = useState(currentYear);
   const [storeQuarter, setStoreQuarter] = useState<1 | 2 | 3 | 4>(
     Math.ceil((new Date().getMonth() + 1) / 3) as 1 | 2 | 3 | 4
   );
+
+  // Laporan Bulanan state
+  const [bulananYear, setBulananYear] = useState(currentYear);
+  const [bulananMonth, setBulananMonth] = useState(currentMonth);
+
+  // Neraca state
+  const [neracaYear, setNeracaYear] = useState(currentYear);
+  const [neracaMonth, setNeracaMonth] = useState(currentMonth);
 
   const formatIDR = (val: number) => {
     return new Intl.NumberFormat("id-ID", {
@@ -342,6 +389,166 @@ export default function LaporanWorkspace({
     });
   }, [storeTxs, storeYear, storeQuarter]);
 
+  // --- LAPORAN BULANAN per anggota ---
+  const BULAN_NAMES = [
+    "Januari","Februari","Maret","April","Mei","Juni",
+    "Juli","Agustus","September","Oktober","November","Desember",
+  ];
+
+  const bulananData = useMemo(() => {
+    const y = bulananYear;
+    const m = bulananMonth;
+    const startOfMonth = new Date(y, m - 1, 1);
+    const endOfMonth = new Date(y, m, 0, 23, 59, 59);
+
+    return members.map((member) => {
+      // Simpanan saldo per akhir bulan ini
+      const pokok = Number(member.savingsAccounts.find((a) => a.type === "POKOK")?.balance) || 0;
+      const wajib = Number(member.savingsAccounts.find((a) => a.type === "WAJIB")?.balance) || 0;
+      const sukarela = Number(member.savingsAccounts.find((a) => a.type === "SUKARELA")?.balance) || 0;
+
+      // Pinjaman aktif bulan ini
+      const activeLoan = allLoans.find(
+        (l) =>
+          l.member.id === member.id &&
+          l.status === "ACTIVE" &&
+          new Date(l.dateDisbursed) <= endOfMonth
+      );
+
+      let sawalHutang = 0;
+      let angsuran = 0;
+      let bunga = 0;
+      let denda = 0;
+      let sakhirHutang = 0;
+
+      if (activeLoan) {
+        const monthlyPrincipal = Number(activeLoan.amount) / activeLoan.tenor;
+        const monthlyInterest =
+          Number(activeLoan.amount) * (Number(activeLoan.interestRate) / 100);
+
+        // Cari installment bulan ini
+        const inst = activeLoan.installments.find((i) => {
+          const due = new Date(i.dueDate);
+          return due >= startOfMonth && due <= endOfMonth;
+        });
+
+        // Saldo awal = total pinjaman - total pokok yang sudah dibayar sebelum bulan ini
+        const paidBefore = activeLoan.installments
+          .filter((i) => i.status === "PAID" && new Date(i.paidAt) < startOfMonth)
+          .reduce((s, i) => s + Number(i.principalPaid), 0);
+
+        sawalHutang = Number(activeLoan.amount) - paidBefore;
+
+        if (inst && inst.status === "PAID") {
+          angsuran = Number(inst.principalPaid) || monthlyPrincipal;
+          bunga = Number(inst.interestPaid) || monthlyInterest;
+          denda = Number(inst.penaltyPaid) || 0;
+        } else {
+          angsuran = 0;
+          bunga = 0;
+          denda = 0;
+        }
+        sakhirHutang = sawalHutang - angsuran;
+      }
+
+      return {
+        no: member.no,
+        name: member.name,
+        sawalHutang,
+        angsuran,
+        bunga,
+        denda,
+        sakhirHutang,
+        tabWajib: wajib,
+        tabSukarela: sukarela,
+        tabPokok: pokok,
+      };
+    });
+  }, [members, allLoans, bulananYear, bulananMonth]);
+
+  const filteredBulanan = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return bulananData;
+    return bulananData.filter(
+      (r) => r.name.toLowerCase().includes(q) || r.no.toString().includes(q)
+    );
+  }, [bulananData, searchQuery]);
+
+  // --- NERACA ---
+  const neracaData = useMemo(() => {
+    const y = neracaYear;
+    const m = neracaMonth;
+    const asOf = new Date(y, m, 0, 23, 59, 59); // end of selected month
+
+    // AKTIVA
+    // Kas = saldo CashTransaction s/d tanggal
+    const kas = cashKoperasi
+      .filter((t) => new Date(t.date) <= asOf)
+      .reduce(
+        (s, t) => s + (t.type === "IN" ? Number(t.amount) : -Number(t.amount)),
+        0
+      );
+
+    // Simpanan anggota (aset koperasi = tabungan anggota yg disimpan)
+    const totalSimpananPokok = members.reduce(
+      (s, m) => s + (Number(m.savingsAccounts.find((a) => a.type === "POKOK")?.balance) || 0),
+      0
+    );
+    const totalSimpananWajib = members.reduce(
+      (s, m) => s + (Number(m.savingsAccounts.find((a) => a.type === "WAJIB")?.balance) || 0),
+      0
+    );
+    const totalSimpananSukarela = members.reduce(
+      (s, m) => s + (Number(m.savingsAccounts.find((a) => a.type === "SUKARELA")?.balance) || 0),
+      0
+    );
+
+    // Piutang pinjaman = sisa outstanding
+    const piutangPinjaman = allLoans
+      .filter((l) => l.status === "ACTIVE" && new Date(l.dateDisbursed) <= asOf)
+      .reduce((s, l) => {
+        const paidPrincipal = l.installments
+          .filter((i) => i.status === "PAID")
+          .reduce((sum, i) => sum + Number(i.principalPaid), 0);
+        return s + (Number(l.amount) - paidPrincipal);
+      }, 0);
+
+    // Pendapatan bunga+denda terakumulasi (laba SP)
+    const pendapatanBunga = allLoans.reduce(
+      (s, l) =>
+        s +
+        l.installments
+          .filter((i) => i.status === "PAID" && new Date(i.paidAt) <= asOf)
+          .reduce((sum, i) => sum + Number(i.interestPaid) + Number(i.penaltyPaid), 0),
+      0
+    );
+    const pendapatanProvisi = allLoans
+      .filter((l) => new Date(l.dateDisbursed) <= asOf)
+      .reduce((s, l) => s + Number(l.provision), 0);
+
+    const totalAktiva = kas + piutangPinjaman;
+
+    // PASIVA — simpanan anggota (kewajiban koperasi ke anggota)
+    const totalSimpanan =
+      totalSimpananPokok + totalSimpananWajib + totalSimpananSukarela;
+    const labaBersih = pendapatanBunga + pendapatanProvisi;
+    // Modal = total aktiva - kewajiban (simpanan)
+    const modal = totalAktiva - totalSimpanan;
+
+    return {
+      aktiva: { kas, piutangPinjaman, totalAktiva },
+      pasiva: {
+        simpananPokok: totalSimpananPokok,
+        simpananWajib: totalSimpananWajib,
+        simpananSukarela: totalSimpananSukarela,
+        totalSimpanan,
+        modal,
+        totalPasiva: totalSimpanan + modal,
+      },
+      info: { pendapatanBunga, pendapatanProvisi, labaBersih },
+    };
+  }, [members, allLoans, cashKoperasi, neracaYear, neracaMonth]);
+
   const handleExportExcel = () => {
     // We will export all data in multiple sheets
     const wb = utils.book_new();
@@ -521,12 +728,40 @@ export default function LaporanWorkspace({
           <PiStorefrontDuotone className="h-4.5 w-4.5" />
           Rugi/Laba Toko
         </button>
+        <button
+          onClick={() => {
+            setTab("bulanan");
+            setSearchQuery("");
+          }}
+          className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
+            tab === "bulanan"
+              ? "border-red-700 text-red-700"
+              : "border-transparent text-gray-500 hover:text-gray-800"
+          }`}
+        >
+          <PiCalendarDuotone className="h-4.5 w-4.5" />
+          Laporan Bulanan
+        </button>
+        <button
+          onClick={() => {
+            setTab("neraca");
+            setSearchQuery("");
+          }}
+          className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
+            tab === "neraca"
+              ? "border-red-700 text-red-700"
+              : "border-transparent text-gray-500 hover:text-gray-800"
+          }`}
+        >
+          <PiScalesDuotone className="h-4.5 w-4.5" />
+          Neraca
+        </button>
       </div>
 
       {/* Tab Contents */}
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
         {/* Search Header for filterable tabs */}
-        {tab !== "store" && (
+        {tab !== "store" && tab !== "neraca" && (
           <div className="border-b border-gray-200 p-4">
             <div className="relative max-w-md">
               <PiMagnifyingGlassBold className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
@@ -941,6 +1176,222 @@ export default function LaporanWorkspace({
                   </tr>
                 </tbody>
               </Table>
+            </div>
+          </div>
+        )}
+
+        {/* Tab 5: Laporan Bulanan Simpan Pinjam */}
+        {tab === "bulanan" && (
+          <div className="overflow-x-auto p-4">
+            <div className="mb-4 flex flex-wrap items-center gap-3">
+              <select
+                value={bulananYear}
+                onChange={(e) => setBulananYear(Number(e.target.value))}
+                className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+              >
+                {Array.from({ length: 8 }, (_, i) => currentYear - 3 + i).map((y) => (
+                  <option key={y} value={y}>{y}</option>
+                ))}
+              </select>
+              <select
+                value={bulananMonth}
+                onChange={(e) => setBulananMonth(Number(e.target.value))}
+                className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+              >
+                {BULAN_NAMES.map((b, i) => (
+                  <option key={i + 1} value={i + 1}>{b}</option>
+                ))}
+              </select>
+              <span className="text-sm font-semibold text-gray-700">
+                {BULAN_NAMES[bulananMonth - 1]} {bulananYear} — {filteredBulanan.length} anggota
+              </span>
+            </div>
+            <div className="overflow-hidden rounded-lg border border-gray-200">
+              <Table variant="modern" className="w-full text-xs text-gray-900">
+                <thead className="bg-red-800 text-xs font-bold uppercase text-white">
+                  <tr>
+                    <th className="px-3 py-3 text-center">No</th>
+                    <th className="px-3 py-3">Nama</th>
+                    <th className="px-3 py-3 text-right">S.Awal Hutang</th>
+                    <th className="px-3 py-3 text-right">Angsuran</th>
+                    <th className="px-3 py-3 text-right">Bunga</th>
+                    <th className="px-3 py-3 text-right">Denda</th>
+                    <th className="px-3 py-3 text-right">S.Akhir Hutang</th>
+                    <th className="px-3 py-3 text-right">Tab Wajib</th>
+                    <th className="px-3 py-3 text-right">Tab Sukarela</th>
+                    <th className="px-3 py-3 text-right">Tab Pokok</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {filteredBulanan.map((row) => (
+                    <tr key={row.no} className="hover:bg-gray-50">
+                      <td className="px-3 py-2.5 text-center text-gray-500">{row.no}</td>
+                      <td className="px-3 py-2.5 font-medium">{row.name}</td>
+                      <td className="px-3 py-2.5 text-right">
+                        {row.sawalHutang > 0 ? formatIDR(row.sawalHutang) : "-"}
+                      </td>
+                      <td className="px-3 py-2.5 text-right">
+                        {row.angsuran > 0 ? formatIDR(row.angsuran) : "-"}
+                      </td>
+                      <td className="px-3 py-2.5 text-right">
+                        {row.bunga > 0 ? formatIDR(row.bunga) : "-"}
+                      </td>
+                      <td className="px-3 py-2.5 text-right text-rose-600">
+                        {row.denda > 0 ? formatIDR(row.denda) : "-"}
+                      </td>
+                      <td className="px-3 py-2.5 text-right font-semibold">
+                        {row.sakhirHutang > 0 ? formatIDR(row.sakhirHutang) : "-"}
+                      </td>
+                      <td className="px-3 py-2.5 text-right">{formatIDR(row.tabWajib)}</td>
+                      <td className="px-3 py-2.5 text-right">{formatIDR(row.tabSukarela)}</td>
+                      <td className="px-3 py-2.5 text-right">{formatIDR(row.tabPokok)}</td>
+                    </tr>
+                  ))}
+                  {filteredBulanan.length === 0 && (
+                    <tr>
+                      <td colSpan={10} className="px-4 py-10 text-center text-gray-400">
+                        Tidak ada data anggota.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </Table>
+            </div>
+          </div>
+        )}
+
+        {/* Tab 6: Neraca */}
+        {tab === "neraca" && (
+          <div className="p-6">
+            <div className="mb-4 flex flex-wrap items-center gap-3">
+              <select
+                value={neracaYear}
+                onChange={(e) => setNeracaYear(Number(e.target.value))}
+                className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+              >
+                {Array.from({ length: 8 }, (_, i) => currentYear - 3 + i).map((y) => (
+                  <option key={y} value={y}>{y}</option>
+                ))}
+              </select>
+              <select
+                value={neracaMonth}
+                onChange={(e) => setNeracaMonth(Number(e.target.value))}
+                className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+              >
+                {BULAN_NAMES.map((b, i) => (
+                  <option key={i + 1} value={i + 1}>{b}</option>
+                ))}
+              </select>
+              <span className="text-sm font-semibold text-gray-700">
+                Per {BULAN_NAMES[neracaMonth - 1]} {neracaYear}
+              </span>
+            </div>
+            <div className="mx-auto max-w-2xl overflow-hidden rounded-lg border border-gray-200">
+              <table className="w-full text-sm">
+                <thead className="bg-red-800 text-xs font-bold uppercase text-white">
+                  <tr>
+                    <th className="px-6 py-3.5 text-left">Keterangan</th>
+                    <th className="px-6 py-3.5 text-right">Jumlah (Rp)</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {/* AKTIVA */}
+                  <tr className="bg-red-50/40 font-bold text-red-900">
+                    <td colSpan={2} className="px-6 py-2.5 text-xs uppercase tracking-wider">
+                      AKTIVA
+                    </td>
+                  </tr>
+                  <tr className="hover:bg-gray-50">
+                    <td className="px-6 py-3 pl-10 text-gray-700">Kas</td>
+                    <td className="px-6 py-3 text-right font-semibold">
+                      {formatIDR(neracaData.aktiva.kas)}
+                    </td>
+                  </tr>
+                  <tr className="hover:bg-gray-50">
+                    <td className="px-6 py-3 pl-10 text-gray-700">Piutang Pinjaman Anggota</td>
+                    <td className="px-6 py-3 text-right font-semibold">
+                      {formatIDR(neracaData.aktiva.piutangPinjaman)}
+                    </td>
+                  </tr>
+                  <tr className="bg-gray-50 font-bold text-gray-900">
+                    <td className="px-6 py-3">TOTAL AKTIVA</td>
+                    <td className="px-6 py-3 text-right text-red-800">
+                      {formatIDR(neracaData.aktiva.totalAktiva)}
+                    </td>
+                  </tr>
+                  {/* PASIVA */}
+                  <tr className="bg-red-50/40 font-bold text-red-900">
+                    <td colSpan={2} className="px-6 py-2.5 text-xs uppercase tracking-wider">
+                      PASIVA — KEWAJIBAN
+                    </td>
+                  </tr>
+                  <tr className="hover:bg-gray-50">
+                    <td className="px-6 py-3 pl-10 text-gray-700">Simpanan Pokok Anggota</td>
+                    <td className="px-6 py-3 text-right">
+                      {formatIDR(neracaData.pasiva.simpananPokok)}
+                    </td>
+                  </tr>
+                  <tr className="hover:bg-gray-50">
+                    <td className="px-6 py-3 pl-10 text-gray-700">Simpanan Wajib Anggota</td>
+                    <td className="px-6 py-3 text-right">
+                      {formatIDR(neracaData.pasiva.simpananWajib)}
+                    </td>
+                  </tr>
+                  <tr className="hover:bg-gray-50">
+                    <td className="px-6 py-3 pl-10 text-gray-700">Simpanan Sukarela Anggota</td>
+                    <td className="px-6 py-3 text-right">
+                      {formatIDR(neracaData.pasiva.simpananSukarela)}
+                    </td>
+                  </tr>
+                  <tr className="bg-gray-50 font-semibold">
+                    <td className="px-6 py-3 pl-6">Total Simpanan</td>
+                    <td className="px-6 py-3 text-right">
+                      {formatIDR(neracaData.pasiva.totalSimpanan)}
+                    </td>
+                  </tr>
+                  <tr className="bg-red-50/40 font-bold text-red-900">
+                    <td colSpan={2} className="px-6 py-2.5 text-xs uppercase tracking-wider">
+                      EKUITAS
+                    </td>
+                  </tr>
+                  <tr className="hover:bg-gray-50">
+                    <td className="px-6 py-3 pl-10 text-gray-700">Modal / SHU Terakumulasi</td>
+                    <td className="px-6 py-3 text-right font-semibold">
+                      {formatIDR(neracaData.pasiva.modal)}
+                    </td>
+                  </tr>
+                  <tr className="bg-gray-50 font-bold text-gray-900 border-t-2 border-gray-300">
+                    <td className="px-6 py-3">TOTAL PASIVA + EKUITAS</td>
+                    <td className="px-6 py-3 text-right text-red-800">
+                      {formatIDR(neracaData.pasiva.totalPasiva)}
+                    </td>
+                  </tr>
+                  {/* INFO */}
+                  <tr className="bg-red-50/40 font-bold text-red-900">
+                    <td colSpan={2} className="px-6 py-2.5 text-xs uppercase tracking-wider">
+                      INFO LABA SIMPAN PINJAM
+                    </td>
+                  </tr>
+                  <tr className="hover:bg-gray-50">
+                    <td className="px-6 py-3 pl-10 text-gray-700">Pendapatan Bunga + Denda</td>
+                    <td className="px-6 py-3 text-right">
+                      {formatIDR(neracaData.info.pendapatanBunga)}
+                    </td>
+                  </tr>
+                  <tr className="hover:bg-gray-50">
+                    <td className="px-6 py-3 pl-10 text-gray-700">Pendapatan Provisi</td>
+                    <td className="px-6 py-3 text-right">
+                      {formatIDR(neracaData.info.pendapatanProvisi)}
+                    </td>
+                  </tr>
+                  <tr className="bg-gray-50 font-bold">
+                    <td className="px-6 py-3 pl-6 text-green-800">Total Laba SP</td>
+                    <td className="px-6 py-3 text-right text-green-800">
+                      {formatIDR(neracaData.info.labaBersih)}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         )}
