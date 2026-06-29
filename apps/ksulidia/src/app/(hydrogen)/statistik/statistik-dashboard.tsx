@@ -42,6 +42,9 @@ type Metrics = {
   totalStorePurchases: number;
   totalSpProfit: number;
   loanCount: number;
+  totalInventoryValue: number;
+  lowStockCount: number;
+  totalProducts: number;
 };
 
 type ChartDataPoint = {
@@ -263,6 +266,25 @@ export default function StatistikDashboard({
             </p>
           </div>
         </Link>
+      </div>
+
+      {/* Inventory Stats Row */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">Total Produk Aktif</p>
+          <p className="mt-2 text-2xl font-bold text-gray-900">{formatNumber(metrics.totalProducts)}</p>
+          <p className="mt-1 text-xs text-gray-400">item terdaftar di katalog</p>
+        </div>
+        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">Nilai Inventaris</p>
+          <p className="mt-2 text-2xl font-bold text-gray-900">{formatIDR(metrics.totalInventoryValue)}</p>
+          <p className="mt-1 text-xs text-gray-400">modal stok tersimpan</p>
+        </div>
+        <div className={`rounded-xl border p-5 shadow-sm ${metrics.lowStockCount > 0 ? "border-rose-200 bg-rose-50" : "border-gray-200 bg-white"}`}>
+          <p className={`text-xs font-semibold uppercase tracking-wider ${metrics.lowStockCount > 0 ? "text-rose-600" : "text-gray-500"}`}>Stok Hampir Habis</p>
+          <p className={`mt-2 text-2xl font-bold ${metrics.lowStockCount > 0 ? "text-rose-700" : "text-gray-900"}`}>{metrics.lowStockCount}</p>
+          <p className="mt-1 text-xs text-gray-400">produk perlu restock segera</p>
+        </div>
       </div>
 
       {/* Auxiliary profit card */}

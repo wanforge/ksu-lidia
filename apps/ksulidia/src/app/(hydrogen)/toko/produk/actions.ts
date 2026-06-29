@@ -41,6 +41,7 @@ export async function createProductAction(
   const name = formData.get("name");
   const category = formData.get("category") || undefined;
   const stock = formData.get("stock") ?? 0;
+  const minStock = formData.get("minStock") ?? 5;
   const purchasePrice = formData.get("purchasePrice") ?? 0;
   const sellingPrice = formData.get("sellingPrice") ?? 0;
 
@@ -49,6 +50,7 @@ export async function createProductAction(
     name,
     category,
     stock,
+    minStock,
     purchasePrice,
     sellingPrice,
   });
@@ -79,6 +81,7 @@ export async function createProductAction(
           name: parsed.data.name,
           category: parsed.data.category,
           stock: parsed.data.stock,
+          minStock: parsed.data.minStock,
           purchasePrice: parsed.data.purchasePrice,
           sellingPrice: parsed.data.sellingPrice,
         },
@@ -150,6 +153,7 @@ export async function updateProductAction(
   const code = formData.get("code");
   const name = formData.get("name");
   const category = formData.get("category") || undefined;
+  const minStock = formData.get("minStock") ?? 5;
   const purchasePrice = formData.get("purchasePrice") ?? 0;
   const sellingPrice = formData.get("sellingPrice") ?? 0;
 
@@ -158,6 +162,7 @@ export async function updateProductAction(
     code,
     name,
     category,
+    minStock,
     purchasePrice,
     sellingPrice,
   });
@@ -190,6 +195,7 @@ export async function updateProductAction(
         code: parsed.data.code,
         name: parsed.data.name,
         category: parsed.data.category,
+        minStock: parsed.data.minStock,
         purchasePrice: parsed.data.purchasePrice,
         sellingPrice: parsed.data.sellingPrice,
       },

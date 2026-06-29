@@ -35,6 +35,7 @@ type Product = {
   name: string;
   category: string | null;
   stock: number;
+  minStock: number;
   purchasePrice: any; // Decimal
   sellingPrice: any; // Decimal
 };
@@ -236,7 +237,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
               </p>
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
               <div>
                 <label className="mb-1 block text-sm font-medium text-gray-700">
                   Stok Awal
@@ -248,6 +249,20 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
                 />
                 <p className="mt-1 text-xs text-gray-500">Stok awal fisik.</p>
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Minimal Stok
+                </label>
+                <input
+                  type="number"
+                  name="minStock"
+                  defaultValue={5}
+                  min={0}
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
+                />
+                <p className="mt-1 text-xs text-gray-500">Alert merah jika stok ≤ nilai ini.</p>
               </div>
 
               <div>
@@ -471,7 +486,7 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                             )}
                           </td>
                           <td
-                            className={`px-4 py-3 text-center font-bold ${p.stock <= 5 ? "text-rose-600" : "text-gray-900"}`}
+                            className={`px-4 py-3 text-center font-bold ${p.stock <= p.minStock ? "text-rose-600" : "text-gray-900"}`}
                           >
                             {p.stock}
                           </td>
@@ -522,8 +537,8 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
               <div className="flex flex-col gap-4 border-t border-gray-200 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
                 {selectedIds.size > 0 && (
                   <Button
-                    variant="outline"
-                    className="border-red-200 bg-red-50 text-red-700 hover:bg-red-100 hover:text-red-800"
+                    variant="ghost"
+                    className="border border-red-200 bg-red-50 text-red-700 hover:bg-red-100 hover:text-red-800"
                     disabled={isBulkDeleting}
                     onClick={async () => {
                       if (
@@ -644,7 +659,21 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
+                    Minimal Stok
+                  </label>
+                  <input
+                    type="number"
+                    name="minStock"
+                    min={0}
+                    defaultValue={editModal.product.minStock}
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
+                  />
+                  <p className="mt-1 text-xs text-gray-500">Alert stok rendah.</p>
+                </div>
+
                 <div>
                   <label className="mb-1 block text-sm font-medium text-gray-700">
                     Harga Beli (Rp)

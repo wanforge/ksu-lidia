@@ -79,7 +79,15 @@ export default async function StatistikPage() {
   const totalSpProfit =
     totalInterestEarned + totalProvisionEarned + totalPenaltyEarned;
 
-  // 4. Fetch store transactions
+  // 4. Fetch store products for inventory stats
+  const products = await prisma.product.findMany({ where: { isActive: true } });
+  const totalInventoryValue = products.reduce(
+    (s, p) => s + p.stock * Number(p.purchasePrice),
+    0
+  );
+  const lowStockCount = products.filter((p) => p.stock <= p.minStock).length;
+
+  // 4b. Fetch store transactions
   const storeTx = await prisma.productTransaction.findMany();
   let totalStoreSales = 0;
   let totalStorePurchases = 0;
@@ -187,6 +195,9 @@ export default async function StatistikPage() {
         totalStorePurchases,
         totalSpProfit,
         loanCount: loans.length,
+        totalInventoryValue,
+        lowStockCount,
+        totalProducts: products.length,
       }}
       chartData={chartData}
       cashFlowData={cashFlowData}

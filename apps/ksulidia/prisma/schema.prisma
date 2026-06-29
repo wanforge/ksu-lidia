@@ -297,6 +297,7 @@ model Product {
   name          String
   category      String?
   stock         Int      @default(0)
+  minStock      Int      @default(5)
   purchasePrice Decimal  @db.Decimal(15, 2)
   sellingPrice  Decimal  @db.Decimal(15, 2)
   isActive      Boolean  @default(true)
