@@ -28,6 +28,6 @@ export const pageLinks = [
   },
   {
     name: "Log Perubahan Data",
-    href: routes.dataChangeLog,
+    href: routes.audit.dataChangeLog,
   },
 ];

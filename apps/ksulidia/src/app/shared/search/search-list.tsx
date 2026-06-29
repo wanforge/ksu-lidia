@@ -41,7 +41,7 @@ const PAGE_ICONS: Record<string, React.ReactNode> = {
   [routes.me.dashboard]: <PiUserDuotone className="h-5 w-5" />,
   [routes.users.list]: <PiUsersThreeDuotone className="h-5 w-5" />,
   [routes.audit.list]: <PiShieldCheckDuotone className="h-5 w-5" />,
-  [routes.dataChangeLog]: <PiClockCountdownDuotone className="h-5 w-5" />,
+  [routes.audit.dataChangeLog]: <PiClockCountdownDuotone className="h-5 w-5" />,
 };
 
 const PAGE_HITS: Hit[] = pageLinks

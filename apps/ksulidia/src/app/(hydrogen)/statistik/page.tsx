@@ -228,6 +228,44 @@ export default async function StatistikPage() {
     loanAmount: Number(i.loan.amount),
   }));
 
+  // 10. Anggota dengan denda tertunggak (penaltyPaid > 0 pada cicilan LATE atau UNPAID lewat jatuh tempo)
+  const overdueWithPenalty = await prisma.loanInstallment.findMany({
+    where: {
+      status: { in: ["LATE", "UNPAID"] },
+      penaltyPaid: { gt: 0 },
+    },
+    include: {
+      loan: {
+        include: { member: { select: { no: true, name: true } } },
+      },
+    },
+    orderBy: { dueDate: "asc" },
+    take: 15,
+  });
+  // Group by member — sum denda
+  const dendaMap = new Map<
+    string,
+    { memberNo: number; memberName: string; totalDenda: number; count: number }
+  >();
+  for (const inst of overdueWithPenalty) {
+    const key = inst.loan.memberId;
+    const existing = dendaMap.get(key);
+    if (existing) {
+      existing.totalDenda += Number(inst.penaltyPaid);
+      existing.count += 1;
+    } else {
+      dendaMap.set(key, {
+        memberNo: inst.loan.member.no,
+        memberName: inst.loan.member.name,
+        totalDenda: Number(inst.penaltyPaid),
+        count: 1,
+      });
+    }
+  }
+  const membersWithDenda = Array.from(dendaMap.values()).sort(
+    (a, b) => b.totalDenda - a.totalDenda
+  );
+
   return (
     <StatistikDashboard
       metrics={{
@@ -252,6 +290,7 @@ export default async function StatistikPage() {
       topProducts={topProducts}
       shuByYear={shuByYear}
       dueSoonInstallments={dueSoonInstallments}
+      membersWithDenda={membersWithDenda}
     />
   );
 }

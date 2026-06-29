@@ -94,6 +94,13 @@ type DueSoonInstallment = {
   loanAmount: number;
 };
 
+type MemberWithDenda = {
+  memberNo: number;
+  memberName: string;
+  totalDenda: number;
+  count: number;
+};
+
 type Props = {
   metrics: Metrics;
   chartData: ChartDataPoint[];
@@ -102,6 +109,7 @@ type Props = {
   topProducts: TopProduct[];
   shuByYear: ShuYear[];
   dueSoonInstallments: DueSoonInstallment[];
+  membersWithDenda: MemberWithDenda[];
 };
 
 export default function StatistikDashboard({
@@ -112,6 +120,7 @@ export default function StatistikDashboard({
   topProducts,
   shuByYear,
   dueSoonInstallments,
+  membersWithDenda,
 }: Props) {
   const router = useRouter();
 
@@ -970,6 +979,54 @@ export default function StatistikDashboard({
                     </tr>
                   );
                 })}
+              </tbody>
+            </Table>
+          </div>
+        </div>
+      )}
+      {/* Anggota Denda Tertunggak */}
+      {membersWithDenda.length > 0 && (
+        <div className="rounded-2xl border border-red-200 bg-red-50 p-6 shadow-sm">
+          <div className="mb-4 flex items-center gap-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-100 text-red-700">
+              <PiWarningDuotone className="text-xl" />
+            </span>
+            <div>
+              <h3 className="text-base font-bold text-red-900">
+                Anggota dengan Denda Tertunggak
+              </h3>
+              <p className="text-sm text-red-700">
+                {membersWithDenda.length} anggota memiliki denda yang belum lunas.
+              </p>
+            </div>
+            <Link
+              href="/simpan-pinjam/pinjaman"
+              className="ml-auto inline-flex items-center gap-1 text-sm font-semibold text-red-800 hover:text-red-950"
+            >
+              Lihat Pinjaman <PiCaretRightBold />
+            </Link>
+          </div>
+          <div className="overflow-x-auto rounded-xl border border-red-200">
+            <Table variant="modern" className="w-full text-left text-sm">
+              <thead className="bg-red-100 text-xs uppercase text-red-800">
+                <tr>
+                  <th className="px-4 py-3 font-semibold">No.</th>
+                  <th className="px-4 py-3 font-semibold">Nama Anggota</th>
+                  <th className="px-4 py-3 text-center font-semibold">Jml Cicilan</th>
+                  <th className="px-4 py-3 text-right font-semibold">Total Denda</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-red-100">
+                {membersWithDenda.map((m, idx) => (
+                  <tr key={idx} className="bg-white hover:bg-red-50/50">
+                    <td className="px-4 py-3 font-semibold text-gray-950">{m.memberNo}</td>
+                    <td className="px-4 py-3 font-medium text-gray-800">{m.memberName}</td>
+                    <td className="px-4 py-3 text-center text-gray-700">{m.count}</td>
+                    <td className="px-4 py-3 text-right font-bold text-red-800">
+                      {formatIDR(m.totalDenda)}
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </Table>
           </div>

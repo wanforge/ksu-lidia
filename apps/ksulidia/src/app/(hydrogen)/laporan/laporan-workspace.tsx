@@ -598,6 +598,45 @@ export default function LaporanWorkspace({
     );
     utils.book_append_sheet(wb, wsCashBook, "Buku_Kas");
 
+    // 4. Laporan Bulanan SP
+    const wsBulanan = utils.json_to_sheet(
+      bulananData.map((r) => ({
+        "No": r.no,
+        "Nama": r.name,
+        "S.Awal Hutang": r.sawalHutang,
+        "Angsuran": r.angsuran,
+        "Bunga": r.bunga,
+        "Denda": r.denda,
+        "S.Akhir Hutang": r.sakhirHutang,
+        "Tab Wajib": r.tabWajib,
+        "Tab Sukarela": r.tabSukarela,
+        "Tab Pokok": r.tabPokok,
+      }))
+    );
+    const bulananTitle = `Laporan_Bulanan_${BULAN_NAMES[bulananMonth - 1]}_${bulananYear}`;
+    utils.book_append_sheet(wb, wsBulanan, bulananTitle.slice(0, 31));
+
+    // 5. Neraca
+    const wsNeraca = utils.json_to_sheet([
+      { "Keterangan": "AKTIVA", "Jumlah": "" },
+      { "Keterangan": "Kas", "Jumlah": neracaData.aktiva.kas },
+      { "Keterangan": "Piutang Pinjaman Anggota", "Jumlah": neracaData.aktiva.piutangPinjaman },
+      { "Keterangan": "TOTAL AKTIVA", "Jumlah": neracaData.aktiva.totalAktiva },
+      { "Keterangan": "PASIVA - KEWAJIBAN", "Jumlah": "" },
+      { "Keterangan": "Simpanan Pokok", "Jumlah": neracaData.pasiva.simpananPokok },
+      { "Keterangan": "Simpanan Wajib", "Jumlah": neracaData.pasiva.simpananWajib },
+      { "Keterangan": "Simpanan Sukarela", "Jumlah": neracaData.pasiva.simpananSukarela },
+      { "Keterangan": "Total Simpanan", "Jumlah": neracaData.pasiva.totalSimpanan },
+      { "Keterangan": "EKUITAS", "Jumlah": "" },
+      { "Keterangan": "Modal / SHU Terakumulasi", "Jumlah": neracaData.pasiva.modal },
+      { "Keterangan": "TOTAL PASIVA + EKUITAS", "Jumlah": neracaData.pasiva.totalPasiva },
+      { "Keterangan": "INFO LABA SP", "Jumlah": "" },
+      { "Keterangan": "Pendapatan Bunga + Denda", "Jumlah": neracaData.info.pendapatanBunga },
+      { "Keterangan": "Pendapatan Provisi", "Jumlah": neracaData.info.pendapatanProvisi },
+      { "Keterangan": "Total Laba SP", "Jumlah": neracaData.info.labaBersih },
+    ]);
+    utils.book_append_sheet(wb, wsNeraca, `Neraca_${BULAN_NAMES[neracaMonth - 1]}_${neracaYear}`);
+
     // Generate and download
     writeFile(wb, "Laporan_Keuangan_KSU_LIDIA.xlsx");
   };
