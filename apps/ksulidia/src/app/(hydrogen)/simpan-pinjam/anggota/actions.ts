@@ -15,6 +15,8 @@ import {
   SavingsTxType,
   AuditAction,
   AttachmentSource,
+  CashEntity,
+  CashTxType,
 } from "@prisma/client";
 import { recordAuditLog } from "@/lib/audit";
 
@@ -212,6 +214,7 @@ export async function postSavingsTransactionAction(
   const savingsType = formData.get("savingsType"); // POKOK | WAJIB | SUKARELA
   const amount = formData.get("amount");
   const description = formData.get("description") || undefined;
+  const transactionDate = formData.get("transactionDate") || undefined;
 
   const parsed = savingsTransactionSchema.safeParse({
     memberId,
@@ -219,6 +222,7 @@ export async function postSavingsTransactionAction(
     savingsType,
     amount,
     description,
+    transactionDate,
   });
   if (!parsed.success) {
     return {
@@ -267,6 +271,13 @@ export async function postSavingsTransactionAction(
         data: { balance: newBalance },
       });
 
+      const txDate = parsed.data.transactionDate ?? new Date();
+      const txDesc =
+        parsed.data.description ||
+        (parsed.data.type === SavingsTxType.DEPOSIT
+          ? "Setoran tunai"
+          : "Penarikan tunai");
+
       // Create transaction log
       const txLog = await tx.savingsTransaction.create({
         data: {
@@ -274,12 +285,23 @@ export async function postSavingsTransactionAction(
           type: parsed.data.type,
           savingsType: parsed.data.savingsType,
           amount: parsed.data.amount,
-          description:
-            parsed.data.description ||
-            (parsed.data.type === SavingsTxType.DEPOSIT
-              ? "Setoran tunai"
-              : "Penarikan tunai"),
-          date: new Date(),
+          description: txDesc,
+          date: txDate,
+        },
+      });
+
+      // Sync to cash ledger
+      await tx.cashTransaction.create({
+        data: {
+          entity: CashEntity.KOPERASI,
+          type:
+            parsed.data.type === SavingsTxType.DEPOSIT
+              ? CashTxType.IN
+              : CashTxType.OUT,
+          amount: parsed.data.amount,
+          description: `${parsed.data.savingsType} - ${txDesc}`,
+          referenceId: txLog.id,
+          date: txDate,
         },
       });
 

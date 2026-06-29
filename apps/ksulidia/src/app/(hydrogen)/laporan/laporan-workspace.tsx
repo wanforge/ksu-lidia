@@ -91,6 +91,11 @@ export default function LaporanWorkspace({
   const [searchQuery, setSearchQuery] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const currentYear = new Date().getFullYear();
+  const [storeYear, setStoreYear] = useState(currentYear);
+  const [storeQuarter, setStoreQuarter] = useState<1 | 2 | 3 | 4>(
+    Math.ceil((new Date().getMonth() + 1) / 3) as 1 | 2 | 3 | 4
+  );
 
   const formatIDR = (val: number) => {
     return new Intl.NumberFormat("id-ID", {
@@ -304,61 +309,38 @@ export default function LaporanWorkspace({
     return filtered;
   }, [storeTxs, startDate, endDate]);
 
-  const storePlData = useMemo(() => {
-    const janSales = 11052000;
-    const janConsignment = 515500;
-    const janPurchases = 10913741;
-    const initialInventory = 5011836;
-    const janHpp = 10123500;
-    const janInventoryEnd = initialInventory + janPurchases - janHpp;
-
-    const febSales = 6399000;
-    const febConsignment = 0;
-    const febPurchases = 4365033;
-    const febInventoryStart = janInventoryEnd;
-    const febHpp = 5824000;
-    const febInventoryEnd = febInventoryStart + febPurchases - febHpp;
-
-    const marSales = 10565000;
-    const marConsignment = 0;
-    const marPurchases = 0;
-    const marInventoryStart = febInventoryEnd;
-    const marHpp = 9520000;
-    const marInventoryEnd = marInventoryStart + marPurchases - marHpp;
-
-    return {
-      jan: {
-        sales: janSales,
-        consignment: janConsignment,
-        totalReceipts: janSales + janConsignment,
-        invStart: initialInventory,
-        purchases: janPurchases,
-        invEnd: janInventoryEnd,
-        hpp: janHpp,
-        grossProfit: janSales + janConsignment - janHpp,
-      },
-      feb: {
-        sales: febSales,
-        consignment: febConsignment,
-        totalReceipts: febSales + febConsignment,
-        invStart: febInventoryStart,
-        purchases: febPurchases,
-        invEnd: febInventoryEnd,
-        hpp: febHpp,
-        grossProfit: febSales + febConsignment - febHpp,
-      },
-      mar: {
-        sales: marSales,
-        consignment: marConsignment,
-        totalReceipts: marSales + marConsignment,
-        invStart: marInventoryStart,
-        purchases: marPurchases,
-        invEnd: marInventoryEnd,
-        hpp: marHpp,
-        grossProfit: marSales + marConsignment - marHpp,
-      },
-    };
-  }, []);
+  const storePlMonths = useMemo(() => {
+    const q = storeQuarter;
+    const y = storeYear;
+    // months 1-based for each quarter
+    const m1 = (q - 1) * 3 + 1;
+    return [m1, m1 + 1, m1 + 2].map((month) => {
+      const txs = storeTxs.filter((tx) => {
+        const d = dayjs(tx.date);
+        return d.year() === y && d.month() + 1 === month;
+      });
+      const sales = txs
+        .filter((t) => t.type === "SALE")
+        .reduce((s, t) => s + Number(t.totalAmount), 0);
+      const purchases = txs
+        .filter((t) => t.type === "PURCHASE")
+        .reduce((s, t) => s + Number(t.totalAmount), 0);
+      return {
+        month,
+        year: y,
+        label: dayjs(`${y}-${String(month).padStart(2, "0")}-01`).format(
+          "MMMM YYYY"
+        ),
+        sales,
+        consignment: 0, // konsinyasi dicatat manual via CashTransaction, tidak ada di ProductTx
+        purchases,
+        // HPP = pembelian (proxy; inventory method butuh stok awal/akhir manual)
+        hpp: purchases,
+        totalReceipts: sales,
+        grossProfit: sales - purchases,
+      };
+    });
+  }, [storeTxs, storeYear, storeQuarter]);
 
   const handleExportExcel = () => {
     // We will export all data in multiple sheets
@@ -813,6 +795,34 @@ export default function LaporanWorkspace({
         {/* Tab 4: Rugi/Laba Toko P&L */}
         {tab === "store" && (
           <div className="overflow-x-auto p-6">
+            {/* Period selector */}
+            <div className="mb-4 flex flex-wrap items-center gap-3">
+              <select
+                value={storeYear}
+                onChange={(e) => setStoreYear(Number(e.target.value))}
+                className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+              >
+                {Array.from({ length: 8 }, (_, i) => currentYear - 3 + i).map(
+                  (y) => (
+                    <option key={y} value={y}>
+                      {y}
+                    </option>
+                  )
+                )}
+              </select>
+              <select
+                value={storeQuarter}
+                onChange={(e) =>
+                  setStoreQuarter(Number(e.target.value) as 1 | 2 | 3 | 4)
+                }
+                className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+              >
+                <option value={1}>Triwulan I (Jan–Mar)</option>
+                <option value={2}>Triwulan II (Apr–Jun)</option>
+                <option value={3}>Triwulan III (Jul–Sep)</option>
+                <option value={4}>Triwulan IV (Okt–Des)</option>
+              </select>
+            </div>
             <div className="mx-auto max-w-4xl overflow-hidden rounded-lg border border-gray-200">
               <Table
                 variant="modern"
@@ -823,15 +833,15 @@ export default function LaporanWorkspace({
                     <th scope="col" className="px-6 py-3.5">
                       Uraian Rugi / Laba Toko
                     </th>
-                    <th scope="col" className="px-6 py-3.5 text-right">
-                      Januari 2026
-                    </th>
-                    <th scope="col" className="px-6 py-3.5 text-right">
-                      Februari 2026
-                    </th>
-                    <th scope="col" className="px-6 py-3.5 text-right">
-                      Maret 2026
-                    </th>
+                    {storePlMonths.map((m) => (
+                      <th
+                        key={m.month}
+                        scope="col"
+                        className="px-6 py-3.5 text-right"
+                      >
+                        {m.label}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
@@ -848,41 +858,35 @@ export default function LaporanWorkspace({
                     <td className="px-6 py-3.5 pl-10 text-gray-700">
                       Penjualan Barang Toko
                     </td>
-                    <td className="px-6 py-3.5 text-right font-semibold">
-                      {formatIDR(storePlData.jan.sales)}
-                    </td>
-                    <td className="px-6 py-3.5 text-right font-semibold">
-                      {formatIDR(storePlData.feb.sales)}
-                    </td>
-                    <td className="px-6 py-3.5 text-right font-semibold">
-                      {formatIDR(storePlData.mar.sales)}
-                    </td>
+                    {storePlMonths.map((m) => (
+                      <td
+                        key={m.month}
+                        className="px-6 py-3.5 text-right font-semibold"
+                      >
+                        {formatIDR(m.sales)}
+                      </td>
+                    ))}
                   </tr>
                   <tr>
                     <td className="px-6 py-3.5 pl-10 text-gray-700">
                       Penerimaan Lain (Laba Konsinyasi)
                     </td>
-                    <td className="px-6 py-3.5 text-right text-gray-700">
-                      {formatIDR(storePlData.jan.consignment)}
-                    </td>
-                    <td className="px-6 py-3.5 text-right text-gray-700">
-                      {formatIDR(storePlData.feb.consignment)}
-                    </td>
-                    <td className="px-6 py-3.5 text-right text-gray-700">
-                      {formatIDR(storePlData.mar.consignment)}
-                    </td>
+                    {storePlMonths.map((m) => (
+                      <td
+                        key={m.month}
+                        className="px-6 py-3.5 text-right text-gray-700"
+                      >
+                        {formatIDR(m.consignment)}
+                      </td>
+                    ))}
                   </tr>
                   <tr className="bg-gray-50 font-bold text-gray-900">
                     <td className="px-6 py-3.5 pl-6">Total Penerimaan</td>
-                    <td className="px-6 py-3.5 text-right">
-                      {formatIDR(storePlData.jan.totalReceipts)}
-                    </td>
-                    <td className="px-6 py-3.5 text-right">
-                      {formatIDR(storePlData.feb.totalReceipts)}
-                    </td>
-                    <td className="px-6 py-3.5 text-right">
-                      {formatIDR(storePlData.mar.totalReceipts)}
-                    </td>
+                    {storePlMonths.map((m) => (
+                      <td key={m.month} className="px-6 py-3.5 text-right">
+                        {formatIDR(m.totalReceipts)}
+                      </td>
+                    ))}
                   </tr>
 
                   {/* HPP SECTION */}
@@ -896,59 +900,29 @@ export default function LaporanWorkspace({
                   </tr>
                   <tr>
                     <td className="px-6 py-3.5 pl-10 text-gray-700">
-                      Persediaan Awal Barang
+                      Pembelian Barang
                     </td>
-                    <td className="px-6 py-3.5 text-right text-gray-600">
-                      {formatIDR(storePlData.jan.invStart)}
-                    </td>
-                    <td className="px-6 py-3.5 text-right text-gray-600">
-                      {formatIDR(storePlData.feb.invStart)}
-                    </td>
-                    <td className="px-6 py-3.5 text-right text-gray-600">
-                      {formatIDR(storePlData.mar.invStart)}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-3.5 pl-10 text-gray-700">
-                      Pembelian Barang Baru
-                    </td>
-                    <td className="px-6 py-3.5 text-right text-gray-600">
-                      {formatIDR(storePlData.jan.purchases)}
-                    </td>
-                    <td className="px-6 py-3.5 text-right text-gray-600">
-                      {formatIDR(storePlData.feb.purchases)}
-                    </td>
-                    <td className="px-6 py-3.5 text-right text-gray-600">
-                      {formatIDR(storePlData.mar.purchases)}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-3.5 pl-10 text-gray-700">
-                      Persediaan Akhir Barang
-                    </td>
-                    <td className="px-6 py-3.5 text-right text-gray-600">
-                      ({formatIDR(storePlData.jan.invEnd)})
-                    </td>
-                    <td className="px-6 py-3.5 text-right text-gray-600">
-                      ({formatIDR(storePlData.feb.invEnd)})
-                    </td>
-                    <td className="px-6 py-3.5 text-right text-gray-600">
-                      ({formatIDR(storePlData.mar.invEnd)})
-                    </td>
+                    {storePlMonths.map((m) => (
+                      <td
+                        key={m.month}
+                        className="px-6 py-3.5 text-right text-gray-600"
+                      >
+                        {formatIDR(m.purchases)}
+                      </td>
+                    ))}
                   </tr>
                   <tr className="bg-gray-50 font-bold text-gray-900">
                     <td className="px-6 py-3.5 pl-6">
                       Harga Pokok Penjualan (HPP)
                     </td>
-                    <td className="px-6 py-3.5 text-right text-gray-900">
-                      {formatIDR(storePlData.jan.hpp)}
-                    </td>
-                    <td className="px-6 py-3.5 text-right text-gray-900">
-                      {formatIDR(storePlData.feb.hpp)}
-                    </td>
-                    <td className="px-6 py-3.5 text-right text-gray-900">
-                      {formatIDR(storePlData.mar.hpp)}
-                    </td>
+                    {storePlMonths.map((m) => (
+                      <td
+                        key={m.month}
+                        className="px-6 py-3.5 text-right text-gray-900"
+                      >
+                        {formatIDR(m.hpp)}
+                      </td>
+                    ))}
                   </tr>
 
                   {/* GROSS PROFIT SECTION */}
@@ -956,15 +930,14 @@ export default function LaporanWorkspace({
                     <td className="px-6 py-4 uppercase">
                       III. Laba Bruto Toko
                     </td>
-                    <td className="px-6 py-4 text-right text-lg font-extrabold">
-                      {formatIDR(storePlData.jan.grossProfit)}
-                    </td>
-                    <td className="px-6 py-4 text-right text-lg font-extrabold">
-                      {formatIDR(storePlData.feb.grossProfit)}
-                    </td>
-                    <td className="px-6 py-4 text-right text-lg font-extrabold">
-                      {formatIDR(storePlData.mar.grossProfit)}
-                    </td>
+                    {storePlMonths.map((m) => (
+                      <td
+                        key={m.month}
+                        className="px-6 py-4 text-right text-lg font-extrabold"
+                      >
+                        {formatIDR(m.grossProfit)}
+                      </td>
+                    ))}
                   </tr>
                 </tbody>
               </Table>

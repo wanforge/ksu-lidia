@@ -14,6 +14,8 @@ import {
   InstallmentStatus,
   AuditAction,
   AttachmentSource,
+  CashEntity,
+  CashTxType,
 } from "@prisma/client";
 import { recordAuditLog } from "@/lib/audit";
 
@@ -133,6 +135,18 @@ export async function createLoanAction(
         });
       }
 
+      // Sync to cash ledger — pengeluaran pencairan (jumlah diterima anggota)
+      await tx.cashTransaction.create({
+        data: {
+          entity: CashEntity.KOPERASI,
+          type: CashTxType.OUT,
+          amount: receivedAmount,
+          description: `Pencairan pinjaman (pokok Rp${loanAmount.toLocaleString("id-ID")} - provisi - CRK)`,
+          referenceId: loan.id,
+          date: new Date(),
+        },
+      });
+
       // Write Audit Log
       await recordAuditLog(tx, {
         actorId: session.user.id,
@@ -236,6 +250,18 @@ export async function payInstallmentAction(
           data: { status: LoanStatus.PAID },
         });
       }
+
+      // Sync to cash ledger — penerimaan angsuran + bunga + denda
+      await tx.cashTransaction.create({
+        data: {
+          entity: CashEntity.KOPERASI,
+          type: CashTxType.IN,
+          amount: totalPaid,
+          description: `Angsuran ke-${inst.monthNumber} (pokok + bunga${parsed.data.penaltyPaid > 0 ? " + denda" : ""})`,
+          referenceId: inst.id,
+          date: new Date(),
+        },
+      });
 
       // Write Audit Log
       await recordAuditLog(tx, {

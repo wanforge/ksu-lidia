@@ -32,6 +32,7 @@ export const savingsTransactionSchema = z.object({
   savingsType: z.nativeEnum(SavingsType),
   amount: z.coerce.number().positive("Nomor harus bernilai positif"),
   description: z.string().optional(),
+  transactionDate: z.coerce.date().optional(),
 });
 
 export const createLoanSchema = z.object({
