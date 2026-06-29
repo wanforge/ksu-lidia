@@ -391,8 +391,18 @@ export default function LaporanWorkspace({
 
   // --- LAPORAN BULANAN per anggota ---
   const BULAN_NAMES = [
-    "Januari","Februari","Maret","April","Mei","Juni",
-    "Juli","Agustus","September","Oktober","November","Desember",
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
   ];
 
   const bulananData = useMemo(() => {
@@ -403,9 +413,18 @@ export default function LaporanWorkspace({
 
     return members.map((member) => {
       // Simpanan saldo per akhir bulan ini
-      const pokok = Number(member.savingsAccounts.find((a) => a.type === "POKOK")?.balance) || 0;
-      const wajib = Number(member.savingsAccounts.find((a) => a.type === "WAJIB")?.balance) || 0;
-      const sukarela = Number(member.savingsAccounts.find((a) => a.type === "SUKARELA")?.balance) || 0;
+      const pokok =
+        Number(
+          member.savingsAccounts.find((a) => a.type === "POKOK")?.balance
+        ) || 0;
+      const wajib =
+        Number(
+          member.savingsAccounts.find((a) => a.type === "WAJIB")?.balance
+        ) || 0;
+      const sukarela =
+        Number(
+          member.savingsAccounts.find((a) => a.type === "SUKARELA")?.balance
+        ) || 0;
 
       // Pinjaman aktif bulan ini
       const activeLoan = allLoans.find(
@@ -434,7 +453,9 @@ export default function LaporanWorkspace({
 
         // Saldo awal = total pinjaman - total pokok yang sudah dibayar sebelum bulan ini
         const paidBefore = activeLoan.installments
-          .filter((i) => i.status === "PAID" && new Date(i.paidAt) < startOfMonth)
+          .filter(
+            (i) => i.status === "PAID" && new Date(i.paidAt) < startOfMonth
+          )
           .reduce((s, i) => s + Number(i.principalPaid), 0);
 
         sawalHutang = Number(activeLoan.amount) - paidBefore;
@@ -491,15 +512,25 @@ export default function LaporanWorkspace({
 
     // Simpanan anggota (aset koperasi = tabungan anggota yg disimpan)
     const totalSimpananPokok = members.reduce(
-      (s, m) => s + (Number(m.savingsAccounts.find((a) => a.type === "POKOK")?.balance) || 0),
+      (s, m) =>
+        s +
+        (Number(m.savingsAccounts.find((a) => a.type === "POKOK")?.balance) ||
+          0),
       0
     );
     const totalSimpananWajib = members.reduce(
-      (s, m) => s + (Number(m.savingsAccounts.find((a) => a.type === "WAJIB")?.balance) || 0),
+      (s, m) =>
+        s +
+        (Number(m.savingsAccounts.find((a) => a.type === "WAJIB")?.balance) ||
+          0),
       0
     );
     const totalSimpananSukarela = members.reduce(
-      (s, m) => s + (Number(m.savingsAccounts.find((a) => a.type === "SUKARELA")?.balance) || 0),
+      (s, m) =>
+        s +
+        (Number(
+          m.savingsAccounts.find((a) => a.type === "SUKARELA")?.balance
+        ) || 0),
       0
     );
 
@@ -519,7 +550,10 @@ export default function LaporanWorkspace({
         s +
         l.installments
           .filter((i) => i.status === "PAID" && new Date(i.paidAt) <= asOf)
-          .reduce((sum, i) => sum + Number(i.interestPaid) + Number(i.penaltyPaid), 0),
+          .reduce(
+            (sum, i) => sum + Number(i.interestPaid) + Number(i.penaltyPaid),
+            0
+          ),
       0
     );
     const pendapatanProvisi = allLoans
@@ -601,12 +635,12 @@ export default function LaporanWorkspace({
     // 4. Laporan Bulanan SP
     const wsBulanan = utils.json_to_sheet(
       bulananData.map((r) => ({
-        "No": r.no,
-        "Nama": r.name,
+        No: r.no,
+        Nama: r.name,
         "S.Awal Hutang": r.sawalHutang,
-        "Angsuran": r.angsuran,
-        "Bunga": r.bunga,
-        "Denda": r.denda,
+        Angsuran: r.angsuran,
+        Bunga: r.bunga,
+        Denda: r.denda,
         "S.Akhir Hutang": r.sakhirHutang,
         "Tab Wajib": r.tabWajib,
         "Tab Sukarela": r.tabSukarela,
@@ -618,24 +652,46 @@ export default function LaporanWorkspace({
 
     // 5. Neraca
     const wsNeraca = utils.json_to_sheet([
-      { "Keterangan": "AKTIVA", "Jumlah": "" },
-      { "Keterangan": "Kas", "Jumlah": neracaData.aktiva.kas },
-      { "Keterangan": "Piutang Pinjaman Anggota", "Jumlah": neracaData.aktiva.piutangPinjaman },
-      { "Keterangan": "TOTAL AKTIVA", "Jumlah": neracaData.aktiva.totalAktiva },
-      { "Keterangan": "PASIVA - KEWAJIBAN", "Jumlah": "" },
-      { "Keterangan": "Simpanan Pokok", "Jumlah": neracaData.pasiva.simpananPokok },
-      { "Keterangan": "Simpanan Wajib", "Jumlah": neracaData.pasiva.simpananWajib },
-      { "Keterangan": "Simpanan Sukarela", "Jumlah": neracaData.pasiva.simpananSukarela },
-      { "Keterangan": "Total Simpanan", "Jumlah": neracaData.pasiva.totalSimpanan },
-      { "Keterangan": "EKUITAS", "Jumlah": "" },
-      { "Keterangan": "Modal / SHU Terakumulasi", "Jumlah": neracaData.pasiva.modal },
-      { "Keterangan": "TOTAL PASIVA + EKUITAS", "Jumlah": neracaData.pasiva.totalPasiva },
-      { "Keterangan": "INFO LABA SP", "Jumlah": "" },
-      { "Keterangan": "Pendapatan Bunga + Denda", "Jumlah": neracaData.info.pendapatanBunga },
-      { "Keterangan": "Pendapatan Provisi", "Jumlah": neracaData.info.pendapatanProvisi },
-      { "Keterangan": "Total Laba SP", "Jumlah": neracaData.info.labaBersih },
+      { Keterangan: "AKTIVA", Jumlah: "" },
+      { Keterangan: "Kas", Jumlah: neracaData.aktiva.kas },
+      {
+        Keterangan: "Piutang Pinjaman Anggota",
+        Jumlah: neracaData.aktiva.piutangPinjaman,
+      },
+      { Keterangan: "TOTAL AKTIVA", Jumlah: neracaData.aktiva.totalAktiva },
+      { Keterangan: "PASIVA - KEWAJIBAN", Jumlah: "" },
+      { Keterangan: "Simpanan Pokok", Jumlah: neracaData.pasiva.simpananPokok },
+      { Keterangan: "Simpanan Wajib", Jumlah: neracaData.pasiva.simpananWajib },
+      {
+        Keterangan: "Simpanan Sukarela",
+        Jumlah: neracaData.pasiva.simpananSukarela,
+      },
+      { Keterangan: "Total Simpanan", Jumlah: neracaData.pasiva.totalSimpanan },
+      { Keterangan: "EKUITAS", Jumlah: "" },
+      {
+        Keterangan: "Modal / SHU Terakumulasi",
+        Jumlah: neracaData.pasiva.modal,
+      },
+      {
+        Keterangan: "TOTAL PASIVA + EKUITAS",
+        Jumlah: neracaData.pasiva.totalPasiva,
+      },
+      { Keterangan: "INFO LABA SP", Jumlah: "" },
+      {
+        Keterangan: "Pendapatan Bunga + Denda",
+        Jumlah: neracaData.info.pendapatanBunga,
+      },
+      {
+        Keterangan: "Pendapatan Provisi",
+        Jumlah: neracaData.info.pendapatanProvisi,
+      },
+      { Keterangan: "Total Laba SP", Jumlah: neracaData.info.labaBersih },
     ]);
-    utils.book_append_sheet(wb, wsNeraca, `Neraca_${BULAN_NAMES[neracaMonth - 1]}_${neracaYear}`);
+    utils.book_append_sheet(
+      wb,
+      wsNeraca,
+      `Neraca_${BULAN_NAMES[neracaMonth - 1]}_${neracaYear}`
+    );
 
     // Generate and download
     writeFile(wb, "Laporan_Keuangan_KSU_LIDIA.xlsx");
@@ -1228,9 +1284,13 @@ export default function LaporanWorkspace({
                 onChange={(e) => setBulananYear(Number(e.target.value))}
                 className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
               >
-                {Array.from({ length: 8 }, (_, i) => currentYear - 3 + i).map((y) => (
-                  <option key={y} value={y}>{y}</option>
-                ))}
+                {Array.from({ length: 8 }, (_, i) => currentYear - 3 + i).map(
+                  (y) => (
+                    <option key={y} value={y}>
+                      {y}
+                    </option>
+                  )
+                )}
               </select>
               <select
                 value={bulananMonth}
@@ -1238,11 +1298,14 @@ export default function LaporanWorkspace({
                 className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
               >
                 {BULAN_NAMES.map((b, i) => (
-                  <option key={i + 1} value={i + 1}>{b}</option>
+                  <option key={i + 1} value={i + 1}>
+                    {b}
+                  </option>
                 ))}
               </select>
               <span className="text-sm font-semibold text-gray-700">
-                {BULAN_NAMES[bulananMonth - 1]} {bulananYear} — {filteredBulanan.length} anggota
+                {BULAN_NAMES[bulananMonth - 1]} {bulananYear} —{" "}
+                {filteredBulanan.length} anggota
               </span>
             </div>
             <div className="overflow-hidden rounded-lg border border-gray-200">
@@ -1264,7 +1327,9 @@ export default function LaporanWorkspace({
                 <tbody className="divide-y divide-gray-100">
                   {filteredBulanan.map((row) => (
                     <tr key={row.no} className="hover:bg-gray-50">
-                      <td className="px-3 py-2.5 text-center text-gray-500">{row.no}</td>
+                      <td className="px-3 py-2.5 text-center text-gray-500">
+                        {row.no}
+                      </td>
                       <td className="px-3 py-2.5 font-medium">{row.name}</td>
                       <td className="px-3 py-2.5 text-right">
                         {row.sawalHutang > 0 ? formatIDR(row.sawalHutang) : "-"}
@@ -1279,16 +1344,27 @@ export default function LaporanWorkspace({
                         {row.denda > 0 ? formatIDR(row.denda) : "-"}
                       </td>
                       <td className="px-3 py-2.5 text-right font-semibold">
-                        {row.sakhirHutang > 0 ? formatIDR(row.sakhirHutang) : "-"}
+                        {row.sakhirHutang > 0
+                          ? formatIDR(row.sakhirHutang)
+                          : "-"}
                       </td>
-                      <td className="px-3 py-2.5 text-right">{formatIDR(row.tabWajib)}</td>
-                      <td className="px-3 py-2.5 text-right">{formatIDR(row.tabSukarela)}</td>
-                      <td className="px-3 py-2.5 text-right">{formatIDR(row.tabPokok)}</td>
+                      <td className="px-3 py-2.5 text-right">
+                        {formatIDR(row.tabWajib)}
+                      </td>
+                      <td className="px-3 py-2.5 text-right">
+                        {formatIDR(row.tabSukarela)}
+                      </td>
+                      <td className="px-3 py-2.5 text-right">
+                        {formatIDR(row.tabPokok)}
+                      </td>
                     </tr>
                   ))}
                   {filteredBulanan.length === 0 && (
                     <tr>
-                      <td colSpan={10} className="px-4 py-10 text-center text-gray-400">
+                      <td
+                        colSpan={10}
+                        className="px-4 py-10 text-center text-gray-400"
+                      >
                         Tidak ada data anggota.
                       </td>
                     </tr>
@@ -1308,9 +1384,13 @@ export default function LaporanWorkspace({
                 onChange={(e) => setNeracaYear(Number(e.target.value))}
                 className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
               >
-                {Array.from({ length: 8 }, (_, i) => currentYear - 3 + i).map((y) => (
-                  <option key={y} value={y}>{y}</option>
-                ))}
+                {Array.from({ length: 8 }, (_, i) => currentYear - 3 + i).map(
+                  (y) => (
+                    <option key={y} value={y}>
+                      {y}
+                    </option>
+                  )
+                )}
               </select>
               <select
                 value={neracaMonth}
@@ -1318,7 +1398,9 @@ export default function LaporanWorkspace({
                 className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
               >
                 {BULAN_NAMES.map((b, i) => (
-                  <option key={i + 1} value={i + 1}>{b}</option>
+                  <option key={i + 1} value={i + 1}>
+                    {b}
+                  </option>
                 ))}
               </select>
               <span className="text-sm font-semibold text-gray-700">
@@ -1336,7 +1418,10 @@ export default function LaporanWorkspace({
                 <tbody className="divide-y divide-gray-100">
                   {/* AKTIVA */}
                   <tr className="bg-red-50/40 font-bold text-red-900">
-                    <td colSpan={2} className="px-6 py-2.5 text-xs uppercase tracking-wider">
+                    <td
+                      colSpan={2}
+                      className="px-6 py-2.5 text-xs uppercase tracking-wider"
+                    >
                       AKTIVA
                     </td>
                   </tr>
@@ -1347,7 +1432,9 @@ export default function LaporanWorkspace({
                     </td>
                   </tr>
                   <tr className="hover:bg-gray-50">
-                    <td className="px-6 py-3 pl-10 text-gray-700">Piutang Pinjaman Anggota</td>
+                    <td className="px-6 py-3 pl-10 text-gray-700">
+                      Piutang Pinjaman Anggota
+                    </td>
                     <td className="px-6 py-3 text-right font-semibold">
                       {formatIDR(neracaData.aktiva.piutangPinjaman)}
                     </td>
@@ -1360,24 +1447,33 @@ export default function LaporanWorkspace({
                   </tr>
                   {/* PASIVA */}
                   <tr className="bg-red-50/40 font-bold text-red-900">
-                    <td colSpan={2} className="px-6 py-2.5 text-xs uppercase tracking-wider">
+                    <td
+                      colSpan={2}
+                      className="px-6 py-2.5 text-xs uppercase tracking-wider"
+                    >
                       PASIVA — KEWAJIBAN
                     </td>
                   </tr>
                   <tr className="hover:bg-gray-50">
-                    <td className="px-6 py-3 pl-10 text-gray-700">Simpanan Pokok Anggota</td>
+                    <td className="px-6 py-3 pl-10 text-gray-700">
+                      Simpanan Pokok Anggota
+                    </td>
                     <td className="px-6 py-3 text-right">
                       {formatIDR(neracaData.pasiva.simpananPokok)}
                     </td>
                   </tr>
                   <tr className="hover:bg-gray-50">
-                    <td className="px-6 py-3 pl-10 text-gray-700">Simpanan Wajib Anggota</td>
+                    <td className="px-6 py-3 pl-10 text-gray-700">
+                      Simpanan Wajib Anggota
+                    </td>
                     <td className="px-6 py-3 text-right">
                       {formatIDR(neracaData.pasiva.simpananWajib)}
                     </td>
                   </tr>
                   <tr className="hover:bg-gray-50">
-                    <td className="px-6 py-3 pl-10 text-gray-700">Simpanan Sukarela Anggota</td>
+                    <td className="px-6 py-3 pl-10 text-gray-700">
+                      Simpanan Sukarela Anggota
+                    </td>
                     <td className="px-6 py-3 text-right">
                       {formatIDR(neracaData.pasiva.simpananSukarela)}
                     </td>
@@ -1389,17 +1485,22 @@ export default function LaporanWorkspace({
                     </td>
                   </tr>
                   <tr className="bg-red-50/40 font-bold text-red-900">
-                    <td colSpan={2} className="px-6 py-2.5 text-xs uppercase tracking-wider">
+                    <td
+                      colSpan={2}
+                      className="px-6 py-2.5 text-xs uppercase tracking-wider"
+                    >
                       EKUITAS
                     </td>
                   </tr>
                   <tr className="hover:bg-gray-50">
-                    <td className="px-6 py-3 pl-10 text-gray-700">Modal / SHU Terakumulasi</td>
+                    <td className="px-6 py-3 pl-10 text-gray-700">
+                      Modal / SHU Terakumulasi
+                    </td>
                     <td className="px-6 py-3 text-right font-semibold">
                       {formatIDR(neracaData.pasiva.modal)}
                     </td>
                   </tr>
-                  <tr className="bg-gray-50 font-bold text-gray-900 border-t-2 border-gray-300">
+                  <tr className="border-t-2 border-gray-300 bg-gray-50 font-bold text-gray-900">
                     <td className="px-6 py-3">TOTAL PASIVA + EKUITAS</td>
                     <td className="px-6 py-3 text-right text-red-800">
                       {formatIDR(neracaData.pasiva.totalPasiva)}
@@ -1407,24 +1508,33 @@ export default function LaporanWorkspace({
                   </tr>
                   {/* INFO */}
                   <tr className="bg-red-50/40 font-bold text-red-900">
-                    <td colSpan={2} className="px-6 py-2.5 text-xs uppercase tracking-wider">
+                    <td
+                      colSpan={2}
+                      className="px-6 py-2.5 text-xs uppercase tracking-wider"
+                    >
                       INFO LABA SIMPAN PINJAM
                     </td>
                   </tr>
                   <tr className="hover:bg-gray-50">
-                    <td className="px-6 py-3 pl-10 text-gray-700">Pendapatan Bunga + Denda</td>
+                    <td className="px-6 py-3 pl-10 text-gray-700">
+                      Pendapatan Bunga + Denda
+                    </td>
                     <td className="px-6 py-3 text-right">
                       {formatIDR(neracaData.info.pendapatanBunga)}
                     </td>
                   </tr>
                   <tr className="hover:bg-gray-50">
-                    <td className="px-6 py-3 pl-10 text-gray-700">Pendapatan Provisi</td>
+                    <td className="px-6 py-3 pl-10 text-gray-700">
+                      Pendapatan Provisi
+                    </td>
                     <td className="px-6 py-3 text-right">
                       {formatIDR(neracaData.info.pendapatanProvisi)}
                     </td>
                   </tr>
                   <tr className="bg-gray-50 font-bold">
-                    <td className="px-6 py-3 pl-6 text-green-800">Total Laba SP</td>
+                    <td className="px-6 py-3 pl-6 text-green-800">
+                      Total Laba SP
+                    </td>
                     <td className="px-6 py-3 text-right text-green-800">
                       {formatIDR(neracaData.info.labaBersih)}
                     </td>

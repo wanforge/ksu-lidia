@@ -67,7 +67,11 @@ export const createProductSchema = z.object({
   name: z.string().min(2, "Nama produk minimal 2 karakter"),
   category: z.string().optional(),
   stock: z.coerce.number().int().nonnegative("Stok awal tidak boleh negatif"),
-  minStock: z.coerce.number().int().nonnegative("Minimal stok tidak boleh negatif").default(5),
+  minStock: z.coerce
+    .number()
+    .int()
+    .nonnegative("Minimal stok tidak boleh negatif")
+    .default(5),
   purchasePrice: z.coerce
     .number()
     .nonnegative("Harga beli tidak boleh negatif"),
@@ -79,7 +83,11 @@ export const updateProductSchema = z.object({
   code: z.string().min(2, "Kode minimal 2 karakter"),
   name: z.string().min(2, "Nama produk minimal 2 karakter"),
   category: z.string().optional(),
-  minStock: z.coerce.number().int().nonnegative("Minimal stok tidak boleh negatif").default(5),
+  minStock: z.coerce
+    .number()
+    .int()
+    .nonnegative("Minimal stok tidak boleh negatif")
+    .default(5),
   purchasePrice: z.coerce
     .number()
     .nonnegative("Harga beli tidak boleh negatif"),

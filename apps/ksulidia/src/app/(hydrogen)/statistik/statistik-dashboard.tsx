@@ -312,19 +312,41 @@ export default function StatistikDashboard({
       {/* Inventory Stats Row */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">Total Produk Aktif</p>
-          <p className="mt-2 text-2xl font-bold text-gray-900">{formatNumber(metrics.totalProducts)}</p>
-          <p className="mt-1 text-xs text-gray-400">item terdaftar di katalog</p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+            Total Produk Aktif
+          </p>
+          <p className="mt-2 text-2xl font-bold text-gray-900">
+            {formatNumber(metrics.totalProducts)}
+          </p>
+          <p className="mt-1 text-xs text-gray-400">
+            item terdaftar di katalog
+          </p>
         </div>
         <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">Nilai Inventaris</p>
-          <p className="mt-2 text-2xl font-bold text-gray-900">{formatIDR(metrics.totalInventoryValue)}</p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+            Nilai Inventaris
+          </p>
+          <p className="mt-2 text-2xl font-bold text-gray-900">
+            {formatIDR(metrics.totalInventoryValue)}
+          </p>
           <p className="mt-1 text-xs text-gray-400">modal stok tersimpan</p>
         </div>
-        <div className={`rounded-xl border p-5 shadow-sm ${metrics.lowStockCount > 0 ? "border-rose-200 bg-rose-50" : "border-gray-200 bg-white"}`}>
-          <p className={`text-xs font-semibold uppercase tracking-wider ${metrics.lowStockCount > 0 ? "text-rose-600" : "text-gray-500"}`}>Stok Hampir Habis</p>
-          <p className={`mt-2 text-2xl font-bold ${metrics.lowStockCount > 0 ? "text-rose-700" : "text-gray-900"}`}>{metrics.lowStockCount}</p>
-          <p className="mt-1 text-xs text-gray-400">produk perlu restock segera</p>
+        <div
+          className={`rounded-xl border p-5 shadow-sm ${metrics.lowStockCount > 0 ? "border-rose-200 bg-rose-50" : "border-gray-200 bg-white"}`}
+        >
+          <p
+            className={`text-xs font-semibold uppercase tracking-wider ${metrics.lowStockCount > 0 ? "text-rose-600" : "text-gray-500"}`}
+          >
+            Stok Hampir Habis
+          </p>
+          <p
+            className={`mt-2 text-2xl font-bold ${metrics.lowStockCount > 0 ? "text-rose-700" : "text-gray-900"}`}
+          >
+            {metrics.lowStockCount}
+          </p>
+          <p className="mt-1 text-xs text-gray-400">
+            produk perlu restock segera
+          </p>
         </div>
       </div>
 
@@ -873,7 +895,10 @@ export default function StatistikDashboard({
                     tickFormatter={(v) => `${(v / 1000000).toFixed(1)}jt`}
                   />
                   <Tooltip
-                    formatter={(value: any) => [formatIDR(Number(value)), "Total SHU"]}
+                    formatter={(value: any) => [
+                      formatIDR(Number(value)),
+                      "Total SHU",
+                    ]}
                     contentStyle={{
                       borderRadius: "12px",
                       border: "1px solid #e5e7eb",
@@ -916,7 +941,8 @@ export default function StatistikDashboard({
                 Cicilan Jatuh Tempo 7 Hari ke Depan
               </h3>
               <p className="text-sm text-amber-700">
-                {dueSoonInstallments.length} cicilan segera jatuh tempo — segera proses pembayaran.
+                {dueSoonInstallments.length} cicilan segera jatuh tempo — segera
+                proses pembayaran.
               </p>
             </div>
             <Link
@@ -933,8 +959,12 @@ export default function StatistikDashboard({
                   <th className="px-4 py-3 font-semibold">No.</th>
                   <th className="px-4 py-3 font-semibold">Nama Anggota</th>
                   <th className="px-4 py-3 font-semibold">Bulan ke-</th>
-                  <th className="px-4 py-3 text-right font-semibold">Jatuh Tempo</th>
-                  <th className="px-4 py-3 text-right font-semibold">Jml Pinjaman</th>
+                  <th className="px-4 py-3 text-right font-semibold">
+                    Jatuh Tempo
+                  </th>
+                  <th className="px-4 py-3 text-right font-semibold">
+                    Jml Pinjaman
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-amber-100">
@@ -996,7 +1026,8 @@ export default function StatistikDashboard({
                 Anggota dengan Denda Tertunggak
               </h3>
               <p className="text-sm text-red-700">
-                {membersWithDenda.length} anggota memiliki denda yang belum lunas.
+                {membersWithDenda.length} anggota memiliki denda yang belum
+                lunas.
               </p>
             </div>
             <Link
@@ -1012,16 +1043,26 @@ export default function StatistikDashboard({
                 <tr>
                   <th className="px-4 py-3 font-semibold">No.</th>
                   <th className="px-4 py-3 font-semibold">Nama Anggota</th>
-                  <th className="px-4 py-3 text-center font-semibold">Jml Cicilan</th>
-                  <th className="px-4 py-3 text-right font-semibold">Total Denda</th>
+                  <th className="px-4 py-3 text-center font-semibold">
+                    Jml Cicilan
+                  </th>
+                  <th className="px-4 py-3 text-right font-semibold">
+                    Total Denda
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-red-100">
                 {membersWithDenda.map((m, idx) => (
                   <tr key={idx} className="bg-white hover:bg-red-50/50">
-                    <td className="px-4 py-3 font-semibold text-gray-950">{m.memberNo}</td>
-                    <td className="px-4 py-3 font-medium text-gray-800">{m.memberName}</td>
-                    <td className="px-4 py-3 text-center text-gray-700">{m.count}</td>
+                    <td className="px-4 py-3 font-semibold text-gray-950">
+                      {m.memberNo}
+                    </td>
+                    <td className="px-4 py-3 font-medium text-gray-800">
+                      {m.memberName}
+                    </td>
+                    <td className="px-4 py-3 text-center text-gray-700">
+                      {m.count}
+                    </td>
                     <td className="px-4 py-3 text-right font-bold text-red-800">
                       {formatIDR(m.totalDenda)}
                     </td>

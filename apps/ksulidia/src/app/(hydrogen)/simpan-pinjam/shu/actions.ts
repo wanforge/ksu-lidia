@@ -61,10 +61,7 @@ export async function calculateAndSaveShuAction(
 
     // Total simpanan seluruh anggota
     const totalAllSimpanan = members.reduce((sum, m) => {
-      return (
-        sum +
-        m.savingsAccounts.reduce((s, a) => s + Number(a.balance), 0)
-      );
+      return sum + m.savingsAccounts.reduce((s, a) => s + Number(a.balance), 0);
     }, 0);
 
     // Total pinjaman yang sudah dibayar oleh seluruh anggota dalam tahun ini

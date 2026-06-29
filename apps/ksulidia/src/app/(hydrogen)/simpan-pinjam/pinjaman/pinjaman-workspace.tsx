@@ -253,9 +253,7 @@ export default function PinjamanWorkspace({
     const monthlyInterest =
       Number(loan.amount) * (Number(loan.interestRate) / 100);
 
-    const isLate = inst.dueDate
-      ? new Date(inst.dueDate) < new Date()
-      : false;
+    const isLate = inst.dueDate ? new Date(inst.dueDate) < new Date() : false;
 
     setPayModal({
       isOpen: true,

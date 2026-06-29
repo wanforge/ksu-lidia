@@ -215,7 +215,9 @@ export default async function StatistikPage() {
       status: "UNPAID",
       dueDate: { gte: today, lte: in7Days },
     },
-    include: { loan: { include: { member: { select: { no: true, name: true } } } } },
+    include: {
+      loan: { include: { member: { select: { no: true, name: true } } } },
+    },
     orderBy: { dueDate: "asc" },
     take: 10,
   });

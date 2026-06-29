@@ -50,10 +50,10 @@ export default function ShuWorkspace({
   const [totalShuSimpanan, setTotalShuSimpanan] = useState("");
   const [totalShuPinjaman, setTotalShuPinjaman] = useState("");
 
-  const [state, formAction, isPending] = useActionState<ShuActionState, FormData>(
-    calculateAndSaveShuAction,
-    { success: false, message: "" }
-  );
+  const [state, formAction, isPending] = useActionState<
+    ShuActionState,
+    FormData
+  >(calculateAndSaveShuAction, { success: false, message: "" });
 
   const filtered = useMemo(
     () => distributions.filter((d) => d.year === viewYear),
@@ -83,15 +83,30 @@ export default function ShuWorkspace({
       .map((d) => ({
         ...d,
         preview: true,
-        shuSimpanan: totalSimpanan > 0 ? (Number(d.shuSimpanan) / totalSimpanan) * tSimpanan : 0,
-        shuPinjaman: totalPinjaman > 0 ? (Number(d.shuPinjaman) / totalPinjaman) * tPinjaman : 0,
+        shuSimpanan:
+          totalSimpanan > 0
+            ? (Number(d.shuSimpanan) / totalSimpanan) * tSimpanan
+            : 0,
+        shuPinjaman:
+          totalPinjaman > 0
+            ? (Number(d.shuPinjaman) / totalPinjaman) * tPinjaman
+            : 0,
         totalShu:
           totalSimpanan > 0
             ? (Number(d.shuSimpanan) / totalSimpanan) * tSimpanan +
-              (totalPinjaman > 0 ? (Number(d.shuPinjaman) / totalPinjaman) * tPinjaman : 0)
+              (totalPinjaman > 0
+                ? (Number(d.shuPinjaman) / totalPinjaman) * tPinjaman
+                : 0)
             : 0,
       }));
-  }, [distributions, inputYear, totalShuSimpanan, totalShuPinjaman, totalSimpanan, totalPinjaman]);
+  }, [
+    distributions,
+    inputYear,
+    totalShuSimpanan,
+    totalShuPinjaman,
+    totalSimpanan,
+    totalPinjaman,
+  ]);
 
   const handleExport = () => {
     if (filtered.length === 0) return;
@@ -177,7 +192,9 @@ export default function ShuWorkspace({
                   : "bg-rose-50 text-rose-800"
               }`}
             >
-              {!state.success && <PiWarningDuotone className="h-4 w-4 shrink-0" />}
+              {!state.success && (
+                <PiWarningDuotone className="h-4 w-4 shrink-0" />
+              )}
               {state.message}
             </div>
           )}
@@ -210,14 +227,18 @@ export default function ShuWorkspace({
             >
               {existingYears.length > 0 ? (
                 existingYears.map((y) => (
-                  <option key={y} value={y}>{y}</option>
+                  <option key={y} value={y}>
+                    {y}
+                  </option>
                 ))
               ) : (
                 <option value={currentYear}>{currentYear}</option>
               )}
             </select>
             {filtered.length > 0 && (
-              <span className="text-sm text-gray-500">{filtered.length} anggota</span>
+              <span className="text-sm text-gray-500">
+                {filtered.length} anggota
+              </span>
             )}
           </div>
           {filtered.length > 0 && (
@@ -253,19 +274,33 @@ export default function ShuWorkspace({
               <tbody className="divide-y divide-gray-100">
                 {filtered.map((d) => (
                   <tr key={d.id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 text-center text-gray-500">{d.no}</td>
-                    <td className="px-4 py-3 font-medium text-gray-900">{d.name}</td>
-                    <td className="px-4 py-3 text-right">{formatIDR(Number(d.shuSimpanan))}</td>
-                    <td className="px-4 py-3 text-right">{formatIDR(Number(d.shuPinjaman))}</td>
+                    <td className="px-4 py-3 text-center text-gray-500">
+                      {d.no}
+                    </td>
+                    <td className="px-4 py-3 font-medium text-gray-900">
+                      {d.name}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      {formatIDR(Number(d.shuSimpanan))}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      {formatIDR(Number(d.shuPinjaman))}
+                    </td>
                     <td className="px-4 py-3 text-right font-bold text-red-800">
                       {formatIDR(Number(d.totalShu))}
                     </td>
                   </tr>
                 ))}
                 <tr className="border-t-2 border-gray-300 bg-gray-50 font-bold text-gray-900">
-                  <td colSpan={2} className="px-4 py-3.5">TOTAL</td>
-                  <td className="px-4 py-3.5 text-right">{formatIDR(totals.shuSimpanan)}</td>
-                  <td className="px-4 py-3.5 text-right">{formatIDR(totals.shuPinjaman)}</td>
+                  <td colSpan={2} className="px-4 py-3.5">
+                    TOTAL
+                  </td>
+                  <td className="px-4 py-3.5 text-right">
+                    {formatIDR(totals.shuSimpanan)}
+                  </td>
+                  <td className="px-4 py-3.5 text-right">
+                    {formatIDR(totals.shuPinjaman)}
+                  </td>
                   <td className="px-4 py-3.5 text-right text-red-800">
                     {formatIDR(totals.totalShu)}
                   </td>

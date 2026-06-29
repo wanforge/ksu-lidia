@@ -262,7 +262,9 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                   min={0}
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
                 />
-                <p className="mt-1 text-xs text-gray-500">Alert merah jika stok ≤ nilai ini.</p>
+                <p className="mt-1 text-xs text-gray-500">
+                  Alert merah jika stok ≤ nilai ini.
+                </p>
               </div>
 
               <div>
@@ -671,7 +673,9 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                     defaultValue={editModal.product.minStock}
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-700"
                   />
-                  <p className="mt-1 text-xs text-gray-500">Alert stok rendah.</p>
+                  <p className="mt-1 text-xs text-gray-500">
+                    Alert stok rendah.
+                  </p>
                 </div>
 
                 <div>

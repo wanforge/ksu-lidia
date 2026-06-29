@@ -38,7 +38,9 @@ export default async function ShuPage() {
     totalShu: d.totalShu,
   }));
 
-  const yearSet = new Set<number>(distributions.map((d: any) => d.year as number));
+  const yearSet = new Set<number>(
+    distributions.map((d: any) => d.year as number)
+  );
   const existingYears: number[] = Array.from(yearSet).sort((a, b) => b - a);
 
   // Agregat untuk preview kalkulasi baru
@@ -48,7 +50,8 @@ export default async function ShuPage() {
   });
 
   const totalSimpanan = members.reduce(
-    (s, m) => s + m.savingsAccounts.reduce((a, acc) => a + Number(acc.balance), 0),
+    (s, m) =>
+      s + m.savingsAccounts.reduce((a, acc) => a + Number(acc.balance), 0),
     0
   );
 
@@ -78,7 +81,8 @@ export default async function ShuPage() {
           Distribusi SHU (Sisa Hasil Usaha)
         </h1>
         <p className="mt-1 text-sm text-gray-500">
-          Hitung dan distribusikan SHU tahunan secara proporsional ke seluruh anggota aktif.
+          Hitung dan distribusikan SHU tahunan secara proporsional ke seluruh
+          anggota aktif.
         </p>
       </div>
       <ShuWorkspace
