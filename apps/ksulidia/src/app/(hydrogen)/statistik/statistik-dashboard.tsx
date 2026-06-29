@@ -26,6 +26,8 @@ import {
   PiTrendUpDuotone,
   PiPrinterDuotone,
   PiCaretRightBold,
+  PiWarningDuotone,
+  PiMedalDuotone,
 } from "react-icons/pi";
 import { formatNumber } from "@/lib/format";
 import { Table } from "rizzui";
@@ -68,11 +70,38 @@ type FinancialReportDataPoint = {
   amount: number;
 };
 
+type TopProduct = {
+  id: string;
+  code: string;
+  name: string;
+  category: string;
+  stock: number;
+  minStock: number;
+  sellingPrice: number;
+};
+
+type ShuYear = {
+  year: number;
+  totalShu: number;
+};
+
+type DueSoonInstallment = {
+  id: string;
+  memberNo: number;
+  memberName: string;
+  dueDate: string | null;
+  monthNumber: number;
+  loanAmount: number;
+};
+
 type Props = {
   metrics: Metrics;
   chartData: ChartDataPoint[];
   cashFlowData: CashFlowDataPoint[];
   financialReportData: FinancialReportDataPoint[];
+  topProducts: TopProduct[];
+  shuByYear: ShuYear[];
+  dueSoonInstallments: DueSoonInstallment[];
 };
 
 export default function StatistikDashboard({
@@ -80,6 +109,9 @@ export default function StatistikDashboard({
   chartData,
   cashFlowData,
   financialReportData,
+  topProducts,
+  shuByYear,
+  dueSoonInstallments,
 }: Props) {
   const router = useRouter();
 
@@ -714,16 +746,17 @@ export default function StatistikDashboard({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6">
-        {/* Top Products stock list */}
-        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md lg:col-span-2">
-          <div className="mb-6 flex items-center justify-between">
+      {/* Products + SHU Trend + Due Soon */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {/* Produk stok rendah (dari DB) */}
+        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md">
+          <div className="mb-4 flex items-center justify-between">
             <div>
               <h3 className="text-lg font-bold text-gray-950">
-                Daftar Produk Terlaris & Stok Terkini
+                Stok Produk (Prioritas Restock)
               </h3>
               <p className="mt-1 text-sm text-gray-500">
-                Klik baris produk untuk mengelola rincian stok.
+                Diurutkan berdasarkan stok terendah.
               </p>
             </div>
             <Link
@@ -734,152 +767,214 @@ export default function StatistikDashboard({
               <PiCaretRightBold />
             </Link>
           </div>
-          <div className="overflow-x-auto rounded-xl border border-gray-200">
-            <Table
-              variant="modern"
-              className="w-full text-left text-sm text-gray-500"
+          {topProducts.length === 0 ? (
+            <p className="py-8 text-center text-sm text-gray-400">
+              Belum ada produk aktif.
+            </p>
+          ) : (
+            <div className="overflow-x-auto rounded-xl border border-gray-200">
+              <Table variant="modern" className="w-full text-left text-sm">
+                <thead className="bg-gray-50 text-xs uppercase text-gray-700">
+                  <tr>
+                    <th className="px-4 py-3 font-semibold">Kode</th>
+                    <th className="px-4 py-3 font-semibold">Nama</th>
+                    <th className="px-4 py-3 text-right font-semibold">Stok</th>
+                    <th className="px-4 py-3 text-right font-semibold">Min</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {topProducts.map((p) => {
+                    const low = p.stock <= p.minStock;
+                    return (
+                      <tr
+                        key={p.id}
+                        onClick={() => router.push("/toko/produk")}
+                        className="group cursor-pointer bg-white transition-colors hover:bg-red-50/50"
+                      >
+                        <td className="px-4 py-3 font-semibold text-gray-950 group-hover:text-red-800">
+                          {p.code}
+                        </td>
+                        <td className="px-4 py-3 font-medium text-gray-800">
+                          {p.name}
+                          {p.category && p.category !== "-" && (
+                            <span className="ml-2 rounded bg-gray-100 px-1.5 py-0.5 text-xs text-gray-500">
+                              {p.category}
+                            </span>
+                          )}
+                        </td>
+                        <td
+                          className={`px-4 py-3 text-right font-bold ${low ? "text-red-700" : "text-gray-900"}`}
+                        >
+                          {low && (
+                            <PiWarningDuotone className="mr-1 inline text-red-500" />
+                          )}
+                          {p.stock}
+                        </td>
+                        <td className="px-4 py-3 text-right text-gray-500">
+                          {p.minStock}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </Table>
+            </div>
+          )}
+        </div>
+
+        {/* SHU Trend tahunan */}
+        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md">
+          <div className="mb-4">
+            <h3 className="text-lg font-bold text-gray-950">
+              Trend SHU Tahunan
+            </h3>
+            <p className="mt-1 text-sm text-gray-500">
+              Total Sisa Hasil Usaha yang didistribusikan per tahun.
+            </p>
+          </div>
+          {shuByYear.length === 0 ? (
+            <div className="flex h-64 items-center justify-center text-sm text-gray-400">
+              Belum ada data SHU terdistribusi.
+            </div>
+          ) : (
+            <div className="h-64 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={shuByYear}
+                  margin={{ top: 5, right: 10, left: 10, bottom: 5 }}
+                >
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    vertical={false}
+                    stroke="#f3f4f6"
+                  />
+                  <XAxis
+                    dataKey="year"
+                    stroke="#9ca3af"
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={false}
+                    dy={10}
+                  />
+                  <YAxis
+                    stroke="#9ca3af"
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={false}
+                    tickFormatter={(v) => `${(v / 1000000).toFixed(1)}jt`}
+                  />
+                  <Tooltip
+                    formatter={(value: any) => [formatIDR(Number(value)), "Total SHU"]}
+                    contentStyle={{
+                      borderRadius: "12px",
+                      border: "1px solid #e5e7eb",
+                      boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
+                      fontWeight: 500,
+                    }}
+                    cursor={{ fill: "#f3f4f6" }}
+                  />
+                  <Bar
+                    dataKey="totalShu"
+                    name="Total SHU"
+                    fill="#d4af37"
+                    radius={[6, 6, 0, 0]}
+                    maxBarSize={60}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+          <Link
+            href="/simpan-pinjam/shu"
+            className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-amber-700 hover:text-amber-900"
+          >
+            <PiMedalDuotone className="text-base" />
+            Kelola Distribusi SHU
+            <PiCaretRightBold className="text-xs" />
+          </Link>
+        </div>
+      </div>
+
+      {/* Cicilan Jatuh Tempo */}
+      {dueSoonInstallments.length > 0 && (
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-6 shadow-sm">
+          <div className="mb-4 flex items-center gap-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-700">
+              <PiWarningDuotone className="text-xl" />
+            </span>
+            <div>
+              <h3 className="text-base font-bold text-amber-900">
+                Cicilan Jatuh Tempo 7 Hari ke Depan
+              </h3>
+              <p className="text-sm text-amber-700">
+                {dueSoonInstallments.length} cicilan segera jatuh tempo — segera proses pembayaran.
+              </p>
+            </div>
+            <Link
+              href="/simpan-pinjam/pinjaman"
+              className="ml-auto inline-flex items-center gap-1 text-sm font-semibold text-amber-800 hover:text-amber-950"
             >
-              <thead className="bg-gray-50 text-xs uppercase text-gray-700">
+              Proses <PiCaretRightBold />
+            </Link>
+          </div>
+          <div className="overflow-x-auto rounded-xl border border-amber-200">
+            <Table variant="modern" className="w-full text-left text-sm">
+              <thead className="bg-amber-100 text-xs uppercase text-amber-800">
                 <tr>
-                  <th scope="col" className="px-5 py-4 font-semibold">
-                    Kode
-                  </th>
-                  <th scope="col" className="px-5 py-4 font-semibold">
-                    Nama Produk
-                  </th>
-                  <th scope="col" className="px-5 py-4 font-semibold">
-                    Kategori
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-5 py-4 text-right font-semibold"
-                  >
-                    Stok
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-5 py-4 text-right font-semibold"
-                  >
-                    Harga Jual
-                  </th>
+                  <th className="px-4 py-3 font-semibold">No.</th>
+                  <th className="px-4 py-3 font-semibold">Nama Anggota</th>
+                  <th className="px-4 py-3 font-semibold">Bulan ke-</th>
+                  <th className="px-4 py-3 text-right font-semibold">Jatuh Tempo</th>
+                  <th className="px-4 py-3 text-right font-semibold">Jml Pinjaman</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
-                <tr
-                  onClick={() => router.push("/toko/produk")}
-                  className="group cursor-pointer bg-white transition-colors hover:bg-red-50/50"
-                >
-                  <td className="px-5 py-3.5 font-semibold text-gray-950 transition-colors group-hover:text-red-800">
-                    IND-01
-                  </td>
-                  <td className="px-5 py-3.5 font-medium text-gray-800">
-                    Indomie Goreng (Dus)
-                  </td>
-                  <td className="px-5 py-3.5">
-                    <span className="rounded-md bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">
-                      Sembako
-                    </span>
-                  </td>
-                  <td className="px-5 py-3.5 text-right font-bold text-gray-900">
-                    45
-                  </td>
-                  <td className="px-5 py-3.5 text-right font-medium text-gray-900">
-                    {formatIDR(115000)}
-                  </td>
-                </tr>
-                <tr
-                  onClick={() => router.push("/toko/produk")}
-                  className="group cursor-pointer bg-white transition-colors hover:bg-red-50/50"
-                >
-                  <td className="px-5 py-3.5 font-semibold text-gray-950 transition-colors group-hover:text-red-800">
-                    BRS-01
-                  </td>
-                  <td className="px-5 py-3.5 font-medium text-gray-800">
-                    Beras Ramos Premium 5kg
-                  </td>
-                  <td className="px-5 py-3.5">
-                    <span className="rounded-md bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">
-                      Sembako
-                    </span>
-                  </td>
-                  <td className="px-5 py-3.5 text-right font-bold text-gray-900">
-                    120
-                  </td>
-                  <td className="px-5 py-3.5 text-right font-medium text-gray-900">
-                    {formatIDR(72000)}
-                  </td>
-                </tr>
-                <tr
-                  onClick={() => router.push("/toko/produk")}
-                  className="group cursor-pointer bg-white transition-colors hover:bg-red-50/50"
-                >
-                  <td className="px-5 py-3.5 font-semibold text-gray-950 transition-colors group-hover:text-red-800">
-                    GLA-01
-                  </td>
-                  <td className="px-5 py-3.5 font-medium text-gray-800">
-                    Gula Pasir Gulaku 1kg
-                  </td>
-                  <td className="px-5 py-3.5">
-                    <span className="rounded-md bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">
-                      Sembako
-                    </span>
-                  </td>
-                  <td className="px-5 py-3.5 text-right font-bold text-gray-900">
-                    150
-                  </td>
-                  <td className="px-5 py-3.5 text-right font-medium text-gray-900">
-                    {formatIDR(17500)}
-                  </td>
-                </tr>
-                <tr
-                  onClick={() => router.push("/toko/produk")}
-                  className="group cursor-pointer bg-white transition-colors hover:bg-red-50/50"
-                >
-                  <td className="px-5 py-3.5 font-semibold text-gray-950 transition-colors group-hover:text-red-800">
-                    MYK-01
-                  </td>
-                  <td className="px-5 py-3.5 font-medium text-gray-800">
-                    Minyak Goreng Bimoli 2L
-                  </td>
-                  <td className="px-5 py-3.5">
-                    <span className="rounded-md bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">
-                      Sembako
-                    </span>
-                  </td>
-                  <td className="px-5 py-3.5 text-right font-bold text-gray-900">
-                    85
-                  </td>
-                  <td className="px-5 py-3.5 text-right font-medium text-gray-900">
-                    {formatIDR(36000)}
-                  </td>
-                </tr>
-                <tr
-                  onClick={() => router.push("/toko/produk")}
-                  className="group cursor-pointer bg-white transition-colors hover:bg-red-50/50"
-                >
-                  <td className="px-5 py-3.5 font-semibold text-gray-950 transition-colors group-hover:text-red-800">
-                    TEH-01
-                  </td>
-                  <td className="px-5 py-3.5 font-medium text-gray-800">
-                    Teh Celup Sariwangi 25s
-                  </td>
-                  <td className="px-5 py-3.5">
-                    <span className="rounded-md bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">
-                      Minuman
-                    </span>
-                  </td>
-                  <td className="px-5 py-3.5 text-right font-bold text-gray-900">
-                    200
-                  </td>
-                  <td className="px-5 py-3.5 text-right font-medium text-gray-900">
-                    {formatIDR(7500)}
-                  </td>
-                </tr>
+              <tbody className="divide-y divide-amber-100">
+                {dueSoonInstallments.map((inst) => {
+                  const due = inst.dueDate ? new Date(inst.dueDate) : null;
+                  const today = new Date();
+                  const diffDays = due
+                    ? Math.ceil((due.getTime() - today.getTime()) / 86400000)
+                    : null;
+                  return (
+                    <tr key={inst.id} className="bg-white hover:bg-amber-50/50">
+                      <td className="px-4 py-3 font-semibold text-gray-950">
+                        {inst.memberNo}
+                      </td>
+                      <td className="px-4 py-3 font-medium text-gray-800">
+                        {inst.memberName}
+                      </td>
+                      <td className="px-4 py-3 text-gray-700">
+                        {inst.monthNumber}
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <span
+                          className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
+                            diffDays !== null && diffDays <= 2
+                              ? "bg-red-100 text-red-800"
+                              : "bg-amber-100 text-amber-800"
+                          }`}
+                        >
+                          {due
+                            ? due.toLocaleDateString("id-ID", {
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric",
+                              })
+                            : "-"}
+                          {diffDays !== null && ` (${diffDays}h)`}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-right font-medium text-gray-900">
+                        {formatIDR(inst.loanAmount)}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </Table>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

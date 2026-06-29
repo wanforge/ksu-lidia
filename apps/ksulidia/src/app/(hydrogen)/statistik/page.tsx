@@ -181,6 +181,53 @@ export default async function StatistikPage() {
     amount: Number(fr.amount) || 0,
   }));
 
+  // 7. Produk (low stock + inventory) — already fetched above
+  const topProducts = products
+    .sort((a, b) => a.stock - b.stock) // sort ascending = lowest stock first (restock priority)
+    .slice(0, 10)
+    .map((p) => ({
+      id: p.id,
+      code: p.code,
+      name: p.name,
+      category: p.category ?? "-",
+      stock: p.stock,
+      minStock: p.minStock,
+      sellingPrice: Number(p.sellingPrice),
+    }));
+
+  // 8. SHU per tahun untuk trend chart
+  const shuRaw = await prisma.shuDistribution.groupBy({
+    by: ["year"],
+    _sum: { totalShu: true },
+    orderBy: { year: "asc" },
+  });
+  const shuByYear = shuRaw.map((r) => ({
+    year: r.year,
+    totalShu: Number(r._sum.totalShu) || 0,
+  }));
+
+  // 9. Cicilan jatuh tempo 7 hari ke depan
+  const today = new Date();
+  const in7Days = new Date(today);
+  in7Days.setDate(in7Days.getDate() + 7);
+  const dueSoon = await prisma.loanInstallment.findMany({
+    where: {
+      status: "UNPAID",
+      dueDate: { gte: today, lte: in7Days },
+    },
+    include: { loan: { include: { member: { select: { no: true, name: true } } } } },
+    orderBy: { dueDate: "asc" },
+    take: 10,
+  });
+  const dueSoonInstallments = dueSoon.map((i) => ({
+    id: i.id,
+    memberNo: i.loan.member.no,
+    memberName: i.loan.member.name,
+    dueDate: i.dueDate ? i.dueDate.toISOString() : null,
+    monthNumber: i.monthNumber,
+    loanAmount: Number(i.loan.amount),
+  }));
+
   return (
     <StatistikDashboard
       metrics={{
@@ -202,6 +249,9 @@ export default async function StatistikPage() {
       chartData={chartData}
       cashFlowData={cashFlowData}
       financialReportData={financialReportData}
+      topProducts={topProducts}
+      shuByYear={shuByYear}
+      dueSoonInstallments={dueSoonInstallments}
     />
   );
 }
