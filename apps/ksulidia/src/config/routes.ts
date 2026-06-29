@@ -15,6 +15,7 @@ export const routes = {
     pinjaman: "/simpan-pinjam/pinjaman",
     master: "/simpan-pinjam/master",
     kas: "/simpan-pinjam/buku-kas",
+    shu: "/simpan-pinjam/shu",
   },
   statistik: "/statistik",
   laporan: "/laporan",
