@@ -319,7 +319,41 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
   }, [members, selectedMemberId]);
 
   return (
-    <div className="rounded-md border border-gray-200 bg-white shadow-sm">
+    <div className="flex w-full flex-col gap-4">
+      {tab === "list" && (
+        <Can permission={PERMISSIONS.SIMPAN_PINJAM_MANAGE}>
+          <div className="flex flex-wrap justify-end gap-2">
+            {selectedIds.size > 0 && (
+              <Button
+                variant="danger-soft"
+                disabled={isBulkDeleting}
+                onClick={async () => {
+                  if (confirm(`Yakin ingin menghapus ${selectedIds.size} anggota terpilih?`)) {
+                    setIsBulkDeleting(true);
+                    const res = await bulkDeleteMembersAction(Array.from(selectedIds));
+                    if (res.success) setSelectedIds(new Set());
+                    else alert(res.message);
+                    setIsBulkDeleting(false);
+                  }
+                }}
+              >
+                <PiTrashDuotone className="mr-1.5 h-4 w-4" />
+                Hapus {selectedIds.size} Terpilih
+              </Button>
+            )}
+            <Button size="md" variant="neutral" onClick={() => setIsImportModalOpen(true)}>
+              <PiUploadSimpleDuotone className="h-4 w-4" />
+              Impor Data
+            </Button>
+            <Button size="md" onClick={() => setIsCreateModalOpen(true)}>
+              <PiPlusDuotone className="h-4 w-4" />
+              Tambah Anggota
+            </Button>
+          </div>
+        </Can>
+      )}
+
+      <div className="rounded-md border border-gray-200 bg-white shadow-sm">
       {/* Tab nav */}
       <Tabs
         tabs={[
@@ -599,42 +633,12 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
       ) : (
         <div>
           {/* Toolbar */}
-          <div className="flex flex-wrap items-start justify-between gap-3 border-b border-gray-200 p-4">
+          <div className="border-b border-gray-200 p-4">
             <DataTableFilters
               filterConfig={memberFilterConfig}
               onFilterChange={table.setAdvancedFilters}
               currentFilters={table.advancedFilters}
             />
-            <Can permission={PERMISSIONS.SIMPAN_PINJAM_MANAGE}>
-              <div className="flex flex-wrap gap-2">
-                {selectedIds.size > 0 && (
-                  <Button
-                    variant="danger-soft"
-                    disabled={isBulkDeleting}
-                    onClick={async () => {
-                      if (confirm(`Yakin ingin menghapus ${selectedIds.size} anggota terpilih?`)) {
-                        setIsBulkDeleting(true);
-                        const res = await bulkDeleteMembersAction(Array.from(selectedIds));
-                        if (res.success) setSelectedIds(new Set());
-                        else alert(res.message);
-                        setIsBulkDeleting(false);
-                      }
-                    }}
-                  >
-                    <PiTrashDuotone className="mr-1.5 h-4 w-4" />
-                    Hapus {selectedIds.size} Terpilih
-                  </Button>
-                )}
-                <Button size="md" variant="neutral" onClick={() => setIsImportModalOpen(true)}>
-                  <PiUploadSimpleDuotone className="h-4 w-4" />
-                  Impor Data
-                </Button>
-                <Button size="md" onClick={() => setIsCreateModalOpen(true)}>
-                  <PiPlusDuotone className="h-4 w-4" />
-                  Tambah Anggota
-                </Button>
-              </div>
-            </Can>
           </div>
 
           {/* Member List Table */}
@@ -857,6 +861,7 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
           )}
         </div>
       )}
+      </div>
 
       {/* ── Modal: Tambah Anggota ── */}
       {isCreateModalOpen && (

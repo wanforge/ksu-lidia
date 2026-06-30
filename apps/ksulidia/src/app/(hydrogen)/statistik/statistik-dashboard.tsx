@@ -633,47 +633,64 @@ export default function StatistikDashboard({
               Distribusi saldo berdasarkan kategori laporan keuangan.
             </p>
           </div>
-          <div className="flex min-h-[400px] w-full items-center justify-center pt-4">
+          <div className="flex w-full flex-col items-start gap-6 pt-4 sm:flex-row sm:items-center">
             {reportPieData.every((d) => d.value === 0) ? (
               <div className="text-gray-400">
                 Belum ada data laporan keuangan
               </div>
             ) : (
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={reportPieData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={70}
-                    outerRadius={95}
-                    paddingAngle={5}
-                    dataKey="value"
-                    stroke="none"
-                  >
-                    {reportPieData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip
-                    formatter={(value: any) => [formatIDR(Number(value)), ""]}
-                    contentStyle={{
-                      borderRadius: "12px",
-                      border: "none",
-                      boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
-                      fontWeight: 500,
-                    }}
-                    itemStyle={{ color: "#111827" }}
-                  />
-                  <Legend
-                    iconType="circle"
-                    layout="horizontal"
-                    verticalAlign="bottom"
-                    align="center"
-                    wrapperStyle={{ fontSize: 12, paddingTop: 20 }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
+              <>
+                <div className="h-56 w-56 shrink-0">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={reportPieData}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={52}
+                        outerRadius={100}
+                        paddingAngle={3}
+                        dataKey="value"
+                        stroke="none"
+                        label={({ percent }) =>
+                          percent > 0.05 ? `${(percent * 100).toFixed(0)}%` : ""
+                        }
+                        labelLine={{ stroke: "#9ca3af", strokeWidth: 1 }}
+                      >
+                        {reportPieData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip
+                        formatter={(value: any) => [formatIDR(Number(value)), ""]}
+                        contentStyle={{
+                          borderRadius: "12px",
+                          border: "none",
+                          boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
+                          fontWeight: 500,
+                        }}
+                        itemStyle={{ color: "#111827" }}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="flex flex-1 flex-col gap-2.5">
+                  {reportPieData.map((entry) => (
+                    <div key={entry.name} className="flex items-center justify-between gap-3">
+                      <div className="flex min-w-0 items-center gap-2">
+                        <div
+                          className="h-2.5 w-2.5 shrink-0 rounded-full"
+                          style={{ backgroundColor: entry.color }}
+                        />
+                        <span className="truncate text-sm text-gray-600">{entry.name}</span>
+                      </div>
+                      <span className="shrink-0 text-sm font-semibold tabular-nums text-gray-900">
+                        {formatIDR(entry.value)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </>
             )}
           </div>
         </div>

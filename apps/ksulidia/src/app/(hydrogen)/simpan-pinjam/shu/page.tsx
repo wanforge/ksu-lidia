@@ -75,7 +75,7 @@ export default async function ShuPage() {
   );
 
   return (
-    <div className="mx-auto w-full max-w-6xl space-y-6 p-4">
+    <div className="flex w-full flex-col gap-6">
       <div>
         <h1 className="text-xl font-bold text-gray-900">
           Distribusi SHU (Sisa Hasil Usaha)

@@ -381,29 +381,31 @@ export default function TransaksiWorkspace({ transactions, products }: Transaksi
   ];
 
   return (
-    <div className="rounded-md border border-gray-200 bg-white shadow-sm">
+    <div className="flex w-full flex-col gap-4">
+      <Can permission={PERMISSIONS.TOKO_MANAGE}>
+        <div className="flex justify-end gap-2">
+          <Button size="md" onClick={() => setTxModalType("sale")}>
+            <PiShoppingCartDuotone className="h-4 w-4" />
+            Catat Penjualan
+          </Button>
+          <Button size="md" variant="neutral" onClick={() => setTxModalType("purchase")}>
+            <PiPackageDuotone className="h-4 w-4" />
+            Catat Pembelian
+          </Button>
+        </div>
+      </Can>
+
+      <div className="rounded-md border border-gray-200 bg-white shadow-sm">
       {/* Tab nav */}
       <Tabs tabs={navTabs} activeTab="list" onChange={() => {}} />
 
       {/* Toolbar */}
-      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-gray-200 p-4">
+      <div className="border-b border-gray-200 p-4">
         <DataTableFilters
           filterConfig={filterConfig}
           onFilterChange={table.setAdvancedFilters}
           currentFilters={table.advancedFilters}
         />
-        <Can permission={PERMISSIONS.TOKO_MANAGE}>
-          <div className="flex gap-2">
-            <Button size="md" onClick={() => setTxModalType("sale")}>
-              <PiShoppingCartDuotone className="h-4 w-4" />
-              Catat Penjualan
-            </Button>
-            <Button size="md" variant="neutral" onClick={() => setTxModalType("purchase")}>
-              <PiPackageDuotone className="h-4 w-4" />
-              Catat Pembelian
-            </Button>
-          </div>
-        </Can>
       </div>
 
       {/* Transaction list */}
@@ -523,6 +525,7 @@ export default function TransaksiWorkspace({ transactions, products }: Transaksi
           />
         </>
       )}
+      </div>
 
       {/* Transaction form modals */}
       {txModalType && (

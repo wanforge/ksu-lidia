@@ -7,6 +7,7 @@ import {
   PiHandCoinsDuotone,
   PiXBold,
   PiMagnifyingGlassBold,
+  PiBookOpenDuotone,
 } from "react-icons/pi";
 import EmptyState from "@/app/(hydrogen)/_components/empty-state";
 import { formatNumber } from "@/lib/format";
@@ -25,6 +26,7 @@ import {
   SortableHeader,
 } from "@/app/(hydrogen)/_components/table-controls";
 import { DataTableFilters } from "@/components/ui/table/DataTableFilters";
+import { TableActionsMenu } from "@/components/ui/table/TableActionsMenu";
 import { Tabs } from "@/components/ui/Tabs";
 import { Can } from "@/components/rbac/can";
 import { PERMISSIONS } from "@/lib/rbac/permissions";
@@ -311,7 +313,19 @@ export default function PinjamanWorkspace({
   ];
 
   return (
-    <div className="rounded-md border border-gray-200 bg-white shadow-sm">
+    <div className="flex w-full flex-col gap-4">
+      {tab === "list" && (
+        <Can permission={PERMISSIONS.SIMPAN_PINJAM_MANAGE}>
+          <div className="flex justify-end">
+            <Button size="md" onClick={() => setIsCreateModalOpen(true)}>
+              <PiPlusDuotone className="h-4 w-4" />
+              Cairkan Pinjaman
+            </Button>
+          </div>
+        </Can>
+      )}
+
+      <div className="rounded-md border border-gray-200 bg-white shadow-sm">
       {/* Tab navigation */}
       <Tabs tabs={navTabs} activeTab={tab} onChange={(id) => setTab(id as any)} />
 
@@ -325,15 +339,6 @@ export default function PinjamanWorkspace({
               onFilterChange={table.setAdvancedFilters}
               currentFilters={table.advancedFilters}
             />
-            <Can permission={PERMISSIONS.SIMPAN_PINJAM_MANAGE}>
-              <Button
-                size="md"
-                onClick={() => setIsCreateModalOpen(true)}
-              >
-                <PiPlusDuotone className="h-4 w-4" />
-                Cairkan Pinjaman
-              </Button>
-            </Can>
           </div>
 
           {table.paginatedItems.length === 0 ? (
@@ -397,12 +402,15 @@ export default function PinjamanWorkspace({
                           </div>
                         </Table.Cell>
                         <Table.Cell className="px-4 py-3">
-                          <Button
-                            size="sm"
-                            onClick={() => { setSelectedLoanId(l.id); setTab("detail"); }}
-                          >
-                            Buka Kartu
-                          </Button>
+                          <TableActionsMenu
+                            actions={[
+                              {
+                                label: "Buka Kartu Angsuran",
+                                icon: PiBookOpenDuotone,
+                                onClick: () => { setSelectedLoanId(l.id); setTab("detail"); },
+                              },
+                            ]}
+                          />
                         </Table.Cell>
                       </Table.Row>
                     ))}
@@ -779,6 +787,7 @@ export default function PinjamanWorkspace({
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }
