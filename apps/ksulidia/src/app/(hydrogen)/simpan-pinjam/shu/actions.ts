@@ -7,6 +7,7 @@ import { ensureAuditContext } from "@/lib/audit-context";
 import { routes } from "@/config/routes";
 import { AuditAction, AttachmentSource } from "@prisma/client";
 import { recordAuditLog } from "@/lib/audit";
+import { hasPermission, PERMISSIONS } from "@/lib/rbac/permissions";
 import { z } from "zod";
 
 export type ShuActionState = {
@@ -34,6 +35,9 @@ export async function calculateAndSaveShuAction(
 
   if (!session?.user) {
     return { success: false, message: "Sesi Anda telah kedaluwarsa." };
+  }
+  if (!hasPermission(session.user.role, PERMISSIONS.SIMPAN_PINJAM_MANAGE)) {
+    return { success: false, message: "Anda tidak memiliki akses untuk aksi ini." };
   }
 
   const parsed = shuInputSchema.safeParse({

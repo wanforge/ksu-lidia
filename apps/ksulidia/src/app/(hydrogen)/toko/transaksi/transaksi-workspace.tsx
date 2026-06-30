@@ -19,6 +19,8 @@ import { ProductTxType } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { useCustomTable, ColumnFilterConfig } from "@/lib/use-custom-table";
 import { Table } from "@/components/ui/table";
+import { Can } from "@/components/rbac/can";
+import { PERMISSIONS } from "@/lib/rbac/permissions";
 import {
   TableControls,
   SortableHeader,
@@ -390,16 +392,18 @@ export default function TransaksiWorkspace({ transactions, products }: Transaksi
           onFilterChange={table.setAdvancedFilters}
           currentFilters={table.advancedFilters}
         />
-        <div className="flex gap-2">
-          <Button size="md" onClick={() => setTxModalType("sale")}>
-            <PiShoppingCartDuotone className="h-4 w-4" />
-            Catat Penjualan
-          </Button>
-          <Button size="md" variant="neutral" onClick={() => setTxModalType("purchase")}>
-            <PiPackageDuotone className="h-4 w-4" />
-            Catat Pembelian
-          </Button>
-        </div>
+        <Can permission={PERMISSIONS.TOKO_MANAGE}>
+          <div className="flex gap-2">
+            <Button size="md" onClick={() => setTxModalType("sale")}>
+              <PiShoppingCartDuotone className="h-4 w-4" />
+              Catat Penjualan
+            </Button>
+            <Button size="md" variant="neutral" onClick={() => setTxModalType("purchase")}>
+              <PiPackageDuotone className="h-4 w-4" />
+              Catat Pembelian
+            </Button>
+          </div>
+        </Can>
       </div>
 
       {/* Transaction list */}

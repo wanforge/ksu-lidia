@@ -26,6 +26,8 @@ import {
 } from "@/app/(hydrogen)/_components/table-controls";
 import { DataTableFilters } from "@/components/ui/table/DataTableFilters";
 import { Tabs } from "@/components/ui/Tabs";
+import { Can } from "@/components/rbac/can";
+import { PERMISSIONS } from "@/lib/rbac/permissions";
 
 type Installment = {
   id: string;
@@ -323,13 +325,15 @@ export default function PinjamanWorkspace({
               onFilterChange={table.setAdvancedFilters}
               currentFilters={table.advancedFilters}
             />
-            <Button
-              size="md"
-              onClick={() => setIsCreateModalOpen(true)}
-            >
-              <PiPlusDuotone className="h-4 w-4" />
-              Cairkan Pinjaman
-            </Button>
+            <Can permission={PERMISSIONS.SIMPAN_PINJAM_MANAGE}>
+              <Button
+                size="md"
+                onClick={() => setIsCreateModalOpen(true)}
+              >
+                <PiPlusDuotone className="h-4 w-4" />
+                Cairkan Pinjaman
+              </Button>
+            </Can>
           </div>
 
           {table.paginatedItems.length === 0 ? (
@@ -519,9 +523,11 @@ export default function PinjamanWorkspace({
                         <Table.Cell className="px-4 py-3 text-sm text-gray-900">{inst.paidAtFormatted}</Table.Cell>
                         <Table.Cell className="px-4 py-3">
                           {!isPaid && selectedLoan.status === LOAN_STATUS.ACTIVE ? (
-                            <Button size="sm" onClick={() => openPayModal(selectedLoan, inst as any)}>
-                              Bayar
-                            </Button>
+                            <Can permission={PERMISSIONS.SIMPAN_PINJAM_MANAGE}>
+                              <Button size="sm" onClick={() => openPayModal(selectedLoan, inst as any)}>
+                                Bayar
+                              </Button>
+                            </Can>
                           ) : (
                             <span className="text-xs text-gray-400">-</span>
                           )}

@@ -27,6 +27,12 @@ const ROUTE_RULES: RouteRule[] = [
     permission: PERMISSIONS.DATA_CHANGE_LOG_VIEW,
   },
   { match: "prefix", path: "/sistem", permission: PERMISSIONS.SYSTEM_VIEW },
+  {
+    match: "prefix",
+    path: "/simpan-pinjam",
+    permission: PERMISSIONS.SIMPAN_PINJAM_VIEW,
+  },
+  { match: "prefix", path: "/toko", permission: PERMISSIONS.TOKO_VIEW },
 
   { match: "prefix", path: "/me", permission: PERMISSIONS.PORTAL_VIEW },
 ];

@@ -18,6 +18,7 @@ import {
   CashTxType,
 } from "@prisma/client";
 import { recordAuditLog } from "@/lib/audit";
+import { hasPermission, PERMISSIONS } from "@/lib/rbac/permissions";
 
 export type LoanActionState = {
   success: boolean;
@@ -41,6 +42,9 @@ export async function createLoanAction(
       success: false,
       message: "Sesi Anda telah kedaluwarsa. Silakan sign in kembali.",
     };
+  }
+  if (!hasPermission(session.user.role, PERMISSIONS.SIMPAN_PINJAM_MANAGE)) {
+    return { success: false, message: "Anda tidak memiliki akses untuk aksi ini." };
   }
 
   const memberId = formData.get("memberId");
@@ -182,6 +186,9 @@ export async function payInstallmentAction(
 
   if (!session?.user) {
     return { success: false, message: "Sesi Anda telah kedaluwarsa." };
+  }
+  if (!hasPermission(session.user.role, PERMISSIONS.SIMPAN_PINJAM_MANAGE)) {
+    return { success: false, message: "Anda tidak memiliki akses untuk aksi ini." };
   }
 
   const installmentId = formData.get("installmentId");

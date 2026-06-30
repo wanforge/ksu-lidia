@@ -12,6 +12,7 @@ import {
 } from "@/validators/ksulidia.schema";
 import { ProductTxType, AuditAction, AttachmentSource } from "@prisma/client";
 import { recordAuditLog } from "@/lib/audit";
+import { hasPermission, PERMISSIONS } from "@/lib/rbac/permissions";
 
 export type ProductActionState = {
   success: boolean;
@@ -35,6 +36,10 @@ export async function createProductAction(
       success: false,
       message: "Sesi Anda telah kedaluwarsa. Silakan sign in kembali.",
     };
+  }
+
+  if (!hasPermission(session.user.role, PERMISSIONS.TOKO_MANAGE)) {
+    return { success: false, message: "Anda tidak memiliki akses untuk aksi ini." };
   }
 
   const code = formData.get("code");
@@ -149,6 +154,10 @@ export async function updateProductAction(
     return { success: false, message: "Sesi Anda telah kedaluwarsa." };
   }
 
+  if (!hasPermission(session.user.role, PERMISSIONS.TOKO_MANAGE)) {
+    return { success: false, message: "Anda tidak memiliki akses untuk aksi ini." };
+  }
+
   const productId = formData.get("productId");
   const code = formData.get("code");
   const name = formData.get("name");
@@ -234,6 +243,10 @@ export async function adjustProductStockAction(
 
   if (!session?.user) {
     return { success: false, message: "Sesi Anda telah kedaluwarsa." };
+  }
+
+  if (!hasPermission(session.user.role, PERMISSIONS.TOKO_MANAGE)) {
+    return { success: false, message: "Anda tidak memiliki akses untuk aksi ini." };
   }
 
   const productId = formData.get("productId");
@@ -336,6 +349,9 @@ export async function bulkDeleteProductsAction(
   if (!session?.user) {
     return { success: false, message: "Sesi Anda telah kedaluwarsa." };
   }
+  if (!hasPermission(session.user.role, PERMISSIONS.TOKO_MANAGE)) {
+    return { success: false, message: "Anda tidak memiliki akses untuk aksi ini." };
+  }
 
   try {
     // Check if any product is used in transactions
@@ -353,10 +369,22 @@ export async function bulkDeleteProductsAction(
       };
     }
 
-    await prisma.product.deleteMany({
-      where: {
-        id: { in: productIds },
-      },
+    await prisma.$transaction(async (tx) => {
+      await tx.product.deleteMany({
+        where: {
+          id: { in: productIds },
+        },
+      });
+
+      await recordAuditLog(tx, {
+        actorId: session.user.id,
+        actorRole: session.user.role,
+        action: AuditAction.DELETE,
+        entityType: "Product",
+        entityId: productIds.join(","),
+        summary: `Menghapus ${productIds.length} produk sekaligus`,
+        source: AttachmentSource.BACK_OFFICE,
+      });
     });
 
     revalidatePath("/toko/produk");

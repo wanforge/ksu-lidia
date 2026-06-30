@@ -45,6 +45,8 @@ import { SAVINGS_TYPES } from "@/lib/constants";
 import { PrintIdCardModal } from "./print-id-card-modal";
 import { PrintKwitansiModal } from "./print-kwitansi-modal";
 import { ImportAnggotaForm } from "./import-anggota-form";
+import { Can, usePermissions } from "@/components/rbac/can";
+import { PERMISSIONS } from "@/lib/rbac/permissions";
 
 type SavingsAccount = {
   id: string;
@@ -91,6 +93,8 @@ function getTotalSavings(member: MemberWithAccounts): number {
 }
 
 export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
+  const { can } = usePermissions();
+  const canManage = can(PERMISSIONS.SIMPAN_PINJAM_MANAGE);
   const [tab, setTab] = useState<"list" | "detail">("list");
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
   const [memberDetail, setMemberDetail] = useState<any>(null);
@@ -396,37 +400,39 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
               </div>
 
               {/* Quick Actions */}
-              <div className="flex gap-2">
-                <Button
-                  size="sm"
-                  disabled={memberDetail.isDeceased}
-                  onClick={() =>
-                    setTxModal({
-                      isOpen: true,
-                      member: memberDetail,
-                      type: SavingsTxType.DEPOSIT,
-                    })
-                  }
-                >
-                  <PiArrowDownRightBold className="mr-1 h-3.5 w-3.5" />
-                  Setor Tunai
-                </Button>
-                <Button
-                  size="sm"
-                  variant="primary-soft"
-                  disabled={memberDetail.isDeceased}
-                  onClick={() =>
-                    setTxModal({
-                      isOpen: true,
-                      member: memberDetail,
-                      type: SavingsTxType.WITHDRAWAL,
-                    })
-                  }
-                >
-                  <PiArrowUpLeftBold className="mr-1 h-3.5 w-3.5" />
-                  Penarikan Saldo
-                </Button>
-              </div>
+              <Can permission={PERMISSIONS.SIMPAN_PINJAM_MANAGE}>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    disabled={memberDetail.isDeceased}
+                    onClick={() =>
+                      setTxModal({
+                        isOpen: true,
+                        member: memberDetail,
+                        type: SavingsTxType.DEPOSIT,
+                      })
+                    }
+                  >
+                    <PiArrowDownRightBold className="mr-1 h-3.5 w-3.5" />
+                    Setor Tunai
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="primary-soft"
+                    disabled={memberDetail.isDeceased}
+                    onClick={() =>
+                      setTxModal({
+                        isOpen: true,
+                        member: memberDetail,
+                        type: SavingsTxType.WITHDRAWAL,
+                      })
+                    }
+                  >
+                    <PiArrowUpLeftBold className="mr-1 h-3.5 w-3.5" />
+                    Penarikan Saldo
+                  </Button>
+                </div>
+              </Can>
 
               {/* Savings Mutasi Table */}
               <div className="space-y-3">
@@ -599,34 +605,36 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
               onFilterChange={table.setAdvancedFilters}
               currentFilters={table.advancedFilters}
             />
-            <div className="flex flex-wrap gap-2">
-              {selectedIds.size > 0 && (
-                <Button
-                  variant="danger-soft"
-                  disabled={isBulkDeleting}
-                  onClick={async () => {
-                    if (confirm(`Yakin ingin menghapus ${selectedIds.size} anggota terpilih?`)) {
-                      setIsBulkDeleting(true);
-                      const res = await bulkDeleteMembersAction(Array.from(selectedIds));
-                      if (res.success) setSelectedIds(new Set());
-                      else alert(res.message);
-                      setIsBulkDeleting(false);
-                    }
-                  }}
-                >
-                  <PiTrashDuotone className="mr-1.5 h-4 w-4" />
-                  Hapus {selectedIds.size} Terpilih
+            <Can permission={PERMISSIONS.SIMPAN_PINJAM_MANAGE}>
+              <div className="flex flex-wrap gap-2">
+                {selectedIds.size > 0 && (
+                  <Button
+                    variant="danger-soft"
+                    disabled={isBulkDeleting}
+                    onClick={async () => {
+                      if (confirm(`Yakin ingin menghapus ${selectedIds.size} anggota terpilih?`)) {
+                        setIsBulkDeleting(true);
+                        const res = await bulkDeleteMembersAction(Array.from(selectedIds));
+                        if (res.success) setSelectedIds(new Set());
+                        else alert(res.message);
+                        setIsBulkDeleting(false);
+                      }
+                    }}
+                  >
+                    <PiTrashDuotone className="mr-1.5 h-4 w-4" />
+                    Hapus {selectedIds.size} Terpilih
+                  </Button>
+                )}
+                <Button size="md" variant="neutral" onClick={() => setIsImportModalOpen(true)}>
+                  <PiUploadSimpleDuotone className="h-4 w-4" />
+                  Impor Data
                 </Button>
-              )}
-              <Button size="md" variant="neutral" onClick={() => setIsImportModalOpen(true)}>
-                <PiUploadSimpleDuotone className="h-4 w-4" />
-                Impor Data
-              </Button>
-              <Button size="md" onClick={() => setIsCreateModalOpen(true)}>
-                <PiPlusDuotone className="h-4 w-4" />
-                Tambah Anggota
-              </Button>
-            </div>
+                <Button size="md" onClick={() => setIsCreateModalOpen(true)}>
+                  <PiPlusDuotone className="h-4 w-4" />
+                  Tambah Anggota
+                </Button>
+              </div>
+            </Can>
           </div>
 
           {/* Member List Table */}
@@ -788,10 +796,12 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                           <Table.Cell className="px-4 py-3">
                             <TableActionsMenu actions={[
                               { label: "Buku Tabungan", icon: PiBookOpenDuotone, onClick: () => { setSelectedMemberId(m.id); setTab("detail"); } },
-                              { label: "Edit Data", icon: PiPencilDuotone, onClick: () => setEditModal({ isOpen: true, member: m }) },
                               { label: "Cetak ID Card", icon: PiIdentificationCardDuotone, onClick: () => setPrintModal({ isOpen: true, member: m }) },
-                              { label: "Setor Tunai", icon: PiArrowDownRightDuotone, onClick: () => setTxModal({ isOpen: true, member: m, type: SavingsTxType.DEPOSIT }), disabled: m.isDeceased },
-                              { label: "Penarikan Saldo", icon: PiArrowUpLeftDuotone, onClick: () => setTxModal({ isOpen: true, member: m, type: SavingsTxType.WITHDRAWAL }), disabled: m.isDeceased },
+                              ...(canManage ? [
+                                { label: "Edit Data", icon: PiPencilDuotone, onClick: () => setEditModal({ isOpen: true, member: m }) },
+                                { label: "Setor Tunai", icon: PiArrowDownRightDuotone, onClick: () => setTxModal({ isOpen: true, member: m, type: SavingsTxType.DEPOSIT }), disabled: m.isDeceased },
+                                { label: "Penarikan Saldo", icon: PiArrowUpLeftDuotone, onClick: () => setTxModal({ isOpen: true, member: m, type: SavingsTxType.WITHDRAWAL }), disabled: m.isDeceased },
+                              ] : []),
                             ]} />
                           </Table.Cell>
                         </Table.Row>

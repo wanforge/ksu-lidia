@@ -29,6 +29,8 @@ import {
 import { DataTableFilters } from "@/components/ui/table/DataTableFilters";
 import { Tabs } from "@/components/ui/Tabs";
 import { TableActionsMenu, TableAction } from "@/components/ui/table/TableActionsMenu";
+import { Can } from "@/components/rbac/can";
+import { PERMISSIONS } from "@/lib/rbac/permissions";
 
 type Product = {
   id: string;
@@ -129,10 +131,12 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
           onFilterChange={table.setAdvancedFilters}
           currentFilters={table.advancedFilters}
         />
-        <Button size="md" onClick={() => setIsCreateModalOpen(true)}>
-          <PiPlusDuotone className="h-4 w-4" />
-          Tambah Produk
-        </Button>
+        <Can permission={PERMISSIONS.TOKO_MANAGE}>
+          <Button size="md" onClick={() => setIsCreateModalOpen(true)}>
+            <PiPlusDuotone className="h-4 w-4" />
+            Tambah Produk
+          </Button>
+        </Can>
       </div>
 
       {/* Table */}
@@ -225,7 +229,9 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
                         ({p.markupPct.toFixed(0)}%)
                       </Table.Cell>
                       <Table.Cell className="px-4 py-3 text-center">
-                        <TableActionsMenu actions={actions} />
+                        <Can permission={PERMISSIONS.TOKO_MANAGE}>
+                          <TableActionsMenu actions={actions} />
+                        </Can>
                       </Table.Cell>
                     </Table.Row>
                   );
@@ -236,23 +242,25 @@ export default function ProdukWorkspace({ products }: ProdukWorkspaceProps) {
 
           <div className="flex flex-col gap-4 border-t border-gray-200 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
             {selectedIds.size > 0 && (
-              <Button
-                variant="ghost"
-                className="border border-red-200 bg-red-50 text-red-700 hover:bg-red-100 hover:text-red-800"
-                disabled={isBulkDeleting}
-                onClick={async () => {
-                  if (confirm(`Yakin ingin menghapus ${selectedIds.size} produk terpilih?`)) {
-                    setIsBulkDeleting(true);
-                    const res = await bulkDeleteProductsAction(Array.from(selectedIds));
-                    if (res.success) setSelectedIds(new Set());
-                    else alert(res.message);
-                    setIsBulkDeleting(false);
-                  }
-                }}
-              >
-                <PiTrashDuotone className="mr-2 h-4 w-4" />
-                Hapus {selectedIds.size} Terpilih
-              </Button>
+              <Can permission={PERMISSIONS.TOKO_MANAGE}>
+                <Button
+                  variant="ghost"
+                  className="border border-red-200 bg-red-50 text-red-700 hover:bg-red-100 hover:text-red-800"
+                  disabled={isBulkDeleting}
+                  onClick={async () => {
+                    if (confirm(`Yakin ingin menghapus ${selectedIds.size} produk terpilih?`)) {
+                      setIsBulkDeleting(true);
+                      const res = await bulkDeleteProductsAction(Array.from(selectedIds));
+                      if (res.success) setSelectedIds(new Set());
+                      else alert(res.message);
+                      setIsBulkDeleting(false);
+                    }
+                  }}
+                >
+                  <PiTrashDuotone className="mr-2 h-4 w-4" />
+                  Hapus {selectedIds.size} Terpilih
+                </Button>
+              </Can>
             )}
             <TableControls
               currentPage={table.currentPage}

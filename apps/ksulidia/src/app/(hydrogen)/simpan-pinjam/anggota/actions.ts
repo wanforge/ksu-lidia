@@ -19,6 +19,7 @@ import {
   CashTxType,
 } from "@prisma/client";
 import { recordAuditLog } from "@/lib/audit";
+import { hasPermission, PERMISSIONS } from "@/lib/rbac/permissions";
 
 export type MemberActionState = {
   success: boolean;
@@ -42,6 +43,10 @@ export async function createMemberAction(
       success: false,
       message: "Sesi Anda telah kedaluwarsa. Silakan sign in kembali.",
     };
+  }
+
+  if (!hasPermission(session.user.role, PERMISSIONS.SIMPAN_PINJAM_MANAGE)) {
+    return { success: false, message: "Anda tidak memiliki akses untuk aksi ini." };
   }
 
   const no = formData.get("no");
@@ -145,6 +150,10 @@ export async function updateMemberAction(
     return { success: false, message: "Sesi Anda telah kedaluwarsa." };
   }
 
+  if (!hasPermission(session.user.role, PERMISSIONS.SIMPAN_PINJAM_MANAGE)) {
+    return { success: false, message: "Anda tidak memiliki akses untuk aksi ini." };
+  }
+
   const memberId = formData.get("memberId");
   const name = formData.get("name");
   const phone = formData.get("phone") || undefined;
@@ -207,6 +216,10 @@ export async function postSavingsTransactionAction(
 
   if (!session?.user) {
     return { success: false, message: "Sesi Anda telah kedaluwarsa." };
+  }
+
+  if (!hasPermission(session.user.role, PERMISSIONS.SIMPAN_PINJAM_MANAGE)) {
+    return { success: false, message: "Anda tidak memiliki akses untuk aksi ini." };
   }
 
   const memberId = formData.get("memberId");
@@ -345,6 +358,10 @@ export async function importMembersAction(
     };
   }
 
+  if (!hasPermission(session.user.role, PERMISSIONS.SIMPAN_PINJAM_MANAGE)) {
+    return { success: false, message: "Anda tidak memiliki akses untuk aksi ini." };
+  }
+
   const membersJson = formData.get("membersJson") as string;
   if (!membersJson) {
     return { success: false, message: "Data tidak valid." };
@@ -425,16 +442,31 @@ export async function bulkDeleteMembersAction(
   if (!session?.user) {
     return { success: false, message: "Sesi Anda telah kedaluwarsa." };
   }
+  if (!hasPermission(session.user.role, PERMISSIONS.SIMPAN_PINJAM_MANAGE)) {
+    return { success: false, message: "Anda tidak memiliki akses untuk aksi ini." };
+  }
 
   try {
-    // Soft delete members
-    await prisma.member.updateMany({
-      where: {
-        id: { in: memberIds },
-      },
-      data: {
-        deletedAt: new Date(),
-      },
+    await prisma.$transaction(async (tx) => {
+      // Soft delete members
+      await tx.member.updateMany({
+        where: {
+          id: { in: memberIds },
+        },
+        data: {
+          deletedAt: new Date(),
+        },
+      });
+
+      await recordAuditLog(tx, {
+        actorId: session.user.id,
+        actorRole: session.user.role,
+        action: AuditAction.DELETE,
+        entityType: "Member",
+        entityId: memberIds.join(","),
+        summary: `Menghapus ${memberIds.length} anggota sekaligus`,
+        source: AttachmentSource.BACK_OFFICE,
+      });
     });
 
     revalidatePath("/simpan-pinjam/anggota");

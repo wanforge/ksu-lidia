@@ -8,6 +8,7 @@ import { routes } from "@/config/routes";
 import { createProductTransactionSchema } from "@/validators/ksulidia.schema";
 import { ProductTxType, AuditAction, AttachmentSource } from "@prisma/client";
 import { recordAuditLog } from "@/lib/audit";
+import { hasPermission, PERMISSIONS } from "@/lib/rbac/permissions";
 
 export type TxActionState = {
   success: boolean;
@@ -31,6 +32,10 @@ export async function recordTransactionAction(
       success: false,
       message: "Sesi Anda telah kedaluwarsa. Silakan sign in kembali.",
     };
+  }
+
+  if (!hasPermission(session.user.role, PERMISSIONS.TOKO_MANAGE)) {
+    return { success: false, message: "Anda tidak memiliki akses untuk aksi ini." };
   }
 
   const type = formData.get("type"); // PURCHASE | SALE
