@@ -36,6 +36,7 @@ const securityHeaders = [
 ];
 
 module.exports = {
+  output: "standalone",
   reactStrictMode: true,
   experimental: {
     serverActions: {
