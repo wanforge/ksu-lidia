@@ -381,10 +381,8 @@ export default function StatistikDashboard({
         </div>
       </Link>
 
-      {/* Main Charts Row */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {/* Toko Sales / Purchases Trend */}
-        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md lg:col-span-2">
+      {/* Tren Penjualan — full width */}
+      <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md">
           <div className="mb-6 flex items-center justify-between">
             <div>
               <h3 className="text-lg font-bold text-gray-950">
@@ -480,6 +478,9 @@ export default function StatistikDashboard({
           </div>
         </div>
 
+      {/* Komposisi + Simpanan vs Pinjaman — 1/2 each */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+
         {/* Savings Composition */}
         <div className="flex flex-col justify-between rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md">
           <div>
@@ -543,10 +544,7 @@ export default function StatistikDashboard({
             ))}
           </div>
         </div>
-      </div>
 
-      {/* Comparison & Details */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Simpanan vs Pinjaman */}
         <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md">
           <div className="mb-6 flex items-center justify-between">
@@ -623,8 +621,10 @@ export default function StatistikDashboard({
           </div>
         </div>
 
-        {/* Financial Reports Pie Chart */}
-        <div className="flex flex-col justify-between rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md lg:col-span-2">
+      </div>{/* end grid Komposisi + SvP */}
+
+      {/* Ringkasan Laporan Keuangan — full width */}
+      <div className="flex flex-col justify-between rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md">
           <div>
             <h3 className="mb-2 text-lg font-bold text-gray-950">
               Ringkasan Laporan Keuangan
@@ -633,22 +633,22 @@ export default function StatistikDashboard({
               Distribusi saldo berdasarkan kategori laporan keuangan.
             </p>
           </div>
-          <div className="flex w-full flex-col items-start gap-6 pt-4 sm:flex-row sm:items-center">
+          <div className="w-full pt-4">
             {reportPieData.every((d) => d.value === 0) ? (
               <div className="text-gray-400">
                 Belum ada data laporan keuangan
               </div>
             ) : (
-              <>
-                <div className="h-56 w-56 shrink-0">
+              <div className="flex w-full flex-col gap-4">
+                <div className="h-72 w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie
                         data={reportPieData}
                         cx="50%"
                         cy="50%"
-                        innerRadius={52}
-                        outerRadius={100}
+                        innerRadius={60}
+                        outerRadius={110}
                         paddingAngle={3}
                         dataKey="value"
                         stroke="none"
@@ -674,7 +674,7 @@ export default function StatistikDashboard({
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
-                <div className="flex flex-1 flex-col gap-2.5">
+                <div className="flex flex-col gap-2">
                   {reportPieData.map((entry) => (
                     <div key={entry.name} className="flex items-center justify-between gap-3">
                       <div className="flex min-w-0 items-center gap-2">
@@ -690,11 +690,10 @@ export default function StatistikDashboard({
                     </div>
                   ))}
                 </div>
-              </>
+              </div>
             )}
           </div>
         </div>
-      </div>
 
       {/* Cash Flow Row */}
       <div className="grid grid-cols-1 gap-6">
