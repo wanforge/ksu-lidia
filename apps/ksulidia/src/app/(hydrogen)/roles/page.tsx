@@ -11,7 +11,7 @@ import {
   PiCheckCircleDuotone,
   PiXCircleDuotone,
 } from "react-icons/pi";
-import { Table } from "rizzui";
+import { Table } from "@/components/ui/table";
 
 export const metadata = {
   title: "Roles & Permission",

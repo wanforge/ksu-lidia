@@ -56,7 +56,7 @@ module.exports = {
       },
     ],
   },
-  transpilePackages: ["core"],
+  transpilePackages: ["core", "rizzui", "@headlessui/react", "@floating-ui/react", "@floating-ui/react-dom", "@floating-ui/dom"],
   async headers() {
     return [
       {

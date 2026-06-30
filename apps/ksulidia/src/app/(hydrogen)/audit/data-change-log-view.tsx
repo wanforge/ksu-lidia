@@ -21,7 +21,7 @@ import {
 import DateField from "@/app/(hydrogen)/_components/date-field";
 import { formatNumber } from "@/lib/format";
 import LogRow from "./log-row";
-import { Table } from "rizzui";
+import { Table } from "@/components/ui/table";
 
 export const dynamic = "force-dynamic";
 

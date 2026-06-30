@@ -23,7 +23,7 @@ import {
 } from "@/app/(hydrogen)/_components/filters";
 import DateField from "@/app/(hydrogen)/_components/date-field";
 import { formatNumber } from "@/lib/format";
-import { Table } from "rizzui";
+import { Table } from "@/components/ui/table";
 
 export const dynamic = "force-dynamic";
 
