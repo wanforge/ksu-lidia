@@ -76,6 +76,8 @@
     "fs-extra": "^11.3.0",
     "glob": "^13.0.6",
     "jotai": "2.12.2",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.8",
     "lodash": "^4.17.21",
     "mariadb": "^3.5.2",
     "motion": "12.5.0",

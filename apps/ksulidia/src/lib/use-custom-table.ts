@@ -1,4 +1,9 @@
 import { useState, useMemo } from "react";
+import {
+  exportToCsv as csvUtil,
+  exportToExcel as excelUtil,
+  exportToPdf as pdfUtil,
+} from "./export";
 
 // NEW: Advanced filter config type, assuming it will be defined elsewhere
 // and imported here. For now, defining it inline.
@@ -175,33 +180,18 @@ export function useCustomTable<T extends Record<string, any>>({
   const exportToCsv = (
     filename: string,
     columns: { label: string; key: string }[]
-  ) => {
-    const headers = columns
-      .map((c) => `"${c.label.replace(/"/g, '""')}"`)
-      .join(",");
+  ) => csvUtil(filename, columns, sortedItems);
 
-    const rows = sortedItems.map((item) => {
-      return columns
-        .map((c) => {
-          const val = getFieldValue(item, c.key);
-          return `"${String(val).replace(/"/g, '""')}"`;
-        })
-        .join(",");
-    });
+  const exportToExcel = (
+    filename: string,
+    columns: { label: string; key: string }[]
+  ) => excelUtil(filename, columns, sortedItems);
 
-    const csvContent =
-      "data:text/csv;charset=utf-8,\uFEFF" + [headers, ...rows].join("\n");
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute(
-      "download",
-      `${filename}_${new Date().toISOString().slice(0, 10)}.csv`
-    );
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+  const exportToPdf = (
+    filename: string,
+    columns: { label: string; key: string }[],
+    title?: string
+  ) => pdfUtil(filename, columns, sortedItems, title);
 
   return {
     searchQuery,
@@ -221,7 +211,8 @@ export function useCustomTable<T extends Record<string, any>>({
     endIndex: Math.min(startIndex + pageSize, sortedItems.length),
     paginatedItems,
     exportToCsv,
-    // NEW returns for advanced filters
+    exportToExcel,
+    exportToPdf,
     advancedFilters,
     setAdvancedFilters: handleAdvancedFilterChange,
   };

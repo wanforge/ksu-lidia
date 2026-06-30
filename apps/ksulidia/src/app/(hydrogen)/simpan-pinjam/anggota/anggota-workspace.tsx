@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useMemo, useState } from "react";
 import {
-  PiPlusBold,
+  PiPlusDuotone,
   PiUsersThreeDuotone,
   PiBookOpenDuotone,
   PiArrowDownRightDuotone,
@@ -16,8 +16,6 @@ import {
   PiPencilDuotone,
   PiIdentificationCardDuotone,
   PiPrinterDuotone,
-  PiDownloadSimpleDuotone,
-  PiUserListDuotone,
   PiUploadSimpleDuotone,
   PiTrashDuotone,
 } from "react-icons/pi";
@@ -33,14 +31,15 @@ import {
 } from "./actions";
 import { SavingsType, SavingsTxType } from "@prisma/client";
 import { Button } from "@/components/ui/button";
-import { Table } from "rizzui";
+import { Table } from "@/components/ui/table";
 import { useCustomTable, ColumnFilterConfig } from "@/lib/use-custom-table";
 import {
   TableControls,
   SortableHeader,
 } from "@/app/(hydrogen)/_components/table-controls";
 import { DataTableFilters } from "@/components/ui/table/DataTableFilters";
-import { TableActionButton } from "@/components/ui/table/TableActionButton";
+import { TableActionsMenu, TableAction } from "@/components/ui/table/TableActionsMenu";
+import { Tabs } from "@/components/ui/Tabs";
 import { DateInput } from "@/components/ui/form/DateInput";
 import { SAVINGS_TYPES } from "@/lib/constants";
 import { PrintIdCardModal } from "./print-id-card-modal";
@@ -92,13 +91,11 @@ function getTotalSavings(member: MemberWithAccounts): number {
 }
 
 export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
-  const [tab, setTab] = useState<"list" | "create" | "detail" | "import">(
-    "list"
-  );
+  const [tab, setTab] = useState<"list" | "detail">("list");
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
-  // Member details loaded dynamically
   const [memberDetail, setMemberDetail] = useState<any>(null);
   const [isLoadingDetail, setIsLoadingDetail] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
 
   // Bulk selection state
@@ -166,9 +163,8 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
     FormData
   >(updateMemberAction, { success: false, message: "" });
 
-  // Auto handle toast & reload
   useActionFeedback(createState, () => {
-    setTab("list");
+    setIsCreateModalOpen(false);
   });
 
   useActionFeedback(updateState, () => {
@@ -320,174 +316,18 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
 
   return (
     <div className="rounded-md border border-gray-200 bg-white shadow-sm">
-      {/* Tabs */}
-      <div className="flex items-center gap-1 border-b border-gray-200 px-3">
-        <button
-          type="button"
-          className={`inline-flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
-            tab === "list"
-              ? "border-red-700 text-red-700"
-              : "border-transparent text-gray-500 hover:text-gray-800"
-          }`}
-          onClick={() => setTab("list")}
-        >
-          <PiUsersThreeDuotone className="h-4 w-4" />
-          Daftar Anggota
-          <span className="ml-1 rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
-            {formatNumber(members.length)}
-          </span>
-        </button>
-
-        {selectedMemberObj && (
-          <button
-            type="button"
-            className={`inline-flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
-              tab === "detail"
-                ? "border-red-700 text-red-700"
-                : "border-transparent text-gray-500 hover:text-gray-800"
-            }`}
-            onClick={() => setTab("detail")}
-          >
-            <PiBookOpenDuotone className="h-4 w-4" />
-            Buku Tabungan: {selectedMemberObj.name}
-          </button>
-        )}
-
-        <button
-          type="button"
-          className={`inline-flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
-            tab === "create"
-              ? "border-red-700 text-red-700"
-              : "border-transparent text-gray-500 hover:text-gray-800"
-          }`}
-          onClick={() => setTab("create")}
-        >
-          <PiPlusBold className="h-4 w-4" />
-          Tambah Anggota
-        </button>
-
-        <button
-          type="button"
-          className={`inline-flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
-            tab === "import"
-              ? "border-red-700 text-red-700"
-              : "border-transparent text-gray-500 hover:text-gray-800"
-          }`}
-          onClick={() => setTab("import")}
-        >
-          <PiDownloadSimpleDuotone className="h-4 w-4" />
-          Impor Data
-        </button>
-      </div>
+      {/* Tab nav */}
+      <Tabs
+        tabs={[
+          { id: "list", label: "Daftar Anggota", icon: PiUsersThreeDuotone, badge: formatNumber(members.length) },
+          ...(selectedMemberObj ? [{ id: "detail", label: `Buku Tabungan: ${selectedMemberObj.name}`, icon: PiBookOpenDuotone }] : []),
+        ]}
+        activeTab={tab}
+        onChange={(id) => setTab(id as any)}
+      />
 
       {/* Tab Contents */}
-      {tab === "create" ? (
-        <div>
-          <div className="border-b border-gray-200 px-5 py-4">
-            <h2 className="text-base font-semibold text-gray-950">
-              Daftarkan Anggota Baru
-            </h2>
-            <p className="mt-1 text-sm text-gray-500">
-              Masukkan data diri lengkap anggota baru koperasi.
-            </p>
-          </div>
-
-          <form action={dispatchCreate}>
-            <div className="grid grid-cols-1 gap-4 p-5 md:grid-cols-2">
-              {createState.message ? (
-                <div
-                  className={
-                    createState.success
-                      ? "rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-800 md:col-span-2"
-                      : "rounded-md border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-800 md:col-span-2"
-                  }
-                >
-                  {createState.message}
-                </div>
-              ) : null}
-
-              <div>
-                <label className="mb-1 block text-sm font-semibold text-gray-800">
-                  Nomor Anggota (RAT)
-                </label>
-                <input
-                  type="number"
-                  name="no"
-                  required
-                  className="h-10 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-700"
-                />
-                <p className="mt-1 text-xs text-gray-500">
-                  Nomor urut anggota dalam buku Rapat Anggota Tahunan (RAT).
-                </p>
-                {createState.errors?.no && (
-                  <p className="mt-1 text-xs text-rose-700">
-                    {createState.errors.no[0]}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label className="mb-1 block text-sm font-semibold text-gray-800">
-                  Nama Lengkap
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  required
-                  className="h-10 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-700"
-                />
-                <p className="mt-1 text-xs text-gray-500">
-                  Nama lengkap sesuai dengan KTP anggota.
-                </p>
-                {createState.errors?.name && (
-                  <p className="mt-1 text-xs text-rose-700">
-                    {createState.errors.name[0]}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label className="mb-1 block text-sm font-semibold text-gray-800">
-                  Nomor Telepon (Optional)
-                </label>
-                <input
-                  type="text"
-                  name="phone"
-                  className="h-10 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-700"
-                />
-                <p className="mt-1 text-xs text-gray-500">
-                  Nomor telepon aktif (WhatsApp) untuk mempermudah komunikasi.
-                </p>
-              </div>
-
-              <div>
-                <label className="mb-1 block text-sm font-semibold text-gray-800">
-                  Alamat (Optional)
-                </label>
-                <textarea
-                  name="address"
-                  className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition focus:border-gray-700"
-                  rows={3}
-                />
-                <p className="mt-1 text-xs text-gray-500">
-                  Alamat tempat tinggal saat ini sesuai domisili.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex justify-end rounded-b-md border-t border-gray-200 bg-gray-50/50 px-5 py-4">
-              <Button type="submit" size="md">
-                <PiUserCirclePlusDuotone className="mr-2 h-4 w-4" />
-                Daftarkan Anggota
-              </Button>
-            </div>
-          </form>
-        </div>
-      ) : tab === "import" ? (
-        <div className="p-4 sm:p-6">
-          <ImportAnggotaForm onSuccess={() => setTab("list")} />
-        </div>
-      ) : tab === "detail" ? (
+      {tab === "detail" ? (
         <div className="space-y-6 p-6">
           {isLoadingDetail ? (
             <div className="py-12 text-center text-sm text-gray-500">
@@ -697,18 +537,14 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                             </Table.Cell>
                             <Table.Cell>{tx.description || "-"}</Table.Cell>
                             <Table.Cell>
-                              <TableActionButton
-                                icon={PiPrinterDuotone}
-                                label="Cetak"
+                              <Button
+                                size="sm"
                                 variant="neutral"
-                                onClick={() => {
-                                  setKwitansiModal({
-                                    isOpen: true,
-                                    transaction: tx,
-                                    member: memberDetail,
-                                  });
-                                }}
-                              />
+                                onClick={() => setKwitansiModal({ isOpen: true, transaction: tx, member: memberDetail })}
+                              >
+                                <PiPrinterDuotone className="mr-1 h-3.5 w-3.5" />
+                                Cetak
+                              </Button>
                             </Table.Cell>
                           </Table.Row>
                         ))
@@ -726,16 +562,28 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                     endIndex={txTable.endIndex}
                     onPageChange={txTable.setCurrentPage}
                     onPageSizeChange={txTable.setPageSize}
-                    onExport={() => {
-                      txTable.exportToCsv(`Mutasi_${memberDetail.name}`, [
-                        { label: "Tanggal", key: "formattedDate" },
-                        { label: "Mutasi", key: "type" },
-                        { label: "Jenis Simpanan", key: "savingsType" },
-                        { label: "Jumlah", key: "amount" },
-                        { label: "Keterangan", key: "description" },
-                      ]);
-                    }}
-                    exportLabel="Unduh Mutasi Buku"
+                    onExport={() => txTable.exportToCsv(`Mutasi_${memberDetail.name}`, [
+                      { label: "Tanggal", key: "formattedDate" },
+                      { label: "Mutasi", key: "type" },
+                      { label: "Jenis Simpanan", key: "savingsType" },
+                      { label: "Jumlah", key: "amount" },
+                      { label: "Keterangan", key: "description" },
+                    ])}
+                    onExportExcel={() => txTable.exportToExcel(`Mutasi_${memberDetail.name}`, [
+                      { label: "Tanggal", key: "formattedDate" },
+                      { label: "Mutasi", key: "type" },
+                      { label: "Jenis Simpanan", key: "savingsType" },
+                      { label: "Jumlah", key: "amount" },
+                      { label: "Keterangan", key: "description" },
+                    ])}
+                    onExportPdf={() => txTable.exportToPdf(`Mutasi_${memberDetail.name}`, [
+                      { label: "Tanggal", key: "formattedDate" },
+                      { label: "Mutasi", key: "type" },
+                      { label: "Simpanan", key: "savingsType" },
+                      { label: "Jumlah", key: "amount" },
+                      { label: "Keterangan", key: "description" },
+                    ], `Mutasi Buku Tabungan — ${memberDetail.name}`)}
+                    exportLabel="Export Mutasi"
                   />
                 )}
               </div>
@@ -744,40 +592,41 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
         </div>
       ) : (
         <div>
-          {/* Filters */}
-          <div className="mb-4 flex flex-col gap-4 border-b border-gray-200 pb-4 sm:flex-row sm:items-center sm:justify-between">
+          {/* Toolbar */}
+          <div className="flex flex-wrap items-start justify-between gap-3 border-b border-gray-200 p-4">
             <DataTableFilters
               filterConfig={memberFilterConfig}
               onFilterChange={table.setAdvancedFilters}
               currentFilters={table.advancedFilters}
             />
-            {selectedIds.size > 0 && (
-              <Button
-                variant="danger-soft"
-                disabled={isBulkDeleting}
-                onClick={async () => {
-                  if (
-                    confirm(
-                      `Yakin ingin menghapus ${selectedIds.size} anggota terpilih?`
-                    )
-                  ) {
-                    setIsBulkDeleting(true);
-                    const res = await bulkDeleteMembersAction(
-                      Array.from(selectedIds)
-                    );
-                    if (res.success) {
-                      setSelectedIds(new Set());
-                    } else {
-                      alert(res.message);
+            <div className="flex flex-wrap gap-2">
+              {selectedIds.size > 0 && (
+                <Button
+                  variant="danger-soft"
+                  disabled={isBulkDeleting}
+                  onClick={async () => {
+                    if (confirm(`Yakin ingin menghapus ${selectedIds.size} anggota terpilih?`)) {
+                      setIsBulkDeleting(true);
+                      const res = await bulkDeleteMembersAction(Array.from(selectedIds));
+                      if (res.success) setSelectedIds(new Set());
+                      else alert(res.message);
+                      setIsBulkDeleting(false);
                     }
-                    setIsBulkDeleting(false);
-                  }
-                }}
-              >
-                <PiTrashDuotone className="mr-2 h-4 w-4" />
-                Hapus {selectedIds.size} Terpilih
+                  }}
+                >
+                  <PiTrashDuotone className="mr-1.5 h-4 w-4" />
+                  Hapus {selectedIds.size} Terpilih
+                </Button>
+              )}
+              <Button size="md" variant="neutral" onClick={() => setIsImportModalOpen(true)}>
+                <PiUploadSimpleDuotone className="h-4 w-4" />
+                Impor Data
               </Button>
-            )}
+              <Button size="md" onClick={() => setIsCreateModalOpen(true)}>
+                <PiPlusDuotone className="h-4 w-4" />
+                Tambah Anggota
+              </Button>
+            </div>
           </div>
 
           {/* Member List Table */}
@@ -936,58 +785,14 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                               </span>
                             )}
                           </Table.Cell>
-                          <Table.Cell>
-                            <TableActionButton
-                              icon={PiBookOpenDuotone}
-                              label="Mutasi"
-                              variant="primary-soft"
-                              onClick={() => {
-                                setSelectedMemberId(m.id);
-                                setTab("detail");
-                              }}
-                            />
-                            <TableActionButton
-                              icon={PiPencilDuotone}
-                              label="Edit"
-                              variant="neutral"
-                              onClick={() => {
-                                setEditModal({ isOpen: true, member: m });
-                              }}
-                            />
-                            <TableActionButton
-                              icon={PiIdentificationCardDuotone}
-                              label="ID Card"
-                              variant="neutral"
-                              onClick={() => {
-                                setPrintModal({ isOpen: true, member: m });
-                              }}
-                            />
-                            <TableActionButton
-                              icon={PiArrowDownRightDuotone}
-                              label="Setor"
-                              variant="primary"
-                              disabled={m.isDeceased}
-                              onClick={() =>
-                                setTxModal({
-                                  isOpen: true,
-                                  member: m,
-                                  type: SavingsTxType.DEPOSIT,
-                                })
-                              }
-                            />
-                            <TableActionButton
-                              icon={PiArrowUpLeftDuotone}
-                              label="Tarik"
-                              variant="warning"
-                              disabled={m.isDeceased}
-                              onClick={() =>
-                                setTxModal({
-                                  isOpen: true,
-                                  member: m,
-                                  type: SavingsTxType.WITHDRAWAL,
-                                })
-                              }
-                            />
+                          <Table.Cell className="px-4 py-3">
+                            <TableActionsMenu actions={[
+                              { label: "Buku Tabungan", icon: PiBookOpenDuotone, onClick: () => { setSelectedMemberId(m.id); setTab("detail"); } },
+                              { label: "Edit Data", icon: PiPencilDuotone, onClick: () => setEditModal({ isOpen: true, member: m }) },
+                              { label: "Cetak ID Card", icon: PiIdentificationCardDuotone, onClick: () => setPrintModal({ isOpen: true, member: m }) },
+                              { label: "Setor Tunai", icon: PiArrowDownRightDuotone, onClick: () => setTxModal({ isOpen: true, member: m, type: SavingsTxType.DEPOSIT }), disabled: m.isDeceased },
+                              { label: "Penarikan Saldo", icon: PiArrowUpLeftDuotone, onClick: () => setTxModal({ isOpen: true, member: m, type: SavingsTxType.WITHDRAWAL }), disabled: m.isDeceased },
+                            ]} />
                           </Table.Cell>
                         </Table.Row>
                       );
@@ -1004,23 +809,122 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                 endIndex={table.endIndex}
                 onPageChange={table.setCurrentPage}
                 onPageSizeChange={table.setPageSize}
-                onExport={() => {
-                  table.exportToCsv("Daftar_Anggota_Koperasi", [
-                    { label: "No. RAT", key: "no" },
-                    { label: "Nama Anggota", key: "name" },
-                    { label: "Nomor Telepon", key: "phone" },
-                    { label: "Alamat", key: "address" },
-                    { label: "Simpanan Pokok", key: "pokok" },
-                    { label: "Simpanan Wajib", key: "wajib" },
-                    { label: "Simpanan Sukarela", key: "sukarela" },
-                    { label: "Total Simpanan", key: "totalSavings" },
-                    { label: "Status Pinjaman", key: "activeLoanText" },
-                  ]);
-                }}
-                exportLabel="Unduh Data Anggota"
+                onExport={() => table.exportToCsv("Daftar_Anggota_Koperasi", [
+                  { label: "No. RAT", key: "no" },
+                  { label: "Nama Anggota", key: "name" },
+                  { label: "Nomor Telepon", key: "phone" },
+                  { label: "Alamat", key: "address" },
+                  { label: "Simpanan Pokok", key: "pokok" },
+                  { label: "Simpanan Wajib", key: "wajib" },
+                  { label: "Simpanan Sukarela", key: "sukarela" },
+                  { label: "Total Simpanan", key: "totalSavings" },
+                  { label: "Status Pinjaman", key: "activeLoanText" },
+                ])}
+                onExportExcel={() => table.exportToExcel("Daftar_Anggota_Koperasi", [
+                  { label: "No. RAT", key: "no" },
+                  { label: "Nama Anggota", key: "name" },
+                  { label: "Nomor Telepon", key: "phone" },
+                  { label: "Alamat", key: "address" },
+                  { label: "Simpanan Pokok", key: "pokok" },
+                  { label: "Simpanan Wajib", key: "wajib" },
+                  { label: "Simpanan Sukarela", key: "sukarela" },
+                  { label: "Total Simpanan", key: "totalSavings" },
+                  { label: "Status Pinjaman", key: "activeLoanText" },
+                ])}
+                onExportPdf={() => table.exportToPdf("Daftar_Anggota_Koperasi", [
+                  { label: "No. RAT", key: "no" },
+                  { label: "Nama Anggota", key: "name" },
+                  { label: "Telepon", key: "phone" },
+                  { label: "Sp. Pokok", key: "pokok" },
+                  { label: "Sp. Wajib", key: "wajib" },
+                  { label: "Sukarela", key: "sukarela" },
+                  { label: "Total", key: "totalSavings" },
+                  { label: "Pinjaman Aktif", key: "activeLoanText" },
+                ], "Daftar Anggota Koperasi")}
+                exportLabel="Export Data Anggota"
               />
             </>
           )}
+        </div>
+      )}
+
+      {/* ── Modal: Tambah Anggota ── */}
+      {isCreateModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 p-4 pt-10">
+          <div className="relative w-full max-w-xl rounded-lg border border-gray-200 bg-white shadow-xl">
+            <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+              <div>
+                <h3 className="text-lg font-bold text-gray-900">Daftarkan Anggota Baru</h3>
+                <p className="mt-0.5 text-sm text-gray-500">Masukkan data diri lengkap anggota baru koperasi.</p>
+              </div>
+              <button type="button" onClick={() => setIsCreateModalOpen(false)} className="text-gray-400 hover:text-gray-600">
+                <PiXBold className="h-5 w-5" />
+              </button>
+            </div>
+            <form action={dispatchCreate}>
+              <div className="grid grid-cols-1 gap-4 p-6 md:grid-cols-2">
+                {createState.message && (
+                  <div className={createState.success
+                    ? "rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-800 md:col-span-2"
+                    : "rounded-md border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-800 md:col-span-2"
+                  }>
+                    {createState.message}
+                  </div>
+                )}
+
+                <div>
+                  <label className="mb-1 block text-sm font-semibold text-gray-800">Nomor Anggota (RAT)</label>
+                  <input type="number" name="no" required className="h-10 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-red-700" />
+                  <p className="mt-1 text-xs text-gray-500">Nomor urut anggota dalam buku Rapat Anggota Tahunan (RAT).</p>
+                  {createState.errors?.no && <p className="mt-1 text-xs text-rose-700">{createState.errors.no[0]}</p>}
+                </div>
+
+                <div>
+                  <label className="mb-1 block text-sm font-semibold text-gray-800">Nama Lengkap</label>
+                  <input type="text" name="name" required className="h-10 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-red-700" />
+                  <p className="mt-1 text-xs text-gray-500">Nama lengkap sesuai dengan KTP anggota.</p>
+                  {createState.errors?.name && <p className="mt-1 text-xs text-rose-700">{createState.errors.name[0]}</p>}
+                </div>
+
+                <div>
+                  <label className="mb-1 block text-sm font-semibold text-gray-800">Nomor Telepon (Opsional)</label>
+                  <input type="text" name="phone" className="h-10 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-red-700" />
+                  <p className="mt-1 text-xs text-gray-500">Nomor telepon aktif (WhatsApp).</p>
+                </div>
+
+                <div>
+                  <label className="mb-1 block text-sm font-semibold text-gray-800">Alamat (Opsional)</label>
+                  <textarea name="address" rows={3} className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition focus:border-red-700" />
+                  <p className="mt-1 text-xs text-gray-500">Alamat tempat tinggal saat ini sesuai domisili.</p>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 rounded-b-md border-t border-gray-200 bg-gray-50/50 px-6 py-4">
+                <Button type="button" variant="neutral" onClick={() => setIsCreateModalOpen(false)}>Batal</Button>
+                <Button type="submit" size="md">
+                  <PiUserCirclePlusDuotone className="mr-2 h-4 w-4" />
+                  Daftarkan Anggota
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ── Modal: Import Anggota ── */}
+      {isImportModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 p-4 pt-10">
+          <div className="relative w-full max-w-xl rounded-lg border border-gray-200 bg-white shadow-xl">
+            <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+              <h3 className="text-lg font-bold text-gray-900">Impor Data Anggota</h3>
+              <button type="button" onClick={() => setIsImportModalOpen(false)} className="text-gray-400 hover:text-gray-600">
+                <PiXBold className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="p-6">
+              <ImportAnggotaForm onSuccess={() => setIsImportModalOpen(false)} />
+            </div>
+          </div>
         </div>
       )}
 
