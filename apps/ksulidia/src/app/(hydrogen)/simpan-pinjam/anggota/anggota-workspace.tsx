@@ -14,7 +14,6 @@ import {
   PiXBold,
   PiWarningBold,
   PiPencilDuotone,
-  PiIdentificationCardDuotone,
   PiPrinterDuotone,
   PiUploadSimpleDuotone,
   PiTrashDuotone,
@@ -42,7 +41,6 @@ import { TableActionsMenu, TableAction } from "@/components/ui/table/TableAction
 import { Tabs } from "@/components/ui/Tabs";
 import { DateInput } from "@/components/ui/form/DateInput";
 import { SAVINGS_TYPES } from "@/lib/constants";
-import { PrintIdCardModal } from "./print-id-card-modal";
 import { PrintKwitansiModal } from "./print-kwitansi-modal";
 import { ImportAnggotaForm } from "./import-anggota-form";
 import { Can, usePermissions } from "@/components/rbac/can";
@@ -124,15 +122,6 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
 
   // Edit Modal
   const [editModal, setEditModal] = useState<{
-    isOpen: boolean;
-    member: MemberWithAccounts | null;
-  }>({
-    isOpen: false,
-    member: null,
-  });
-
-  // Print ID Card Modal
-  const [printModal, setPrintModal] = useState<{
     isOpen: boolean;
     member: MemberWithAccounts | null;
   }>({
@@ -798,15 +787,34 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
                             )}
                           </Table.Cell>
                           <Table.Cell className="px-4 py-3">
-                            <TableActionsMenu actions={[
-                              { label: "Buku Tabungan", icon: PiBookOpenDuotone, onClick: () => { setSelectedMemberId(m.id); setTab("detail"); } },
-                              { label: "Cetak ID Card", icon: PiIdentificationCardDuotone, onClick: () => setPrintModal({ isOpen: true, member: m }) },
-                              ...(canManage ? [
-                                { label: "Edit Data", icon: PiPencilDuotone, onClick: () => setEditModal({ isOpen: true, member: m }) },
-                                { label: "Setor Tunai", icon: PiArrowDownRightDuotone, onClick: () => setTxModal({ isOpen: true, member: m, type: SavingsTxType.DEPOSIT }), disabled: m.isDeceased },
-                                { label: "Penarikan Saldo", icon: PiArrowUpLeftDuotone, onClick: () => setTxModal({ isOpen: true, member: m, type: SavingsTxType.WITHDRAWAL }), disabled: m.isDeceased },
-                              ] : []),
-                            ]} />
+                            <div className="flex items-center gap-1.5">
+                              {canManage && (
+                                <>
+                                  <button
+                                    disabled={m.isDeceased}
+                                    onClick={() => setTxModal({ isOpen: true, member: m, type: SavingsTxType.DEPOSIT })}
+                                    className="inline-flex items-center gap-1 rounded-md border border-emerald-200 bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-700 transition hover:bg-emerald-100 disabled:opacity-40 disabled:cursor-not-allowed"
+                                  >
+                                    <PiArrowDownRightDuotone className="h-3.5 w-3.5" />
+                                    Setor
+                                  </button>
+                                  <button
+                                    disabled={m.isDeceased}
+                                    onClick={() => setTxModal({ isOpen: true, member: m, type: SavingsTxType.WITHDRAWAL })}
+                                    className="inline-flex items-center gap-1 rounded-md border border-amber-200 bg-amber-50 px-2 py-1 text-xs font-semibold text-amber-700 transition hover:bg-amber-100 disabled:opacity-40 disabled:cursor-not-allowed"
+                                  >
+                                    <PiArrowUpLeftDuotone className="h-3.5 w-3.5" />
+                                    Tarik
+                                  </button>
+                                </>
+                              )}
+                              <TableActionsMenu actions={[
+                                { label: "Buku Tabungan", icon: PiBookOpenDuotone, onClick: () => { setSelectedMemberId(m.id); setTab("detail"); } },
+                                ...(canManage ? [
+                                  { label: "Edit Data", icon: PiPencilDuotone, onClick: () => setEditModal({ isOpen: true, member: m }) },
+                                ] : []),
+                              ]} />
+                            </div>
                           </Table.Cell>
                         </Table.Row>
                       );
@@ -1158,13 +1166,6 @@ export default function AnggotaWorkspace({ members }: AnggotaWorkspaceProps) {
           </div>
         </div>
       )}
-
-      {/* Print ID Card Modal */}
-      <PrintIdCardModal
-        isOpen={printModal.isOpen}
-        member={printModal.member}
-        onClose={() => setPrintModal({ isOpen: false, member: null })}
-      />
 
       {/* Print Kwitansi Modal */}
       <PrintKwitansiModal
